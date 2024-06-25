@@ -1,19 +1,22 @@
-import { TextField, Box, Button } from "@mui/material";
+import { TextField, Box, Button, MenuItem } from "@mui/material";
 import { useFormik } from "formik";
 import { memo, useMemo } from "react";
 import styled from "styled-components";
 import { Dialog, Title } from "../../../components";
-import { useOrderCRUD, useProductCRUD } from "../../../hooks";
+import {
+  Order,
+  OrderProduct,
+  useOrderCRUD,
+  useProductCRUD,
+} from "../../../hooks";
 import { AddOrderSchema } from "../../../yup";
 import { useTranslation } from "react-i18next";
 import { SelectProductField } from "./SelectProductField";
+import { SelectOptionField } from "./SelectOptionField";
 
 const StyledBox = styled(Box)`
   dispaly: flex;
   flex-direction: column;
-`;
-const StyledTextField = styled(TextField)`
-  margin-top: 10px;
 `;
 
 const SelectTable = styled(Box)`
@@ -23,10 +26,17 @@ const SelectTable = styled(Box)`
   gap: 2vh;
 `;
 
+const StyledSelectOptionField = styled(SelectOptionField)<{ $width?: number }>`
+  width: ${({ $width }) => ($width ? $width : 30)}%;
+`;
+
 const SelectTableRow = styled(Box)`
   width: 100%;
   display: flex;
-  gap: 5vw;
+  gap: 1.5vw;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.greys[3]};
+  padding: 10px;
+  flex-wrap: wrap;
 `;
 
 const StyledSelectTextField = styled(TextField)<{ $width?: number }>`
@@ -40,6 +50,12 @@ const StyledSelectProductField = styled(SelectProductField)<{
 const AddProductButton = styled(Button)`
   float: left;
 `;
+const DeleteProductButton = styled(Button)`
+  float: right;
+`;
+const BottomWrapper = styled(Box)`
+  padding: 10px;
+`;
 type Props = {
   showAddForm: boolean;
   setShowAddForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -52,20 +68,36 @@ export const AddOrderForm = memo(({ showAddForm, setShowAddForm }: Props) => {
 
   const formik = useFormik({
     initialValues: {
-      order_name: "",
-      selected_products: [] as { product_id: string; quantity: number }[],
+      selected_products: [] as Omit<OrderProduct, "price">[],
+      status: "unpaid" as Order["status"],
     },
-    enableReinitialize: false,
     validationSchema: AddOrderSchema,
+    enableReinitialize: false,
     onSubmit: async (values) => {
+      console.log("asd");
+
       try {
-        await createOrder(values.order_name, values.selected_products, total);
+        if (
+          values.selected_products.some((selected_product) => {
+            const product = productList.find(
+              (product) => product.product_id === selected_product.product_id
+            );
+            if (!product) return true;
+            return (
+              Object.keys(selected_product.options).length !==
+              product.options.length
+            );
+          })
+        )
+          return;
+        await createOrder(values.selected_products, values.status, total);
         setShowAddForm(false);
       } catch (e) {
         console.log(e);
       }
     },
   });
+  console.log(formik.values);
 
   const total = useMemo(() => {
     return formik.values.selected_products.reduce((acc, cur) => {
@@ -95,21 +127,6 @@ export const AddOrderForm = memo(({ showAddForm, setShowAddForm }: Props) => {
       fullWidth
     >
       <StyledBox>
-        <StyledTextField
-          id="order_name"
-          label={t("order.order_name")}
-          name="order_name"
-          value={formik.values.order_name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.order_name && Boolean(formik.errors.order_name)}
-          helperText={
-            formik.touched.order_name &&
-            formik.errors.order_name &&
-            t(formik.errors.order_name)
-          }
-          fullWidth
-        />
         <SelectTable>
           <>
             <Box>
@@ -120,6 +137,7 @@ export const AddOrderForm = memo(({ showAddForm, setShowAddForm }: Props) => {
                     {
                       product_id: "",
                       quantity: 0,
+                      options: {},
                     },
                   ]);
                 }}
@@ -129,14 +147,16 @@ export const AddOrderForm = memo(({ showAddForm, setShowAddForm }: Props) => {
             </Box>
             {formik.values.selected_products.map(
               ({ product_id, quantity }, index) => {
-                const product_unit_price =
-                  productList.find(({ product_id: id }) => product_id === id)
-                    ?.price ?? 0;
+                const product = productList.find(
+                  ({ product_id: id }) => product_id === id
+                );
+                const product_unit_price = product ? product.price : 0;
+                const product_options = product ? product.options : [];
                 return (
                   <SelectTableRow key={index}>
                     <StyledSelectProductField
                       productList={productList}
-                      $width={60}
+                      $width={45}
                       select
                       id={`product_name`}
                       label={t("product.product_name")}
@@ -168,10 +188,27 @@ export const AddOrderForm = memo(({ showAddForm, setShowAddForm }: Props) => {
                       type="number"
                       value={product_unit_price}
                       label={t("product.price")}
-                      name={`selected_products.${index}.quantity`}
+                      name={`selected_products.${index}.price`}
                       disabled
                     />
-                    <Button
+                    {product_options.map(({ option_name, choices }) => {
+                      return (
+                        <StyledSelectOptionField
+                          key={option_name}
+                          $width={20}
+                          choices={choices}
+                          name={`selected_products.${index}.options.${option_name}`}
+                          label={option_name}
+                          value={
+                            formik.values.selected_products[index].options[
+                              option_name
+                            ]
+                          }
+                          onChange={formik.handleChange}
+                        />
+                      );
+                    })}
+                    <DeleteProductButton
                       onClick={() => {
                         formik.setFieldValue(
                           "selected_products",
@@ -183,14 +220,33 @@ export const AddOrderForm = memo(({ showAddForm, setShowAddForm }: Props) => {
                       }}
                     >
                       {t("button.delete")}
-                    </Button>
+                    </DeleteProductButton>
                   </SelectTableRow>
                 );
               }
             )}
           </>
         </SelectTable>
-        {t("order.total")}: ${total}
+        <BottomWrapper>
+          <StyledSelectTextField
+            select
+            label="status"
+            value={formik.values.status}
+            name={`status`}
+            onChange={formik.handleChange}
+          >
+            {["paid", "unpaid"].map((status) => {
+              return (
+                <MenuItem key={status} value={status}>
+                  {status}
+                </MenuItem>
+              );
+            })}
+          </StyledSelectTextField>
+          <Box>
+            {t("order.total")}: ${total}
+          </Box>
+        </BottomWrapper>
       </StyledBox>
     </Dialog>
   );

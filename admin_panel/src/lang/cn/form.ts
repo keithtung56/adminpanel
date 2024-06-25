@@ -11,6 +11,9 @@ export const form = {
             addProduct: "新增產品",
         }
     },
+    viewOrder: {
+        title: "查看訂單",
+    },
     addProduct: {
         title: "新增產品"
     },

@@ -1,22 +1,31 @@
 import { ref, onValue, update, remove } from "firebase/database";
-import { database } from "../firebase";
+import { auth, database } from "../firebase";
 import { useCallback, useEffect, useState } from "react";
 import uuid from "react-uuid";
 import moment from "moment";
 import { DATE_DB_FORMAT } from "../constants";
 import { useProductCRUD } from "./useProductCRUD";
 
+export type OrderProduct = {
+  product_id: string;
+  quantity: number;
+  price: number;
+  options: {
+    [key: string]: string;
+  };
+};
 export type Order = {
   order_id: string;
-  order_name: string;
-  products: { product_id: string; quantity: number }[];
+  products: OrderProduct[];
   created_time: moment.Moment;
   modified_time: moment.Moment;
-  status: string;
+  status: "paid" | "unpaid";
   total: number;
+  user_id: string;
 };
 export const useOrderCRUD = () => {
   const [orderList, setorderList] = useState<Order[]>([]);
+
   const { productList } = useProductCRUD();
   useEffect(() => {
     const unsubscribe = onValue(ref(database, "/Orders"), (snapshot) => {
@@ -68,30 +77,39 @@ export const useOrderCRUD = () => {
 
   const createOrder = useCallback(
     async (
-      order_name: string,
-      selected_products: { product_id: string; quantity: number }[],
+      selected_products: Omit<OrderProduct, "price">[],
+      status: Order["status"],
       total: number
     ) => {
-      const random_id = uuid();
+      const random_order_id = uuid();
 
       await Promise.all([
-        update(ref(database, `/Orders/${random_id}`), {
-          order_name,
+        update(ref(database, `/Orders/${random_order_id}`), {
           total,
-          status: "pending",
+          status: status,
           created_time: moment().format(DATE_DB_FORMAT),
           modified_time: moment().format(DATE_DB_FORMAT),
+          user: auth.currentUser?.uid,
         }),
-        ...selected_products.map(({ product_id, quantity }) => {
+        update(ref(database, `/Users/${auth.currentUser?.uid}/orders/`), {
+          [random_order_id]: "",
+        }),
+        ...selected_products.map(({ product_id, quantity, options }) => {
           const product = productList.find(
             (product) => product.product_id === product_id
           );
           if (product) {
+            const random_order_product_id = uuid();
             update(
-              ref(database, `/Orders/${random_id}/products/${product_id}`),
+              ref(
+                database,
+                `/Orders/${random_order_id}/products/${random_order_product_id}`
+              ),
               {
+                product_id,
                 quantity,
                 price: product.price,
+                options,
               }
             );
           }
@@ -103,19 +121,20 @@ export const useOrderCRUD = () => {
 
   const deleteOrder = useCallback(async (order_id: string) => {
     await remove(ref(database, `/Orders/${order_id}`));
+    await remove(
+      ref(database, `/Users/${auth.currentUser?.uid}/orders/${order_id}`)
+    );
   }, []);
 
   const updateOrder = useCallback(
     async (
       order_id: string,
-      order_name: string,
       total: number,
       selected_products: { product_id: string; quantity: number }[]
     ) => {
       await remove(ref(database, `/Orders/${order_id}/products`));
       await Promise.all([
         update(ref(database, `/Orders/${order_id}`), {
-          order_name,
           total,
           modified_time: moment().format(DATE_DB_FORMAT),
         }),
@@ -137,5 +156,15 @@ export const useOrderCRUD = () => {
     },
     [productList]
   );
-  return { orderList, createOrder, deleteOrder, updateOrder };
+
+  const updateOrderStatus = useCallback(async (order_id: String, status) => {
+    await update(ref(database, `/Orders/${order_id}`), { status });
+  }, []);
+  return {
+    orderList,
+    createOrder,
+    deleteOrder,
+    updateOrder,
+    updateOrderStatus,
+  };
 };

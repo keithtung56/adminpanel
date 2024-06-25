@@ -6,7 +6,7 @@ import moment from "moment";
 import { DATE_DB_FORMAT } from "../constants";
 import { useProductImageCRUD } from "./useProductImageCRUD";
 
-type Options = {
+export type Options = {
   option_name: string;
   choices: string[];
 }[];

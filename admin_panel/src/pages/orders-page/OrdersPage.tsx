@@ -3,12 +3,11 @@ import { AddButton, DeleteButton, GenericTable } from "../../components";
 import { Card, Box, Checkbox, Button } from "@mui/material";
 import styled from "styled-components";
 import { useOrderCRUD } from "../../hooks/useOrderCRUD";
-import { AddOrderForm } from "./component";
-import { EditOrderForm } from "./component/EditOrderForm";
+import { AddOrderForm, EditOrderForm, ViewOrderForm } from "./component";
 import { useProductCRUD, useUserCRUD } from "../../hooks";
 import { useTranslation } from "react-i18next";
 import { DATE_DISPLAY_FORMAT } from "../../constants";
-import { EditIcon } from "../../icons";
+import { EditIcon, ViewIcon } from "../../icons";
 
 const StyledCard = styled(Card)`
   border-radius: 20px;
@@ -44,16 +43,22 @@ const StyledTable = styled(GenericTable)`
   }
 `;
 
+const StyledViewIcon = styled(ViewIcon)`
+  margin-right: 5px;
+`;
 const StyledEditIcon = styled(EditIcon)`
   margin-right: 5px;
 `;
 export const OrdersPage = memo(() => {
   const { t } = useTranslation();
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
-  const { orderList, deleteOrder } = useOrderCRUD();
+  const [showEditForm, setShowEditForm] = useState<boolean>(false);
+  const [showViewOrderForm, setShowViewOrderForm] = useState<boolean>(false);
+
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
   const [editOrder, setEditOrder] = useState<any>(null);
-  const [showEditForm, setShowEditForm] = useState<boolean>(false);
+
+  const { orderList, deleteOrder } = useOrderCRUD();
   const { productList } = useProductCRUD();
   const { userList } = useUserCRUD();
   const AddButtonOnClick = useCallback(() => {
@@ -90,11 +95,6 @@ export const OrdersPage = memo(() => {
             }}
           />
         ),
-      },
-      {
-        key: "order_name",
-        header: t("order.order_name"),
-        render: (data: any) => data.order_name,
       },
       {
         key: "user",
@@ -150,21 +150,32 @@ export const OrdersPage = memo(() => {
       {
         key: "edit",
         header: "",
-        render: (data: any) =>
-          data.status === "paid" ? (
+        render: (data: any) => (
+          <>
             <Button
               variant="outlined"
               onClick={() => {
                 setEditOrder(data);
-                setShowEditForm(true);
+                setShowViewOrderForm(true);
               }}
             >
-              <StyledEditIcon />
-              {t("button.edit")}
+              <StyledViewIcon />
+              {t("button.view")}
             </Button>
-          ) : (
-            <></>
-          ),
+            {data.status === "unpaid" && (
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setEditOrder(data);
+                  setShowEditForm(true);
+                }}
+              >
+                <StyledEditIcon />
+                {t("button.edit")}
+              </Button>
+            )}
+          </>
+        ),
       },
     ],
     [selectedOrderIds, CheckBoxOnClick, setEditOrder, productList, t, userList]
@@ -203,10 +214,17 @@ export const OrdersPage = memo(() => {
           setShowAddForm={setShowAddForm}
         />
       )}
+      {showViewOrderForm && (
+        <ViewOrderForm
+          showViewOrderForm={showViewOrderForm}
+          setShowViewOrderForm={setShowViewOrderForm}
+          order={editOrder}
+        />
+      )}
       {showEditForm && (
         <EditOrderForm
-          showEditForm={showEditForm}
-          setShowEditForm={setShowEditForm}
+          showEditOrderForm={showEditForm}
+          setShowEditOrderForm={setShowEditForm}
           order={editOrder}
         />
       )}

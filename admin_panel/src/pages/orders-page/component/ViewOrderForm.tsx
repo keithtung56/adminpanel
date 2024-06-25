@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { memo, useMemo } from "react";
 import styled from "styled-components";
 import { Dialog, Title } from "../../../components";
-import { Order, useOrderCRUD, useProductCRUD } from "../../../hooks";
+import { Order, useProductCRUD } from "../../../hooks";
 import { useTranslation } from "react-i18next";
 import { SelectProductField } from "./SelectProductField";
 
@@ -34,25 +34,20 @@ const SelectTableRow = styled(Box)`
 const BottomWrapper = styled(Box)`
   padding: 10px;
 `;
-
 type Props = {
-  showEditOrderForm: boolean;
-  setShowEditOrderForm: React.Dispatch<React.SetStateAction<boolean>>;
+  showViewOrderForm: boolean;
+  setShowViewOrderForm: React.Dispatch<React.SetStateAction<boolean>>;
   order: Order;
 };
-export const EditOrderForm = memo(
-  ({ showEditOrderForm, setShowEditOrderForm, order }: Props) => {
+export const ViewOrderForm = memo(
+  ({ showViewOrderForm, setShowViewOrderForm, order }: Props) => {
     const { t } = useTranslation();
     const { productList } = useProductCRUD();
-    const { updateOrderStatus } = useOrderCRUD();
     //@ts-ignore
     const formik = useFormik({
       initialValues: {
         selected_products: order.products,
         status: order.status,
-      },
-      onSubmit: async (values) => {
-        await updateOrderStatus(values.status);
       },
     });
 
@@ -65,10 +60,10 @@ export const EditOrderForm = memo(
     return (
       <Dialog
         title={<Title>{t("form.viewOrder.title")}</Title>}
-        open={showEditOrderForm}
+        open={showViewOrderForm}
         handleClose={(value: boolean) => {
           if (!value) {
-            setShowEditOrderForm(false);
+            setShowViewOrderForm(false);
           } else {
             formik.handleSubmit();
           }
@@ -133,6 +128,7 @@ export const EditOrderForm = memo(
               value={formik.values.status}
               name={`status`}
               onChange={formik.handleChange}
+              disabled
             >
               {["paid", "unpaid"].map((status) => {
                 return (
@@ -152,4 +148,4 @@ export const EditOrderForm = memo(
   }
 );
 
-EditOrderForm.displayName = "EditOrderForm";
+ViewOrderForm.displayName = "ViewOrderForm";

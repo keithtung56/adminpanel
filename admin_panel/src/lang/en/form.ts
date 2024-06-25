@@ -11,6 +11,9 @@ export const form = {
             addProduct: "Add Product",
         }
     },
+    viewOrder: {
+        title: "View Order",
+    },
     addProduct: {
         title: "Add Product"
     },
