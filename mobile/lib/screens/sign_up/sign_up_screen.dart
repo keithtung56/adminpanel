@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../constants.dart';
 import 'components/sign_up_form.dart';
 
@@ -10,7 +11,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Sign Up"),
+        title: Text(AppLocalizations.of(context)!.sign_up),
       ),
       body: SafeArea(
         child: SizedBox(
@@ -21,11 +22,8 @@ class SignUpScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 16),
-                  const Text("Register Account", style: headingStyle),
-                  const Text(
-                    "Complete your details or continue \nwith social media",
-                    textAlign: TextAlign.center,
-                  ),
+                  Text(AppLocalizations.of(context)!.register_account,
+                      style: headingStyle),
                   const SizedBox(height: 16),
                   const SignUpForm(),
                   const SizedBox(height: 16),
@@ -47,11 +45,11 @@ class SignUpScreen extends StatelessWidget {
                   //   ],
                   // ),
                   // const SizedBox(height: 16),
-                  Text(
-                    'By continuing your confirm that you agree \nwith our Term and Condition',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  )
+                  // Text(
+                  //   'By continuing your confirm that you agree \nwith our Term and Condition',
+                  //   textAlign: TextAlign.center,
+                  //   style: Theme.of(context).textTheme.bodySmall,
+                  // )
                 ],
               ),
             ),

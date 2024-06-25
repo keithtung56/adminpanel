@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/services/auth/auth_service.dart';
 import 'package:shop_app/services/crud/user/db_user_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/form_error.dart';
 import '../../../constants.dart';
@@ -50,27 +52,33 @@ class _SignUpFormState extends State<SignUpForm> {
             onSaved: (newValue) => email = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyEmailError);
-              } else if (emailValidatorRegExp.hasMatch(value)) {
-                removeError(error: invalidEmailError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_email_error);
+              }
+              if (emailValidatorRegExp.hasMatch(value)) {
+                removeError(
+                    error: AppLocalizations.of(context)!.invalid_email_error);
               }
               return;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyEmailError);
+                addError(
+                    error: AppLocalizations.of(context)!.empty_email_error);
                 return "";
               } else if (!emailValidatorRegExp.hasMatch(value)) {
-                addError(error: invalidEmailError);
+                addError(
+                    error: AppLocalizations.of(context)!.invalid_email_error);
                 return "";
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: "Email",
-              hintText: "Enter your email",
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.email,
+              hintText: AppLocalizations.of(context)!.enter_your_email,
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
+              suffixIcon:
+                  const CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
             ),
           ),
           const SizedBox(height: 20),
@@ -95,11 +103,12 @@ class _SignUpFormState extends State<SignUpForm> {
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: "Password",
-              hintText: "Enter your password",
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.password,
+              hintText: AppLocalizations.of(context)!.enter_your_password,
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
+              suffixIcon:
+                  const CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
             ),
           ),
           const SizedBox(height: 20),
@@ -108,27 +117,36 @@ class _SignUpFormState extends State<SignUpForm> {
             onSaved: (newValue) => confirmPassword = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyPasswordError);
-              } else if (value.isNotEmpty && password == confirmPassword) {
-                removeError(error: notMatchPasswordError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_password_error);
+              }
+              if (value.isNotEmpty && password == confirmPassword) {
+                removeError(
+                    error:
+                        AppLocalizations.of(context)!.not_match_password_error);
               }
               confirmPassword = value;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyPasswordError);
+                addError(
+                    error: AppLocalizations.of(context)!.empty_password_error);
                 return "";
               } else if ((password != value)) {
-                addError(error: notMatchPasswordError);
+                addError(
+                    error:
+                        AppLocalizations.of(context)!.not_match_password_error);
                 return "";
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: "Confirm Password",
-              hintText: "Re-enter your password",
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.confirm_password,
+              hintText:
+                  AppLocalizations.of(context)!.enter_your_confirm_password,
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
+              suffixIcon:
+                  const CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
             ),
           ),
           const SizedBox(height: 20),
@@ -146,9 +164,9 @@ class _SignUpFormState extends State<SignUpForm> {
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: "Username",
-              hintText: "Enter your username",
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.username,
+              hintText: AppLocalizations.of(context)!.enter_your_username,
               floatingLabelBehavior: FloatingLabelBehavior.always,
             ),
           ),
@@ -168,29 +186,32 @@ class _SignUpFormState extends State<SignUpForm> {
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: "Age",
-              hintText: "Enter your age",
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.age,
+              hintText: AppLocalizations.of(context)!.enter_your_age,
               floatingLabelBehavior: FloatingLabelBehavior.always,
             ),
           ),
           const SizedBox(height: 20),
           DropdownButtonFormField(
-            items: genderOptions.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+            value: gender,
+            items: [
+              DropdownMenuItem(
+                  value: "male",
+                  child: Text(AppLocalizations.of(context)!.male)),
+              DropdownMenuItem(
+                  value: "female",
+                  child: Text(AppLocalizations.of(context)!.female)),
+            ],
             onSaved: (newValue) {
               gender = newValue ?? "male";
             },
             onChanged: (value) {
               gender = value ?? "male";
             },
-            decoration: const InputDecoration(
-              labelText: "gender",
-              hintText: "Choose your gender",
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.gender,
+              hintText: AppLocalizations.of(context)!.select_your_gender,
               floatingLabelBehavior: FloatingLabelBehavior.always,
             ),
           ),
@@ -220,7 +241,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 }
               }
             },
-            child: const Text("Continue"),
+            child: Text(AppLocalizations.of(context)!.register),
           ),
         ],
       ),

@@ -50,19 +50,23 @@ class _SignFormState extends State<SignForm> {
             onSaved: (newValue) => email = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyEmailError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_email_error);
               }
               if (emailValidatorRegExp.hasMatch(value)) {
-                removeError(error: invalidEmailError);
+                removeError(
+                    error: AppLocalizations.of(context)!.invalid_email_error);
               }
               return;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyEmailError);
+                addError(
+                    error: AppLocalizations.of(context)!.empty_email_error);
                 return "";
               } else if (!emailValidatorRegExp.hasMatch(value)) {
-                addError(error: invalidEmailError);
+                addError(
+                    error: AppLocalizations.of(context)!.invalid_email_error);
                 return "";
               }
               return null;
@@ -81,13 +85,15 @@ class _SignFormState extends State<SignForm> {
             onSaved: (newValue) => password = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyPasswordError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_password_error);
               }
               return;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyPasswordError);
+                addError(
+                    error: AppLocalizations.of(context)!.empty_password_error);
                 return "";
               }
               return null;
@@ -103,16 +109,6 @@ class _SignFormState extends State<SignForm> {
           const SizedBox(height: 20),
           Row(
             children: [
-              Checkbox(
-                value: remember,
-                activeColor: kPrimaryColor,
-                onChanged: (value) {
-                  setState(() {
-                    remember = value;
-                  });
-                },
-              ),
-              const Text("Remember me"),
               const Spacer(),
               GestureDetector(
                 onTap: () => Navigator.pushNamed(
@@ -128,27 +124,36 @@ class _SignFormState extends State<SignForm> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () async {
-              removeError(error: 'user not found');
-              removeError(error: 'wrong password');
-              removeError(error: 'failed to login');
+              removeError(error: AppLocalizations.of(context)!.user_not_found);
+              removeError(error: AppLocalizations.of(context)!.wrong_password);
+              removeError(error: AppLocalizations.of(context)!.failed_to_login);
               try {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
 
                   KeyboardUtil.hideKeyboard(context);
-                  await AuthService.firebase()
-                      .logIn(email: email, password: password);
+                  await AuthService.firebase().logIn(
+                    email: email,
+                    password: password,
+                  );
                   if (context.mounted) {
                     Navigator.pushNamedAndRemoveUntil(
                         context, InitScreen.routeName, (_) => true);
                   }
                 }
               } on UserNotFoundAuthException {
-                addError(error: 'user not found');
+                if (context.mounted) {
+                  addError(error: AppLocalizations.of(context)!.user_not_found);
+                }
               } on WrongPasswordAuthException {
-                addError(error: 'wrong password');
+                if (context.mounted) {
+                  addError(error: AppLocalizations.of(context)!.wrong_password);
+                }
               } on GenericAuthException {
-                addError(error: 'failed to login');
+                if (context.mounted) {
+                  addError(
+                      error: AppLocalizations.of(context)!.failed_to_login);
+                }
               }
             },
             child: Text(AppLocalizations.of(context)!.login),

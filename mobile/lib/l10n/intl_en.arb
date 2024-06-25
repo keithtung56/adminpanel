@@ -49,6 +49,22 @@
   "enter_your_email":"Enter your email",
   "password":"password",
   "enter_your_password":"Enter your password",
+  "confirm_password":"confirm password",
+  "enter_your_confirm_password":"Re-enter your password",
   "no_account_text":"Don't have an account?",
-  "forget_password":"Forgot Password"
+  "forget_password":"Forgot Password",
+  "user_not_found":"User not found",
+  "wrong_password":"Wrong password",
+  "failed_to_login":"Failed to login",
+  "empty_email_error":"Please enter your email",
+  "invalid_email_error":"Please enter valid email",
+  "empty_password_error":"Please enter your password",
+  "too_short_password_error":"Password is too short",
+  "not_match_password_error":"Passwords don't match",
+  "empty_username_error":"Please enter your username",
+  "empty_age_error":"Please enter your age",
+  "register":"Register",
+  "register_account":"Register Account",
+  "male":"male",
+  "female":"female"
 }

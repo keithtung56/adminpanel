@@ -1,4 +1,3 @@
-
 import 'package:shop_app/services/auth/auth_user.dart';
 
 abstract class AuthProvider {

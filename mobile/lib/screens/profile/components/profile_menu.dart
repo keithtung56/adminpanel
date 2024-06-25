@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../../constants.dart';
 
 class ProfileMenu extends StatelessWidget {
@@ -32,6 +31,10 @@ class ProfileMenu extends StatelessWidget {
             SvgPicture.asset(
               icon,
               width: 22,
+              colorFilter: const ColorFilter.mode(
+                kPrimaryColor,
+                BlendMode.srcIn,
+              ),
             ),
             const SizedBox(width: 20),
             Expanded(child: Text(text)),

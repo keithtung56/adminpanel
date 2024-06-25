@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/constants.dart';
 import 'package:shop_app/services/crud/user/db_user.dart';
 import 'package:shop_app/services/crud/user/db_user_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -60,14 +59,16 @@ class _MyAccountFormState extends State<MyAccountForm> {
             onSaved: (newValue) => username = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: "");
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_username_error);
               }
               username = value;
               return;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: "");
+                addError(
+                    error: AppLocalizations.of(context)!.empty_username_error);
                 return "";
               }
               return null;
@@ -87,14 +88,15 @@ class _MyAccountFormState extends State<MyAccountForm> {
             onSaved: (newValue) => age = int.parse(newValue ?? "0"),
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: "");
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_age_error);
               }
               age = int.parse(value);
               return;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: "");
+                addError(error: AppLocalizations.of(context)!.empty_age_error);
                 return "";
               }
               return null;
@@ -108,12 +110,14 @@ class _MyAccountFormState extends State<MyAccountForm> {
           const SizedBox(height: 20),
           DropdownButtonFormField(
             value: gender,
-            items: genderOptions.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+            items: [
+              DropdownMenuItem(
+                  value: "male",
+                  child: Text(AppLocalizations.of(context)!.male)),
+              DropdownMenuItem(
+                  value: "female",
+                  child: Text(AppLocalizations.of(context)!.female)),
+            ],
             onSaved: (newValue) {
               gender = newValue ?? "male";
             },

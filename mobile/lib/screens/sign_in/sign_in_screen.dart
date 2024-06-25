@@ -6,7 +6,7 @@ import 'components/sign_form.dart';
 class SignInScreen extends StatelessWidget {
   static String routeName = "/sign_in";
 
-  const SignInScreen({Key? key});
+  const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +20,7 @@ class SignInScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center, // Center vertically
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 16),
                     Text(

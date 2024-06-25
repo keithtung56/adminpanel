@@ -59,15 +59,17 @@ class MyApp extends StatelessWidget {
                           }),
                         );
                       default:
-                        return const Scaffold(
+                        return const MaterialApp(
+                            home: Scaffold(
                           body: CircularProgressIndicator(),
-                        );
+                        ));
                     }
                   });
             default:
-              return const Scaffold(
+              return const MaterialApp(
+                  home: Scaffold(
                 body: CircularProgressIndicator(),
-              );
+              ));
           }
         });
   }

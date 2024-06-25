@@ -1,4 +1,3 @@
-
 import 'package:shop_app/services/auth/auth_provider.dart';
 import 'package:shop_app/services/auth/auth_user.dart';
 import 'package:shop_app/services/auth/firebase_auth_provider.dart';
