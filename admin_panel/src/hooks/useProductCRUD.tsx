@@ -6,7 +6,7 @@ import moment from "moment";
 import { DATE_DB_FORMAT } from "../constants";
 import { useProductImageCRUD } from "./useProductImageCRUD";
 
-type ProcessedOptions = {
+type Options = {
   option_name: string;
   choices: string[];
 }[];
@@ -19,7 +19,7 @@ export type Product = {
   modified_time: moment.Moment;
   description: string;
   img_id?: string;
-  options: ProcessedOptions;
+  options: Options;
 };
 export const useProductCRUD = () => {
   const [productList, setproductList] = useState<Product[]>([]);
@@ -34,17 +34,17 @@ export const useProductCRUD = () => {
           Object.entries(res).reduce(
             (acc: string[], [id, attr]: [string, any]) => {
               const { created_time, modified_time, options, ...others } = attr;
-
-              let processed_options = [] as ProcessedOptions;
+              let processedOptions: Options = [];
               if (options) {
-                processed_options = Object.entries(options).map(
-                  ([option_name, choicesObj]: [string, any]) => ({
-                    option_name,
-                    choices: Object.keys(choicesObj),
-                  })
-                );
+                processedOptions = Object.entries(options).map(
+                  ([key, value]) => {
+                    return {
+                      option_name: key,
+                      choices: value,
+                    };
+                  }
+                ) as Options;
               }
-
               return [
                 ...acc,
                 {
@@ -52,7 +52,7 @@ export const useProductCRUD = () => {
                   product_id: id,
                   created_time: moment(created_time, DATE_DB_FORMAT),
                   modified_time: moment(modified_time, DATE_DB_FORMAT),
-                  options: processed_options,
+                  options: processedOptions,
                 },
               ];
             },
@@ -98,13 +98,13 @@ export const useProductCRUD = () => {
         options.map(async ({ option_name, choices }) => {
           const choices_arr = choices.split(",");
           await Promise.all(
-            choices_arr.map(async (choice) => {
+            choices_arr.map(async (choice, index) => {
               await update(
                 ref(
                   database,
                   `/Products/${product_random_id}/options/${option_name}`
                 ),
-                { [choice]: "" }
+                { [index]: choice }
               );
             })
           );
@@ -187,19 +187,24 @@ export const useProductCRUD = () => {
       await update(ref(database, `/Products/${product_id}`), {
         options: {},
       });
-      await Promise.all(
-        options.map(async ({ option_name, choices }) => {
-          const choices_arr = choices.split(",");
-          await Promise.all(
-            choices_arr.map(async (choice) => {
-              await update(
-                ref(database, `/Products/${product_id}/options/${option_name}`),
-                { [choice]: "" }
-              );
-            })
-          );
-        })
-      );
+      if (options) {
+        await Promise.all(
+          options.map(async ({ option_name, choices }) => {
+            const choices_arr = choices.split(",");
+            await Promise.all(
+              choices_arr.map(async (choice, index) => {
+                await update(
+                  ref(
+                    database,
+                    `/Products/${product_id}/options/${option_name}`
+                  ),
+                  { [index]: choice }
+                );
+              })
+            );
+          })
+        );
+      }
     },
     []
   );

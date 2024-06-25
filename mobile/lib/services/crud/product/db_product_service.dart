@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:logger/logger.dart';
 import 'package:shop_app/services/crud/product/db_product.dart';
 
 class DBProductService {
@@ -13,6 +14,18 @@ class DBProductService {
         final imageUrl = await FirebaseStorage.instance
             .ref("Images/Products/$imgId")
             .getDownloadURL();
+
+        final optionsObj = val['options'];
+        var options = [] as dynamic;
+        try {
+          options = optionsObj.entries.map((e) {
+            final optionName = e.key;
+            final optionChoice = e.value.entries.map((e) => e.key);
+            return {optionName: optionChoice};
+          });
+        } catch (e) {
+          Logger().d(e.toString());
+        }
         return DBProduct(
           id: e.key,
           categoryId: val['category_id'],
@@ -22,6 +35,7 @@ class DBProductService {
           createdTime: val['created_time'],
           modifiedTime: val['modified_time'],
           imgUrl: imageUrl,
+          options: options,
         );
       }).toList());
       return productsList;
@@ -56,6 +70,18 @@ class DBProductService {
     final imageUrl = await FirebaseStorage.instance
         .ref("Images/Products/$imgId")
         .getDownloadURL();
+    final optionsObj = val['options'];
+    Logger().d(optionsObj.toString());
+    var options = [] as dynamic;
+    try {
+      options = optionsObj.entries.map((e) {
+        final optionName = e.key;
+        final optionChoice = e.value.entries.map((e) => e.key);
+        return {optionName: optionChoice};
+      });
+    } catch (e) {
+      Logger().d(e.toString());
+    }
     return DBProduct(
       id: id,
       categoryId: val['category_id'],
@@ -65,6 +91,7 @@ class DBProductService {
       createdTime: val['created_time'],
       modifiedTime: val['modified_time'],
       imgUrl: imageUrl,
+      options: options,
     );
   }
 }

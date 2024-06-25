@@ -173,7 +173,6 @@ export const AddProductForm = memo(({ showAddForm, setShowAddForm }: Props) => {
             Add Option
           </Button>
           {formik.values.options.map(({ option_name, choices }, index) => {
-            console.log(index);
             return (
               <OptionField key={index}>
                 <OptionTextField

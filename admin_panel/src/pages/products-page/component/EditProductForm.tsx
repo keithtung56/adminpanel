@@ -58,7 +58,6 @@ export const EditProductForm = memo(
     useEffect(() => {
       setCurrentImgId(product.img_id ?? "");
     }, [product, setCurrentImgId]);
-
     const formik = useFormik({
       initialValues: {
         product_name: product.product_name,
@@ -187,7 +186,6 @@ export const EditProductForm = memo(
               Add Option
             </Button>
             {formik.values.options.map(({ option_name, choices }, index) => {
-              console.log(index);
               return (
                 <OptionField key={index}>
                   <OptionTextField

@@ -140,7 +140,6 @@ export const LoginPage = memo(() => {
           </LoginButton>
         </Tail>
       </StyledCard>
-      ;
     </StyledBox>
   );
 });
