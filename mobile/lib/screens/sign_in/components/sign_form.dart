@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/screens/init_screen.dart';
 import 'package:shop_app/services/auth/auth_exceptions.dart';
 import 'package:shop_app/services/auth/auth_service.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/form_error.dart';
 import '../../../constants.dart';
@@ -67,11 +67,12 @@ class _SignFormState extends State<SignForm> {
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: "Email",
-              hintText: "Enter your email",
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.email,
+              hintText: AppLocalizations.of(context)!.enter_your_email,
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
+              suffixIcon:
+                  const CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
             ),
           ),
           const SizedBox(height: 20),
@@ -91,11 +92,12 @@ class _SignFormState extends State<SignForm> {
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: "Password",
-              hintText: "Enter your password",
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.password,
+              hintText: AppLocalizations.of(context)!.enter_your_password,
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
+              suffixIcon:
+                  const CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
             ),
           ),
           const SizedBox(height: 20),
@@ -115,9 +117,9 @@ class _SignFormState extends State<SignForm> {
               GestureDetector(
                 onTap: () => Navigator.pushNamed(
                     context, ForgotPasswordScreen.routeName),
-                child: const Text(
-                  "Forgot Password",
-                  style: TextStyle(decoration: TextDecoration.underline),
+                child: Text(
+                  AppLocalizations.of(context)!.forget_password,
+                  style: const TextStyle(decoration: TextDecoration.underline),
                 ),
               )
             ],
@@ -149,7 +151,7 @@ class _SignFormState extends State<SignForm> {
                 addError(error: 'failed to login');
               }
             },
-            child: const Text("Login"),
+            child: Text(AppLocalizations.of(context)!.login),
           ),
         ],
       ),

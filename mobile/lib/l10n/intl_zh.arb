@@ -6,6 +6,9 @@
   "my_orders":"我的訂單",
   "settings":"設置",
   "logout":"登出",
+  "login":"登入",
+  "sign_in":"登入",
+  "sign_up":"注冊",
   "profile":"用戶資料",
   "favorites":"我的最愛",
   "username":"用戶名稱",
@@ -41,5 +44,11 @@
   "quantity":"件數",
   "total_quantity":"總件數",
   "total":"總額",
-  "order_details":"訂單詳情"
+  "order_details":"訂單詳情",
+  "email":"電郵地址",
+  "enter_your_email":"輸入你的電郵地址",
+  "password":"密碼",
+  "enter_your_password":"輸入你的密碼",
+  "no_account_text":"沒有帳戶?",
+  "forget_password":"忘記密碼"
   }

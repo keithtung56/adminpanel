@@ -6,6 +6,9 @@
   "my_orders":"My Orders",
   "settings":"Settings",
   "logout":"Logout",
+  "login":"Login",
+  "sign_in":"Sign In",
+  "sign_up":"Sign Up",
   "profile":"User Profile",
   "favorites":"Favorites",
   "username":"Username",
@@ -41,5 +44,11 @@
   "quantity":"quantity",
   "total_quantity":"total quantity",
   "total":"total",
-  "order_details":"Order Details"
+  "order_details":"Order Details",
+  "email":"email",
+  "enter_your_email":"Enter your email",
+  "password":"password",
+  "enter_your_password":"Enter your password",
+  "no_account_text":"Don't have an account?",
+  "forget_password":"Forgot Password"
 }
