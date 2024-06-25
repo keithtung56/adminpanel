@@ -6,6 +6,7 @@ class DBCart {
 
   //not exist in DB
   final double total;
+
   const DBCart(
       {required this.userId, required this.cartItems, required this.total});
 }

@@ -1,12 +1,14 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:logger/logger.dart';
 import 'package:shop_app/services/crud/product/db_product.dart';
 
 class DBProductService {
   Future<List<DBProduct>> getProductList() async {
     final snapshot = await FirebaseDatabase.instance.ref("Products").get();
-    if (snapshot.exists) {
+    if (!snapshot.exists) {
+      return [];
+    }
+    try {
       final val = snapshot.value as Map<dynamic, dynamic>;
       var productsList = await Future.wait(val.entries.map((e) async {
         final val = e.value;
@@ -15,17 +17,15 @@ class DBProductService {
             .ref("Images/Products/$imgId")
             .getDownloadURL();
 
-        final optionsObj = val['options'];
-        var options = [] as dynamic;
-        try {
-          options = optionsObj.entries.map((e) {
-            final optionName = e.key;
-            final optionChoice = e.value.entries.map((e) => e.key);
-            return {optionName: optionChoice};
-          });
-        } catch (e) {
-          Logger().d(e.toString());
-        }
+        final optionsObj = val['options'] as Map<dynamic, dynamic>;
+        final options = val['options'] != null
+            ? optionsObj.entries.map((e) {
+                final optionName = e.key;
+                final optionChoice = e.value;
+                return {'optionName': optionName, 'optionChoice': optionChoice};
+              }).toList()
+            : [] as List<Map<dynamic, dynamic>>;
+
         return DBProduct(
           id: e.key,
           categoryId: val['category_id'],
@@ -39,8 +39,9 @@ class DBProductService {
         );
       }).toList());
       return productsList;
+    } catch (_) {
+      return [];
     }
-    return [];
   }
 
   Future<List<DBProduct>> getProductListByCategoryId(String categoryId) async {
@@ -70,18 +71,14 @@ class DBProductService {
     final imageUrl = await FirebaseStorage.instance
         .ref("Images/Products/$imgId")
         .getDownloadURL();
-    final optionsObj = val['options'];
-    Logger().d(optionsObj.toString());
-    var options = [] as dynamic;
-    try {
-      options = optionsObj.entries.map((e) {
-        final optionName = e.key;
-        final optionChoice = e.value.entries.map((e) => e.key);
-        return {optionName: optionChoice};
-      });
-    } catch (e) {
-      Logger().d(e.toString());
-    }
+    final optionsObj = val['options'] as Map<dynamic, dynamic>;
+    final options = val['options'] != null
+        ? optionsObj.entries.map((e) {
+            final optionName = e.key;
+            final optionChoice = e.value;
+            return {'optionName': optionName, 'optionChoice': optionChoice};
+          }).toList()
+        : [] as List<Map<dynamic, dynamic>>;
     return DBProduct(
       id: id,
       categoryId: val['category_id'],

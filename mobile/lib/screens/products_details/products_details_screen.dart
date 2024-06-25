@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logger/logger.dart';
 import 'package:shop_app/screens/cart/cart_screen.dart';
 import 'package:shop_app/screens/products_details/components/product_images.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
@@ -21,6 +22,7 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int quantity = 1;
+  var options = {};
   @override
   Widget build(BuildContext context) {
     final ProductDetailsArguments agrs =
@@ -92,12 +94,45 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ProductDescription(
                   product: product,
                 ),
-                const TopRoundedContainer(
-                  color: Color(0xFFF6F7F9),
+                TopRoundedContainer(
+                  color: const Color(0xFFF6F7F9),
                   child: Column(
-                    children: [
-                      // ColorDots(product: product),
-                    ],
+                    children: product.options.map((optionObj) {
+                      final optionName = optionObj['optionName'];
+                      final optionChoice = (optionObj['optionChoice'] as List)
+                          .map((item) => item.toString())
+                          .toList();
+                      return Container(
+                        margin: const EdgeInsets.all(
+                            8.0), // Adjust this value as needed
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: optionName,
+                          ),
+                          child: SizedBox(
+                            height: 30.0, // Adjust this value as needed
+                            width: 50.0, // Adjust this value as needed
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: options[optionName],
+                                isExpanded: true,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    options[optionName] = newValue;
+                                  });
+                                },
+                                items: optionChoice.map((choice) {
+                                  return DropdownMenuItem<String>(
+                                    value: choice,
+                                    child: Text(choice),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
               ],
@@ -158,7 +193,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       Navigator.pushNamedAndRemoveUntil(
                           context, SignInScreen.routeName, (_) => true);
                     } else {
-                      await DBCartService().addItemToCart(product.id, quantity);
+                      if (options.keys.length != product.options.length) {
+                        return;
+                      }
+                      Logger().d('1');
+                      await DBCartService()
+                          .addItemToCart(product.id, quantity, options);
                       if (context.mounted) {
                         Navigator.pushNamed(context, CartScreen.routeName);
                       }

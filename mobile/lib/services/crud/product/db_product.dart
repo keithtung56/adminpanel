@@ -10,7 +10,7 @@ class DBProduct {
   final String createdTime;
   final String modifiedTime;
   final String imgUrl;
-  final List<Map<String, List<String>>> options;
+  final List<Map<dynamic, dynamic>> options;
 
   const DBProduct({
     required this.id,

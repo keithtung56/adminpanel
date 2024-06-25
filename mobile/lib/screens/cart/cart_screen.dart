@@ -52,12 +52,12 @@ class _CartScreenState extends State<CartScreen> {
                     itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Dismissible(
-                        key: Key(snapshot.data!.cartItems[index].productId
-                            .toString()),
+                        key:
+                            Key(snapshot.data!.cartItems[index].uid.toString()),
                         direction: DismissDirection.endToStart,
                         onDismissed: (direction) async {
-                          await DBCartService().removeItemFromCart(
-                              snapshot.data!.cartItems[index].productId);
+                          String uid = snapshot.data!.cartItems[index].uid;
+                          await DBCartService().removeItemFromCart(uid);
                         },
                         background: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -24,7 +24,8 @@ class _OrderProductCardState extends State<OrderProductCard> {
   void initState() {
     super.initState();
 
-    _productDetails = DBProductService().getProductById(widget.product.id);
+    _productDetails =
+        DBProductService().getProductById(widget.product.productId);
   }
 
   @override
@@ -62,6 +63,15 @@ class _OrderProductCardState extends State<OrderProductCard> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
+                      ...widget.product.options.entries.map((entry) {
+                        return Text(
+                          '${entry.key}: ${entry.value}',
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 13),
+                          textDirection: TextDirection.ltr,
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      }).toList(),
                       Text.rich(
                         TextSpan(
                           text: "\$${snapshot.data!.price}",
