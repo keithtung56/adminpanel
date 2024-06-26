@@ -140,6 +140,7 @@ export const SelectUserForm = memo(
           <StyledTable
             //@ts-ignore
             data={sortedUserList}
+            //@ts-ignore
             generator={listGenerator}
             unique_col={"uid"}
           />
