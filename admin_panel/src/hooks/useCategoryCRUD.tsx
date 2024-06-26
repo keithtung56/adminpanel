@@ -69,20 +69,23 @@ export const useCategoryCRUD = () => {
         newCategory
       );
     },
-    []
+    [uploadCategoryImage]
   );
 
-  const deleteCategory = useCallback(async (category_id: string) => {
-    const snapshot = await get(
-      ref(database, `/Categories/${category_id}/img_id`)
-    );
-    const img_id: string = snapshot.val();
-    if (img_id) {
-      deleteCategoryImage(img_id);
-    }
+  const deleteCategory = useCallback(
+    async (category_id: string) => {
+      const snapshot = await get(
+        ref(database, `/Categories/${category_id}/img_id`)
+      );
+      const img_id: string = snapshot.val();
+      if (img_id) {
+        deleteCategoryImage(img_id);
+      }
 
-    await remove(ref(database, `/Categories/${category_id}`));
-  }, []);
+      await remove(ref(database, `/Categories/${category_id}`));
+    },
+    [deleteCategoryImage]
+  );
 
   const updateCategory = useCallback(
     async (
@@ -134,7 +137,7 @@ export const useCategoryCRUD = () => {
 
       await update(ref(database, `/Categories/${category_id}`), newCategory);
     },
-    []
+    [deleteCategoryImage, uploadCategoryImage]
   );
 
   return { categoriesList, createCategory, deleteCategory, updateCategory };

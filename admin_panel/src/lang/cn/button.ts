@@ -3,6 +3,7 @@ export const button = {
     delete: "刪除",
     edit: "修改",
     view: "查看",
+    send: "發送",
     confirm: "確定",
     cancel: "取消",
     logout: "登出",

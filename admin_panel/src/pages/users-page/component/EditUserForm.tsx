@@ -4,7 +4,7 @@ import { memo } from "react";
 import styled from "styled-components";
 import { Dialog, Title } from "../../../components";
 import { EditCustomerSchema } from "../../../yup";
-import { useUserCRUD } from "../../../hooks";
+import { User, useUserCRUD } from "../../../hooks";
 import { useTranslation } from "react-i18next";
 
 const StyledBox = styled(Box)`
@@ -17,12 +17,7 @@ const StyledTextField = styled(TextField)`
 type Props = {
   showEditForm: boolean;
   setShowEditForm: React.Dispatch<React.SetStateAction<boolean>>;
-  editUser: {
-    uid: string;
-    username: string;
-    gender: string;
-    age: number;
-  };
+  editUser: User;
 };
 export const EditUserForm = memo(
   ({ showEditForm, setShowEditForm, editUser }: Props) => {
@@ -33,6 +28,7 @@ export const EditUserForm = memo(
         username: editUser.username,
         gender: editUser.gender,
         age: editUser.age,
+        phone: editUser.phone,
       },
       validationSchema: EditCustomerSchema,
       onSubmit: async (values) => {
@@ -40,7 +36,8 @@ export const EditUserForm = memo(
           editUser.uid,
           values.username,
           values.gender,
-          values.age
+          values.age,
+          values.phone
         );
         setShowEditForm(false);
       },
@@ -85,6 +82,22 @@ export const EditUserForm = memo(
             error={formik.touched.age && Boolean(formik.errors.age)}
             helperText={
               formik.touched.age && formik.errors.age && t(formik.errors.age)
+            }
+            fullWidth
+          />
+
+          <StyledTextField
+            id="phone"
+            label={t("user.phone")}
+            name="phone"
+            value={formik.values.phone}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.phone && Boolean(formik.errors.phone)}
+            helperText={
+              formik.touched.phone &&
+              formik.errors.phone &&
+              t(formik.errors.phone)
             }
             fullWidth
           />

@@ -13,6 +13,7 @@
     "@mui/material": "^5.15.19",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@mui/x-charts": "^7.6.1",
+    "dotenv": "^16.4.5",
     "firebase": "^10.12.2",
     "formik": "^2.4.6",
     "i18next": "^23.11.5",

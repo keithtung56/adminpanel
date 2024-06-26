@@ -3,6 +3,7 @@ export const button = {
     delete: "Delete",
     edit: "Edit",
     view: "View",
+    send: "Send",
     confirm: "Confirm",
     cancel: "Cancel",
     logout: "Logout",

@@ -98,6 +98,11 @@ export const UsersPage = memo(() => {
         render: (data: any) => data.email,
       },
       {
+        key: "email",
+        header: t("user.phone"),
+        render: (data: any) => data.phone,
+      },
+      {
         key: "gender",
         header: t("user.gender"),
         render: (data: any) => t(`user.${data.gender}`),

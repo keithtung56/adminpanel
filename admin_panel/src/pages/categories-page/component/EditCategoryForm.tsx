@@ -73,8 +73,9 @@ export const EditCategoryForm = memo(
         handleClose={(value: boolean) => {
           if (!value) {
             setShowEditForm(false);
+          } else {
+            formik.handleSubmit();
           }
-          formik.handleSubmit();
         }}
         fullWidth
       >

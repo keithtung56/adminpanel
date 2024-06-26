@@ -26,6 +26,7 @@ export const AddUserForm = memo(({ showAddForm, setShowAddForm }: Props) => {
       email: "",
       username: "",
       password: "",
+      phone: "",
       gender: "",
       age: 0,
     },
@@ -36,6 +37,7 @@ export const AddUserForm = memo(({ showAddForm, setShowAddForm }: Props) => {
         values.username,
         values.email,
         values.password,
+        values.phone,
         values.age,
         values.gender,
         res.user.uid
@@ -102,6 +104,22 @@ export const AddUserForm = memo(({ showAddForm, setShowAddForm }: Props) => {
           }
           fullWidth
         />
+        <StyledTextField
+          id="password"
+          label={t("user.phone")}
+          name="phone"
+          value={formik.values.phone}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.phone && Boolean(formik.errors.phone)}
+          helperText={
+            formik.touched.phone &&
+            formik.errors.phone &&
+            t(formik.errors.phone)
+          }
+          fullWidth
+        />
+
         <StyledTextField
           type="number"
           id="age"

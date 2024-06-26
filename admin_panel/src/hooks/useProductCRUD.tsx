@@ -111,17 +111,22 @@ export const useProductCRUD = () => {
         })
       );
     },
-    []
+    [uploadProductImage]
   );
 
-  const deleteProduct = useCallback(async (product_id: string) => {
-    const snapshot = await get(ref(database, `/Products/${product_id}/img_id`));
-    const img_id: string = snapshot.val();
-    if (img_id) {
-      deleteProductImage(img_id);
-    }
-    await remove(ref(database, `/Products/${product_id}`));
-  }, []);
+  const deleteProduct = useCallback(
+    async (product_id: string) => {
+      const snapshot = await get(
+        ref(database, `/Products/${product_id}/img_id`)
+      );
+      const img_id: string = snapshot.val();
+      if (img_id) {
+        deleteProductImage(img_id);
+      }
+      await remove(ref(database, `/Products/${product_id}`));
+    },
+    [deleteProductImage]
+  );
 
   const updateProduct = useCallback(
     async (
@@ -206,7 +211,7 @@ export const useProductCRUD = () => {
         );
       }
     },
-    []
+    [deleteProductImage, uploadProductImage]
   );
 
   return { productList, createProduct, deleteProduct, updateProduct };

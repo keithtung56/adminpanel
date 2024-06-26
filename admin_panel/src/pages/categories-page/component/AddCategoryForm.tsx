@@ -61,8 +61,9 @@ export const AddCategoryForm = memo(
         handleClose={(value: boolean) => {
           if (!value) {
             setShowAddForm(false);
+          } else {
+            formik.handleSubmit();
           }
-          formik.handleSubmit();
         }}
         fullWidth
       >

@@ -14,6 +14,7 @@ export type User = {
   uid: string;
   username: string;
   password: string;
+  phone: string;
   email: string;
   age: number;
   gender: string;
@@ -54,6 +55,7 @@ export const useUserCRUD = () => {
       username: string,
       email: string,
       password: string,
+      phone: string,
       age: number,
       gender: string,
       uid: string
@@ -62,6 +64,7 @@ export const useUserCRUD = () => {
         username,
         email,
         password,
+        phone,
         age,
         gender,
         created_time: moment().format(DATE_DB_FORMAT),
@@ -106,11 +109,18 @@ export const useUserCRUD = () => {
   }, []);
 
   const updateUser = useCallback(
-    async (uid: string, username: string, gender: string, age: number) => {
+    async (
+      uid: string,
+      username: string,
+      gender: string,
+      age: number,
+      phone: string
+    ) => {
       await update(ref(database, `Users/${uid}`), {
         username,
         gender,
         age,
+        phone,
         modified_time: moment().format(DATE_DB_FORMAT),
       });
     },

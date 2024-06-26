@@ -10,7 +10,7 @@ import styled from "styled-components";
 
 type GenericTableGenerator = {
   key: string;
-  header: string;
+  header: string | (() => JSX.Element | string);
   render: (data: any) => string;
 };
 
@@ -35,7 +35,11 @@ export const GenericTable = memo(
         <StyledTableHead>
           <TableRow>
             {generator.map((col) => (
-              <TableCell key={col.key}>{String(col.header)}</TableCell>
+              <TableCell key={col.key}>
+                {typeof col.header === "function"
+                  ? col.header()
+                  : String(col.header)}
+              </TableCell>
             ))}
           </TableRow>
         </StyledTableHead>

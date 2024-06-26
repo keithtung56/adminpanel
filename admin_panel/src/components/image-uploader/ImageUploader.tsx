@@ -76,7 +76,7 @@ export const ImageUploader = memo(
         setImageChanged(true);
         setIsHover(false);
       }
-    }, [setImageFile, setImgURL]);
+    }, [setImageFile, setImgURL, setImageChanged]);
 
     const RemoveButtonOnClick = useCallback(() => {
       setImgURL("");
@@ -85,7 +85,7 @@ export const ImageUploader = memo(
       if (uploadInput.current) {
         uploadInput.current.value = "";
       }
-    }, [setImgURL, setImageFile]);
+    }, [setImgURL, setImageFile, setImageChanged]);
 
     const ReplaceButtonOnClick = useCallback(() => {
       if (uploadInput.current) {
