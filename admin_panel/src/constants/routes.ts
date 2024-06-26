@@ -6,5 +6,6 @@ export const ROUTES = Object.freeze({
     Categories: { path: "/categories", key: "Categories" },
     Users: { path: "/users", key: "Users" },
     Marketing: { path: "/marketing", key: "Marketing" },
+    Video: { path: "/video", key: "Video" },
     NotFound: { path: "*", key: "NotFound" },
 })

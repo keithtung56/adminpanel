@@ -11,6 +11,7 @@ import {
   ProtectedPage,
   UsersPage,
   CategoriesPage,
+  VideoPage,
 } from "../pages";
 import { ROUTES } from "../constants";
 
@@ -75,6 +76,16 @@ export const routes: RouteObject[] = [
       <ProtectedPage>
         <BasePage>
           <MarketingPage />
+        </BasePage>
+      </ProtectedPage>
+    ),
+  },
+  {
+    path: ROUTES.Video.path,
+    element: (
+      <ProtectedPage>
+        <BasePage>
+          <VideoPage />
         </BasePage>
       </ProtectedPage>
     ),

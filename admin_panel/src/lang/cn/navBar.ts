@@ -8,5 +8,6 @@ export const navBar = {
     "Analysis": "分析",
     "Marketing": "行銷",
     "NotFound": "NotFound",
-    "Categories": "產品類別"
+    "Categories": "產品類別",
+    "Video": "影片",
 }

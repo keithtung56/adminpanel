@@ -12,6 +12,7 @@ import {
   ProductIcon,
   UserIcon,
   CategoryIcon,
+  VideoIcon,
 } from "../../icons";
 
 const StyledCard = styled(Card)`
@@ -86,6 +87,12 @@ const StyledCategoryIcon = styled(CategoryIcon)`
   }
   transform: scale(0.6);
 `;
+const StyledVideoIcon = styled(VideoIcon)`
+  * {
+    stroke: ${({ theme }) => theme.colors.black};
+  }
+  transform: scale(0.6);
+`;
 export const NavBar = memo(() => {
   const navigate = useNavigate();
   const { matchpath } = useCurrentPath();
@@ -121,6 +128,11 @@ export const NavBar = memo(() => {
         text: ROUTES.Marketing.key,
         navagation_link: ROUTES.Marketing.path,
         icon: <StyledMarketingIcon />,
+      },
+      {
+        text: ROUTES.Video.key,
+        navagation_link: ROUTES.Video.path,
+        icon: <StyledVideoIcon />,
       },
     ],
     []

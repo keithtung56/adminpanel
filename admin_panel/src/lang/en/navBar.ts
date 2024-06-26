@@ -8,5 +8,6 @@ export const navBar = {
     "Analysis": "Analysis",
     "Marketing": "Marketing",
     "NotFound": "NotFound",
-    "Categories": "Catergories"
+    "Categories": "Catergories",
+    "Video": "Video",
 }

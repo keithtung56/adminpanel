@@ -13,5 +13,6 @@ import MarketingIcon from './MarketingIcon.svg?react'
 import ViewIcon from './ViewIcon.svg?react'
 import SendIcon from './SendIcon.svg?react'
 import CategoryIcon from './CategoryIcon.svg?react'
+import VideoIcon from './VideoIcon.svg?react'
 
-export { AddIcon, DeleteIcon, ChineseIcon, EnglishIcon, LogoIcon, EditIcon, ListIcon, HomeIcon, ProductIcon, UserIcon, OrderIcon, MarketingIcon, ViewIcon, SendIcon, CategoryIcon }
+export { AddIcon, DeleteIcon, ChineseIcon, EnglishIcon, LogoIcon, EditIcon, ListIcon, HomeIcon, ProductIcon, UserIcon, OrderIcon, MarketingIcon, ViewIcon, SendIcon, CategoryIcon, VideoIcon }
