@@ -6,9 +6,6 @@ import { useCurrentPath } from "../../hooks";
 import { useTranslation } from "react-i18next";
 import { useNavBar } from "../../hooks/useNavBar";
 
-const AppBarWrapper = styled(Box)`
-  height: 10vh;
-`;
 const BodyWrapper = styled.div`
   display: flex;
   height: 90vh;
@@ -27,13 +24,11 @@ export const BasePage = memo<PropsWithChildren>(({ children }) => {
   const { showNavBar, listIconOnClick } = useNavBar();
   return (
     <>
-      <AppBarWrapper>
-        <AppBar listIconOnClick={listIconOnClick} />
-      </AppBarWrapper>
+      <AppBar listIconOnClick={listIconOnClick} />
       <BodyWrapper>
-        {showNavBar && <NavBar />}
+        <NavBar open={showNavBar} />
         <RightWrapper>
-          <Box>
+          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
             <Title>{t(`navBar.${matchpath}`)}</Title>
           </Box>
           {children}

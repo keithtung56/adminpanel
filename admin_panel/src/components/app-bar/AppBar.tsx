@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { ChineseIcon, EnglishIcon, ListIcon, LogoIcon } from "../../icons";
 
 const StyledAppBar = styled(MuiAppBar)`
-  height: 100%;
   display: flex;
   justify-content: center;
 `;
@@ -73,7 +72,10 @@ export const AppBar = memo(({ listIconOnClick }: Props) => {
   const theme = useTheme();
 
   return (
-    <StyledAppBar position="static" sx={{ bgcolor: theme.colors.greys[8] }}>
+    <StyledAppBar
+      position="relative"
+      sx={{ bgcolor: theme.colors.greys[8], zIndex: 1400 }}
+    >
       <Toolbar>
         <LeftWrapper>
           <Button

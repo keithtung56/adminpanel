@@ -1,4 +1,15 @@
-import { Box, Button, Card } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+} from "@mui/material";
 import { memo, useMemo } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -15,42 +26,13 @@ import {
   VideoIcon,
 } from "../../icons";
 
-const StyledCard = styled(Card)`
-  display: flex;
-  flex-direction: column;
-  width: 15vw;
-  border-radius: ;
-`;
-const ButtonsWrapper = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  margin-top: 3vh;
-  justify-contents: center;
-  align-items: center;
-  gap: 3vh;
-`;
-const StyledButton = styled(Button)<{ $selected?: boolean }>`
-  height: 5vh;
-  color: ${({ theme }) => theme.colors.greys[5]};
-  background-color: ${({ $selected, theme }) =>
+const StyledListItemButton = styled(ListItemButton)<{ $selected?: boolean }>`
+  background-color: ${({ theme, $selected }) =>
     $selected ? theme.colors.greys[0] : theme.colors.white};
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.greys[1]};
-  }
-  font-size: ${({ theme }) => theme.fontSize.medium};
-  width: 100%;
 `;
-const IconWrapper = styled(Box)`
-  margin-left: 0;
-  margin-right: auto;
-  display: flex;
-  justify-contents: center;
+const StyledDrawer = styled(Drawer)`
+  position: static;
 `;
-const TextWrapper = styled(Box)`
-  margin-right: auto;
-`;
-
 const StyledHomeIcon = styled(HomeIcon)`
   * {
     stroke: ${({ theme }) => theme.colors.white};
@@ -93,7 +75,10 @@ const StyledVideoIcon = styled(VideoIcon)`
   }
   transform: scale(0.6);
 `;
-export const NavBar = memo(() => {
+type Props = {
+  open: boolean;
+};
+export const NavBar = memo(({ open }: Props) => {
   const navigate = useNavigate();
   const { matchpath } = useCurrentPath();
   const { t } = useTranslation();
@@ -139,22 +124,36 @@ export const NavBar = memo(() => {
   );
 
   return (
-    <StyledCard>
-      <ButtonsWrapper>
-        {Buttons.map(({ text, navagation_link, icon }) => (
-          <StyledButton
-            onClick={() => {
-              navigate(navagation_link);
-            }}
-            key={text}
-            $selected={text == matchpath}
-          >
-            <IconWrapper>{icon}</IconWrapper>
-            <TextWrapper>{t(`navBar.${text}`)}</TextWrapper>
-          </StyledButton>
-        ))}
-      </ButtonsWrapper>
-    </StyledCard>
+    <StyledDrawer
+      variant="persistent"
+      anchor="left"
+      open={open}
+      sx={{
+        width: open ? 200 : 0,
+        [`& .MuiDrawer-paper`]: {
+          width: open ? 200 : 0,
+        }, //z-index
+      }}
+    >
+      <Toolbar />
+      <Box sx={{ overflow: "auto" }}>
+        <List>
+          {Buttons.map(({ text, navagation_link, icon }) => (
+            <ListItem>
+              <StyledListItemButton
+                onClick={() => {
+                  navigate(navagation_link);
+                }}
+                $selected={text === matchpath}
+              >
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText>{t(`navBar.${text}`)}</ListItemText>
+              </StyledListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </StyledDrawer>
   );
 });
 
