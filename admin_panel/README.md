@@ -1,6 +1,6 @@
 #Set Up<br />
 
-create .env under /src<br />
+create .env under /admin_panel<br />
 
 .env:<br />
 VITE_TWILIO_SID=[your twilio sid]<br />
