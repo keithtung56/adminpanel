@@ -21,7 +21,8 @@ export const useMonthlySalesData = () => {
       "12": 0,
     };
 
-    orderList.forEach(({ created_time, total }) => {
+    orderList.forEach(({ created_time, total, status }) => {
+      if (status == "unpaid") return;
       const month = created_time.format("M");
       init[month] += total;
     });

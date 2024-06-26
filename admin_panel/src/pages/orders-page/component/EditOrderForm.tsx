@@ -52,7 +52,8 @@ export const EditOrderForm = memo(
         status: order.status,
       },
       onSubmit: async (values) => {
-        await updateOrderStatus(values.status);
+        await updateOrderStatus(order.order_id, values.status);
+        setShowEditOrderForm(false);
       },
     });
 

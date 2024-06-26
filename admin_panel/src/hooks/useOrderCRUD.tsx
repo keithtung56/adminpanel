@@ -157,9 +157,12 @@ export const useOrderCRUD = () => {
     [productList]
   );
 
-  const updateOrderStatus = useCallback(async (order_id: String, status) => {
-    await update(ref(database, `/Orders/${order_id}`), { status });
-  }, []);
+  const updateOrderStatus = useCallback(
+    async (order_id: String, status: Order["status"]) => {
+      await update(ref(database, `/Orders/${order_id}`), { status });
+    },
+    []
+  );
   return {
     orderList,
     createOrder,

@@ -8,9 +8,11 @@ export const useTodaySalesData = () => {
     let sales = 0;
     let count = 0;
     const current_date = new Date();
-    orderList.forEach(({ created_time, total }) => {
+    orderList.forEach(({ created_time, total, status }) => {
       if (created_time.isSame(current_date, "day")) {
-        sales += total;
+        if (status === "paid") {
+          sales += total;
+        }
         count += 1;
       }
     });
