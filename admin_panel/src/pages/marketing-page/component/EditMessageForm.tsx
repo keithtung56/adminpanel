@@ -39,7 +39,7 @@ export const EditMessageForm = memo(
 
     return (
       <Dialog
-        title={<Title>{t("form.addMessage.title")}</Title>}
+        title={<Title>{t("form.editMessage.title")}</Title>}
         open={showEditForm}
         handleClose={(value: boolean) => {
           if (!value) {

@@ -4,6 +4,7 @@ export const user = {
     gender: "性別",
     age: "年齡",
     password: "密碼",
+    phone: "電話",
     male: "男",
     female: "女",
     created_time: "創建時間",

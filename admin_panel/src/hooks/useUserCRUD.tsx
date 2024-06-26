@@ -30,16 +30,19 @@ export const useUserCRUD = () => {
       if (res) {
         setuserList(
           //@ts-ignore
-          Object.keys(res).reduce(
-            (acc: string[], cur) => [
-              ...acc,
-              {
-                ...res[cur],
-                uid: cur,
-                created_time: moment(res[cur].created_time, DATE_DB_FORMAT),
-                modified_time: moment(res[cur].modified_time, DATE_DB_FORMAT),
-              },
-            ],
+          Object.entries(res).reduce(
+            (acc: string[], [uid, attr]: [string, any]) => {
+              const { created_time, modified_time, ...other } = attr;
+              return [
+                ...acc,
+                {
+                  ...other,
+                  uid,
+                  created_time: moment(created_time, DATE_DB_FORMAT),
+                  modified_time: moment(modified_time, DATE_DB_FORMAT),
+                },
+              ];
+            },
             []
           )
         );

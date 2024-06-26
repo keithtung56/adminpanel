@@ -28,6 +28,9 @@ export const form = {
     },
     addCategory: { title: "新增類別" },
     editCategory: { title: "修改類別" },
+    addMessage: { title: "新增短訊" },
+    editMessage: { title: "修改短訊" },
+    sendMessage: { title: "發送短訊" },
     login: {
         email: "電郵地址",
         password: "密碼",

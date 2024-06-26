@@ -98,7 +98,7 @@ export const MarketingPage = memo(() => {
       },
       {
         key: "content",
-        header: t("category.message_content"),
+        header: t("message.content"),
         render: (data: any) => data.content,
       },
       {

@@ -11,6 +11,7 @@ import {
   OrderIcon,
   ProductIcon,
   UserIcon,
+  CategoryIcon,
 } from "../../icons";
 
 const StyledCard = styled(Card)`
@@ -37,7 +38,7 @@ const StyledButton = styled(Button)<{ $selected?: boolean }>`
     background-color: ${({ theme }) => theme.colors.greys[1]};
   }
   font-size: ${({ theme }) => theme.fontSize.medium};
-  width: 80%;
+  width: 100%;
 `;
 const IconWrapper = styled(Box)`
   margin-left: 0;
@@ -79,6 +80,12 @@ const StyledMarketingIcon = styled(MarketingIcon)`
   }
   transform: scale(0.6);
 `;
+const StyledCategoryIcon = styled(CategoryIcon)`
+  * {
+    stroke: ${({ theme }) => theme.colors.black};
+  }
+  transform: scale(0.6);
+`;
 export const NavBar = memo(() => {
   const navigate = useNavigate();
   const { matchpath } = useCurrentPath();
@@ -103,7 +110,7 @@ export const NavBar = memo(() => {
       {
         text: ROUTES.Categories.key,
         navagation_link: ROUTES.Categories.path,
-        icon: <StyledProductIcon />,
+        icon: <StyledCategoryIcon />,
       },
       {
         text: ROUTES.Users.key,

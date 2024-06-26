@@ -4,6 +4,7 @@ export const user = {
     gender: "gender",
     age: "age",
     password: "password",
+    phone: "phone",
     male: "male",
     female: "female",
     created_time: "created time",

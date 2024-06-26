@@ -28,6 +28,9 @@ export const form = {
     },
     addCategory: { title: "Add Category" },
     editCategory: { title: "Edit Category" },
+    addMessage: { title: "Add Message" },
+    editMessage: { title: "Edit Message" },
+    sendMessage: { title: "Send Message" },
     login: {
         email: "email",
         password: "password",

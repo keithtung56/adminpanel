@@ -6,7 +6,7 @@ import { navBar } from "./navBar";
 import { order } from "./order";
 import { product } from "./product";
 import { user } from "./user";
-
+import { message } from './message'
 export const cn = {
-    navBar, button, user, order, product, form, home, category
+    navBar, button, user, order, product, form, home, category, message
 }
