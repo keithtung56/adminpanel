@@ -24,6 +24,7 @@ const defaultDuration = Duration(milliseconds: 250);
 // Form Error
 final RegExp emailValidatorRegExp =
     RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+final RegExp phoneValidatorRegExp = RegExp(r'^[0-9]{8}$');
 const String emptyEmailError = "Please Enter your email";
 const String invalidEmailError = "Please Enter Valid Email";
 const String emptyPasswordError = "Please Enter your password";

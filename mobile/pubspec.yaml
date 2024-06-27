@@ -55,6 +55,8 @@ dependencies:
   intl: any
   flutter_bloc: ^8.1.6
   shared_preferences: ^2.2.3
+  video_player: ^2.8.7
+  flutter_cache_manager: ^3.3.2
 
 dev_dependencies:
   flutter_test:

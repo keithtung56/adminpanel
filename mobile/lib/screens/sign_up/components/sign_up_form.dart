@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/screens/home/home_screen.dart';
+import 'package:shop_app/screens/init_screen.dart';
 import 'package:shop_app/services/auth/auth_service.dart';
 import 'package:shop_app/services/crud/user/db_user_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,6 +24,8 @@ class _SignUpFormState extends State<SignUpForm> {
   String username = "";
   String gender = genderDefaultOptions;
   bool remember = false;
+  String phoneNumber = "";
+
   final List<String?> errors = [];
   void addError({String? error}) {
     if (!errors.contains(error)) {
@@ -193,6 +195,35 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
           ),
           const SizedBox(height: 20),
+          TextFormField(
+            keyboardType: TextInputType.phone,
+            onSaved: (newValue) => phoneNumber = newValue ?? "",
+            onChanged: (value) {
+              if (value.isNotEmpty) {
+                removeError(error: "Please enter your phone number");
+              } else if (phoneValidatorRegExp.hasMatch(value)) {
+                removeError(error: "Please enter a valid phone number");
+              }
+              phoneNumber = value;
+            },
+            validator: (value) {
+              if (value!.isEmpty) {
+                addError(error: "Please enter your phone number");
+                return "";
+              } else if (!phoneValidatorRegExp.hasMatch(value)) {
+                addError(error: "Please enter a valid phone number");
+                return "";
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              labelText: "Phone Number",
+              hintText: "Enter your phone number",
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              prefix: Text("+852"),
+            ),
+          ),
+          const SizedBox(height: 20),
           DropdownButtonFormField(
             value: gender,
             items: [
@@ -234,10 +265,11 @@ class _SignUpFormState extends State<SignUpForm> {
                     password: password,
                     username: username,
                     gender: gender,
+                    phone: "+852$phoneNumber",
                     age: age);
                 if (context.mounted) {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, HomeScreen.routeName, (_) => true);
+                      context, InitScreen.routeName, (_) => true);
                 }
               }
             },

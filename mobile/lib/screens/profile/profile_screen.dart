@@ -3,6 +3,7 @@ import 'package:shop_app/screens/my-account/my_account_screen.dart';
 import 'package:shop_app/screens/my-orders/my_orders_screen.dart';
 import 'package:shop_app/screens/settings/settings_screen.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
+import 'package:shop_app/services/auth/auth_exceptions.dart';
 import 'package:shop_app/services/auth/auth_service.dart';
 import 'package:shop_app/services/crud/user/db_user.dart';
 import 'package:shop_app/services/crud/user/db_user_service.dart';
@@ -38,6 +39,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case (ConnectionState.done):
+                  if (snapshot.hasError) {
+                    if (snapshot.error == UserNotLoggedInAuthException) {
+                      WidgetsBinding.instance.addPostFrameCallback((callback) {
+                        if (context.mounted) {
+                          Navigator.pushReplacementNamed(
+                              context, SignInScreen.routeName);
+                        }
+                      });
+
+                      return const CircularProgressIndicator();
+                    }
+                  }
                   return SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Column(

@@ -8,6 +8,7 @@ import 'package:shop_app/screens/payment/payment_screen.dart';
 import 'package:shop_app/screens/products/products_screen.dart';
 import 'package:shop_app/screens/products/search_products_screen.dart';
 import 'package:shop_app/screens/settings/settings_screen.dart';
+import 'package:shop_app/screens/video/video_screen.dart';
 import 'screens/products_details/products_details_screen.dart';
 import 'screens/forgot_password/forgot_password_screen.dart';
 import 'screens/home/home_screen.dart';
@@ -34,6 +35,7 @@ final Map<String, WidgetBuilder> routes = {
   MyOrdersScreen.routeName: (context) => const MyOrdersScreen(),
   SettingsScreen.routeName: (context) => const SettingsScreen(),
   LanguageScreen.routeName: (context) => const LanguageScreen(),
+  VideoScreen.routeName: (context) => const VideoScreen(),
   ProductsScreen.routeName: (context) {
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;

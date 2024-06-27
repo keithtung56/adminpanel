@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:logger/logger.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/services/auth/auth_exceptions.dart';
@@ -14,6 +13,7 @@ class DBUserService {
     required String username,
     required String gender,
     required int age,
+    required String phone,
   }) async {
     await FirebaseDatabase.instance.ref("Users/$uid").set({
       'email': email,
@@ -21,6 +21,7 @@ class DBUserService {
       'username': username,
       'age': age,
       'gender': gender,
+      'phone': phone,
       'created_time': Moment.now().format(dateDBFormat),
       'modified_time': Moment.now().format(dateDBFormat),
     });
@@ -29,6 +30,7 @@ class DBUserService {
   Future<DBUser> getDBUserByUid(String uid) async {
     final snapshot = await FirebaseDatabase.instance.ref("Users/$uid").get();
     if (!snapshot.exists) {
+      await AuthService.firebase().logOut();
       throw UserNotFound();
     }
     final val = snapshot.value as Map<dynamic, dynamic>;
@@ -38,14 +40,13 @@ class DBUserService {
       var orders = val['orders'] as Map<dynamic, dynamic>;
       ordersId = orders.entries.map((e) => e.key as String).toList();
     }
-
-    Logger().d(ordersId);
     return DBUser(
       uid: uid,
       email: val['email'],
       password: val['password'],
       username: val['username'],
       gender: val['gender'],
+      phone: val['phone'],
       age: val['age'],
       createdTime: val['created_time'],
       modifiedTime: val['modified_time'],
