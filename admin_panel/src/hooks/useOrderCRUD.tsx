@@ -80,7 +80,8 @@ export const useOrderCRUD = () => {
     async (
       selected_products: Omit<OrderProduct, "price">[],
       status: Order["status"],
-      total: number
+      total: number,
+      user_id: string
     ) => {
       const random_order_id = uuid();
 
@@ -90,9 +91,9 @@ export const useOrderCRUD = () => {
           status: status,
           created_time: moment().format(DATE_DB_FORMAT),
           modified_time: moment().format(DATE_DB_FORMAT),
-          user: auth.currentUser?.uid,
+          user: user_id,
         }),
-        update(ref(database, `/Users/${auth.currentUser?.uid}/orders/`), {
+        update(ref(database, `/Users/${user_id}/orders/`), {
           [random_order_id]: "",
         }),
         ...selected_products.map(({ product_id, quantity, options }) => {

@@ -8,11 +8,13 @@ import {
   OrderProduct,
   useOrderCRUD,
   useProductCRUD,
+  useUserCRUD,
 } from "../../../hooks";
 import { AddOrderSchema } from "../../../yup";
 import { useTranslation } from "react-i18next";
 import { SelectProductField } from "./SelectProductField";
 import { SelectOptionField } from "./SelectOptionField";
+import { SelectUserField } from "./SelectUserField";
 
 const StyledBox = styled(Box)`
   dispaly: flex;
@@ -47,6 +49,11 @@ const StyledSelectProductField = styled(SelectProductField)<{
 }>`
   width: ${({ $width }) => ($width ? $width : 30)}%;
 `;
+const StyledSelectUserField = styled(SelectUserField)<{
+  $width?: number;
+}>`
+  width: ${({ $width }) => ($width ? $width : 30)}%;
+`;
 const AddProductButton = styled(Button)`
   float: left;
 `;
@@ -55,6 +62,9 @@ const DeleteProductButton = styled(Button)`
 `;
 const BottomWrapper = styled(Box)`
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 type Props = {
   showAddForm: boolean;
@@ -64,18 +74,24 @@ export const AddOrderForm = memo(({ showAddForm, setShowAddForm }: Props) => {
   const { t } = useTranslation();
   const { createOrder } = useOrderCRUD();
   const { productList } = useProductCRUD();
+  const { userList } = useUserCRUD();
   //@ts-ignore
 
   const formik = useFormik({
     initialValues: {
-      selected_products: [] as Omit<OrderProduct, "price">[],
+      selected_products: [
+        {
+          product_id: "",
+          quantity: 0,
+          options: {},
+        },
+      ] as Omit<OrderProduct, "price">[],
       status: "unpaid" as Order["status"],
+      user_id: "",
     },
     validationSchema: AddOrderSchema,
     enableReinitialize: false,
     onSubmit: async (values) => {
-      console.log("asd");
-
       try {
         if (
           values.selected_products.some((selected_product) => {
@@ -90,14 +106,18 @@ export const AddOrderForm = memo(({ showAddForm, setShowAddForm }: Props) => {
           })
         )
           return;
-        await createOrder(values.selected_products, values.status, total);
+        await createOrder(
+          values.selected_products,
+          values.status,
+          total,
+          values.user_id
+        );
         setShowAddForm(false);
       } catch (e) {
         console.log(e);
       }
     },
   });
-  console.log(formik.values);
 
   const total = useMemo(() => {
     return formik.values.selected_products.reduce((acc, cur) => {
@@ -228,6 +248,17 @@ export const AddOrderForm = memo(({ showAddForm, setShowAddForm }: Props) => {
           </>
         </SelectTable>
         <BottomWrapper>
+          <StyledSelectUserField
+            userList={userList}
+            id={`user_id`}
+            label={t("user_id")}
+            name={`user_id`}
+            value={formik.values.user_id}
+            onChange={formik.handleChange}
+            onBlur={() => {
+              formik.setFieldTouched(`user_id`);
+            }}
+          />
           <StyledSelectTextField
             select
             label="status"

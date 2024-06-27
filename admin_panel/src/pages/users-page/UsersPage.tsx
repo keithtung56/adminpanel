@@ -98,7 +98,7 @@ export const UsersPage = memo(() => {
         render: (data: User) => data.email,
       },
       {
-        key: "email",
+        key: "phone",
         header: t("user.phone"),
         render: (data: User) => data.phone,
       },
