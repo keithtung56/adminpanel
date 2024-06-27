@@ -17,7 +17,7 @@ export const useProductImageCRUD = () => {
         .then((url) => {
           setImageUrl(url);
         })
-        .catch((_) => {
+        .catch(() => {
           setImageUrl("");
         });
     }

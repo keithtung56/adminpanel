@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { AddButton, DeleteButton, GenericTable } from "../../components";
 import { Card, Box, Checkbox, Button } from "@mui/material";
 import styled from "styled-components";
-import { useUserCRUD } from "../../hooks";
+import { User, useUserCRUD } from "../../hooks";
 import { AddUserForm, EditUserForm } from "./component";
 import { useTranslation } from "react-i18next";
 import { DATE_DISPLAY_FORMAT } from "../../constants";
@@ -48,7 +48,7 @@ const StyledEditIcon = styled(EditIcon)`
 export const UsersPage = memo(() => {
   const { t } = useTranslation();
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
-  const [editUser, setEditUser] = useState<any>(null);
+  const [editUser, setEditUser] = useState<User | null>(null);
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
   const { userList, deleteAuthUser, deleteUserFromDb } = useUserCRUD();
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
@@ -78,7 +78,7 @@ export const UsersPage = memo(() => {
       {
         key: "delete",
         header: "",
-        render: (data: any) => (
+        render: (data: User) => (
           <Checkbox
             checked={selectedUserIds.indexOf(data.uid) != -1}
             onClick={() => {
@@ -90,42 +90,42 @@ export const UsersPage = memo(() => {
       {
         key: "username",
         header: t("user.username"),
-        render: (data: any) => data.username,
+        render: (data: User) => data.username,
       },
       {
         key: "email",
         header: t("user.email"),
-        render: (data: any) => data.email,
+        render: (data: User) => data.email,
       },
       {
         key: "email",
         header: t("user.phone"),
-        render: (data: any) => data.phone,
+        render: (data: User) => data.phone,
       },
       {
         key: "gender",
         header: t("user.gender"),
-        render: (data: any) => t(`user.${data.gender}`),
+        render: (data: User) => t(`user.${data.gender}`),
       },
       {
         key: "age",
         header: t("user.age"),
-        render: (data: any) => data.age,
+        render: (data: User) => data.age,
       },
       {
         key: "created_time",
         header: t("user.created_time"),
-        render: (data: any) => data.created_time.format(DATE_DISPLAY_FORMAT),
+        render: (data: User) => data.created_time.format(DATE_DISPLAY_FORMAT),
       },
       {
         key: "modified_time",
         header: t("user.modified_time"),
-        render: (data: any) => data.modified_time.format(DATE_DISPLAY_FORMAT),
+        render: (data: User) => data.modified_time.format(DATE_DISPLAY_FORMAT),
       },
       {
         key: "edit",
         header: "",
-        render: (data: any) => (
+        render: (data: User) => (
           <Button
             variant="outlined"
             onClick={() => {
@@ -161,8 +161,8 @@ export const UsersPage = memo(() => {
       <StyledCard>
         {
           <StyledTable
-            //@ts-ignore
             data={sortedUserList}
+            //@ts-ignore
             generator={listGenerator}
             unique_col={"uid"}
           />
@@ -174,7 +174,7 @@ export const UsersPage = memo(() => {
           setShowAddForm={setShowAddForm}
         />
       )}
-      {showEditForm && (
+      {showEditForm && editUser && (
         <EditUserForm
           showEditForm={showEditForm}
           setShowEditForm={setShowEditForm}

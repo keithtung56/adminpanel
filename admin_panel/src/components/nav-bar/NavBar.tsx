@@ -1,7 +1,5 @@
 import {
   Box,
-  Button,
-  Card,
   Drawer,
   List,
   ListItem,
@@ -139,7 +137,7 @@ export const NavBar = memo(({ open }: Props) => {
       <Box sx={{ overflow: "auto" }}>
         <List>
           {Buttons.map(({ text, navagation_link, icon }) => (
-            <ListItem>
+            <ListItem key={text}>
               <StyledListItemButton
                 onClick={() => {
                   navigate(navagation_link);

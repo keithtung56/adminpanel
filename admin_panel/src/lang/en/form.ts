@@ -26,6 +26,12 @@ export const form = {
     editUser: {
         title: "Edit User"
     },
+    addVideo: {
+        title: "Upload Video"
+    },
+    viewVideo: {
+        title: "View Video"
+    },
     addCategory: { title: "Add Category" },
     editCategory: { title: "Edit Category" },
     addMessage: { title: "Add Message" },

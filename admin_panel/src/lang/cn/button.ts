@@ -8,4 +8,6 @@ export const button = {
     cancel: "取消",
     logout: "登出",
     login: "登入",
+    upload: "上傳",
+    replace: "重新上傳"
 }

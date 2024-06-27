@@ -26,6 +26,12 @@ export const form = {
     editUser: {
         title: "修改用戶"
     },
+    addVideo: {
+        title: "上傳影片"
+    },
+    viewVideo: {
+        title: "查看影片"
+    },
     addCategory: { title: "新增類別" },
     editCategory: { title: "修改類別" },
     addMessage: { title: "新增短訊" },

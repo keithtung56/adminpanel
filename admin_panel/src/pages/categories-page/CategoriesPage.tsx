@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { AddButton, DeleteButton, GenericTable } from "../../components";
 import { useTranslation } from "react-i18next";
 import { AddCategoryForm, EditCategoryForm } from "./component";
-import { useCategoryCRUD } from "../../hooks";
+import { Category, useCategoryCRUD } from "../../hooks";
 import { DATE_DISPLAY_FORMAT } from "../../constants";
 import { EditIcon } from "../../icons";
 
@@ -82,7 +82,7 @@ export const CategoriesPage = memo(() => {
       {
         key: "delete",
         header: "",
-        render: (data: any) => (
+        render: (data: Category) => (
           <Checkbox
             checked={selectedCategoryIds.indexOf(data.category_id) != -1}
             onClick={() => {
@@ -94,22 +94,24 @@ export const CategoriesPage = memo(() => {
       {
         key: "category_name",
         header: t("category.category_name"),
-        render: (data: any) => data.category_name,
+        render: (data: Category) => data.category_name,
       },
       {
         key: "created_time",
         header: t("category.created_time"),
-        render: (data: any) => data.created_time.format(DATE_DISPLAY_FORMAT),
+        render: (data: Category) =>
+          data.created_time.format(DATE_DISPLAY_FORMAT),
       },
       {
         key: "modified_time",
         header: t("category.modified_time"),
-        render: (data: any) => data.modified_time.format(DATE_DISPLAY_FORMAT),
+        render: (data: Category) =>
+          data.modified_time.format(DATE_DISPLAY_FORMAT),
       },
       {
         key: "edit",
         header: "",
-        render: (data: any) => (
+        render: (data: Category) => (
           <Button
             variant="outlined"
             onClick={() => {
@@ -145,6 +147,7 @@ export const CategoriesPage = memo(() => {
       <StyledCard>
         <StyledTable
           data={sortedCategoriesList}
+          //@ts-ignore
           generator={listGenerator}
           unique_col={"category_id"}
         />

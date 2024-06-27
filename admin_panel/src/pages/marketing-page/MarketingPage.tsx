@@ -3,7 +3,7 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { EditIcon, SendIcon } from "../../icons";
 import styled from "styled-components";
 import { AddButton, DeleteButton, GenericTable } from "../../components";
-import { useMessageCRUD } from "../../hooks";
+import { Message, useMessageCRUD } from "../../hooks";
 import { useTranslation } from "react-i18next";
 import { AddMessageForm, EditMessageForm, SelectUserForm } from "./component";
 
@@ -54,7 +54,7 @@ export const MarketingPage = memo(() => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showSelectUserForm, setShowSelectUserForm] = useState(false);
-  const [editMessage, setEditMessage] = useState<any>(null);
+  const [editMessage, setEditMessage] = useState<Message | null>(null);
   const [selectedMessageIds, setSelectedMessageIds] = useState<string[]>([]);
   const { messageList, deleteMessage } = useMessageCRUD();
   const AddButtonOnClick = useCallback(() => {
@@ -87,7 +87,7 @@ export const MarketingPage = memo(() => {
       {
         key: "delete",
         header: "",
-        render: (data: any) => (
+        render: (data: Message) => (
           <Checkbox
             checked={selectedMessageIds.indexOf(data.message_id) != -1}
             onClick={() => {
@@ -99,12 +99,12 @@ export const MarketingPage = memo(() => {
       {
         key: "content",
         header: t("message.content"),
-        render: (data: any) => data.content,
+        render: (data: Message) => data.content,
       },
       {
         key: "edit/send",
         header: "",
-        render: (data: any) => (
+        render: (data: Message) => (
           <>
             <Button
               variant="outlined"
@@ -158,6 +158,7 @@ export const MarketingPage = memo(() => {
       <StyledCard>
         <StyledTable
           data={sortedMessageList}
+          //@ts-ignore
           generator={listGenerator}
           unique_col={"message_id"}
         />
@@ -170,14 +171,14 @@ export const MarketingPage = memo(() => {
         />
       )}
 
-      {showEditForm && (
+      {showEditForm && editMessage && (
         <EditMessageForm
           showEditForm={showEditForm}
           setShowEditForm={setShowEditForm}
           message={editMessage}
         />
       )}
-      {showSelectUserForm && (
+      {showSelectUserForm && editMessage && (
         <SelectUserForm
           showSelectUserForm={showSelectUserForm}
           setShowSelectUserForm={setShowSelectUserForm}

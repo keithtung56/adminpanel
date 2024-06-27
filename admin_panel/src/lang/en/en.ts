@@ -7,6 +7,7 @@ import { order } from "./order";
 import { product } from "./product";
 import { user } from "./user";
 import { message } from './message'
+import { video } from './video'
 export const en = {
-    navBar, button, user, order, product, form, home, category, message
+    navBar, button, user, order, product, form, home, category, message, video
 }

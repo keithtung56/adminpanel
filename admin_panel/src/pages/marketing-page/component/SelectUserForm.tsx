@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo, useState } from "react";
-import { Message, useMessage, useUserCRUD } from "../../../hooks";
+import { Message, User, useMessage, useUserCRUD } from "../../../hooks";
 import { Dialog, GenericTable, Title } from "../../../components";
 import { useTranslation } from "react-i18next";
 import { Box, Checkbox } from "@mui/material";
@@ -67,7 +67,7 @@ export const SelectUserForm = memo(
               }}
             />
           ),
-          render: (data: any) => (
+          render: (data: User) => (
             <Checkbox
               checked={selectedUserIds.indexOf(data.uid) != -1}
               onClick={() => {
@@ -79,27 +79,27 @@ export const SelectUserForm = memo(
         {
           key: "username",
           header: t("user.username"),
-          render: (data: any) => data.username,
+          render: (data: User) => data.username,
         },
         {
           key: "email",
           header: t("user.email"),
-          render: (data: any) => data.email,
+          render: (data: User) => data.email,
         },
         {
           key: "phone",
           header: t("user.phone"),
-          render: (data: any) => data.phone,
+          render: (data: User) => data.phone,
         },
         {
           key: "gender",
           header: t("user.gender"),
-          render: (data: any) => t(`user.${data.gender}`),
+          render: (data: User) => t(`user.${data.gender}`),
         },
         {
           key: "age",
           header: t("user.age"),
-          render: (data: any) => data.age,
+          render: (data: User) => data.age,
         },
       ],
       [selectedUserIds, CheckBoxOnClick, t, userList, AllCheckBoxOnClick]
@@ -138,7 +138,6 @@ export const SelectUserForm = memo(
       >
         <Body>
           <StyledTable
-            //@ts-ignore
             data={sortedUserList}
             //@ts-ignore
             generator={listGenerator}

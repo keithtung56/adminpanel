@@ -8,4 +8,6 @@ export const button = {
     cancel: "Cancel",
     logout: "Logout",
     login: "Login",
+    upload: "Upload",
+    replace: "Replace"
 }

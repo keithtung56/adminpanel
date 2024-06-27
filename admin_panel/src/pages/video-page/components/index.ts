@@ -1,1 +1,2 @@
-export * from './AddVideoFileForm'
+export * from './UploadVideoForm'
+export * from './ViewVideoForm'

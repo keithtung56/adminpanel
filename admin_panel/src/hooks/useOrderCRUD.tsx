@@ -33,11 +33,12 @@ export const useOrderCRUD = () => {
       if (res) {
         const returnOrderList = Object.entries(res).reduce(
           (acc: string[], [id, attr]: [string, any]) => {
-            const { created_time, modified_time, ...others } = attr;
+            const { created_time, modified_time, user, ...others } = attr;
             return [
               ...acc,
               {
                 ...others,
+                user_id: user,
                 order_id: id,
                 created_time: moment(created_time, DATE_DB_FORMAT),
                 modified_time: moment(modified_time, DATE_DB_FORMAT),
@@ -158,7 +159,7 @@ export const useOrderCRUD = () => {
   );
 
   const updateOrderStatus = useCallback(
-    async (order_id: String, status: Order["status"]) => {
+    async (order_id: string, status: Order["status"]) => {
       await update(ref(database, `/Orders/${order_id}`), { status });
     },
     []

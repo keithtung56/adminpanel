@@ -17,7 +17,7 @@ export const useCategoryImageCRUD = () => {
         .then((url) => {
           setImageUrl(url);
         })
-        .catch((_) => {
+        .catch(() => {
           setImageUrl("");
         });
     }

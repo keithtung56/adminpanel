@@ -3,7 +3,7 @@ import { memo, useCallback, useState, useMemo } from "react";
 import { AddButton, DeleteButton, GenericTable } from "../../components";
 import styled from "styled-components";
 import {} from "../../components";
-import { useCategoryCRUD, useProductCRUD } from "../../hooks";
+import { Product, useCategoryCRUD, useProductCRUD } from "../../hooks";
 import { AddProductForm } from "./component";
 import { EditProductForm } from "./component/EditProductForm";
 import { useTranslation } from "react-i18next";
@@ -86,7 +86,7 @@ export const ProductsPage = memo(() => {
       {
         key: "delete",
         header: "",
-        render: (data: any) => (
+        render: (data: Product) => (
           <Checkbox
             checked={selectedProductIds.indexOf(data.product_id) != -1}
             onClick={() => {
@@ -98,17 +98,17 @@ export const ProductsPage = memo(() => {
       {
         key: "product_name",
         header: t("product.product_name"),
-        render: (data: any) => data.product_name,
+        render: (data: Product) => data.product_name,
       },
       {
         key: "price",
         header: t("product.price"),
-        render: (data: any) => data.price,
+        render: (data: Product) => data.price,
       },
       {
         key: "category",
         header: t("product.category"),
-        render: (data: any) => {
+        render: (data: Product) => {
           const category = categoriesList.find(
             (category) => category.category_id === data.category_id
           );
@@ -121,17 +121,19 @@ export const ProductsPage = memo(() => {
       {
         key: "created_time",
         header: t("product.created_time"),
-        render: (data: any) => data.created_time.format(DATE_DISPLAY_FORMAT),
+        render: (data: Product) =>
+          data.created_time.format(DATE_DISPLAY_FORMAT),
       },
       {
         key: "modified_time",
         header: t("product.modified_time"),
-        render: (data: any) => data.modified_time.format(DATE_DISPLAY_FORMAT),
+        render: (data: Product) =>
+          data.modified_time.format(DATE_DISPLAY_FORMAT),
       },
       {
         key: "edit",
         header: "",
-        render: (data: any) => (
+        render: (data: Product) => (
           <Button
             variant="outlined"
             onClick={() => {
@@ -161,7 +163,7 @@ export const ProductsPage = memo(() => {
       <ButtonWrapper>
         <LeftButtons></LeftButtons>
         <RightButtons>
-          <StyledAddButton onClick={AddButtonOnClick}></StyledAddButton>
+          <StyledAddButton onClick={AddButtonOnClick} />
           <StyledDeleteButton onClick={DeleteButtonOnClick} />
         </RightButtons>
       </ButtonWrapper>
@@ -169,8 +171,8 @@ export const ProductsPage = memo(() => {
       <StyledCard>
         {
           <StyledTable
-            //@ts-ignore
             data={sortedproductList}
+            //@ts-ignore
             generator={listGenerator}
             unique_col="product_id"
           />

@@ -2,7 +2,7 @@ import { memo, useCallback, useState, useMemo } from "react";
 import { AddButton, DeleteButton, GenericTable } from "../../components";
 import { Card, Box, Checkbox, Button } from "@mui/material";
 import styled from "styled-components";
-import { useOrderCRUD } from "../../hooks/useOrderCRUD";
+import { Order, useOrderCRUD } from "../../hooks";
 import { AddOrderForm, EditOrderForm, ViewOrderForm } from "./component";
 import { useProductCRUD, useUserCRUD } from "../../hooks";
 import { useTranslation } from "react-i18next";
@@ -87,7 +87,7 @@ export const OrdersPage = memo(() => {
       {
         key: "delete",
         header: "",
-        render: (data: any) => (
+        render: (data: Order) => (
           <Checkbox
             checked={selectedOrderIds.indexOf(data.order_id) != -1}
             onClick={() => {
@@ -99,13 +99,13 @@ export const OrdersPage = memo(() => {
       {
         key: "user",
         header: t("order.username"),
-        render: (data: any) =>
-          userList.find((user) => user.uid === data.user)?.username ?? "",
+        render: (data: Order) =>
+          userList.find((user) => user.uid === data.user_id)?.username ?? "",
       },
       {
         key: "products",
         header: t("order.products"),
-        render: (data: any) => {
+        render: (data: Order) => {
           const products = data.products;
           let overflow = false;
           //@ts-ignore
@@ -130,27 +130,27 @@ export const OrdersPage = memo(() => {
       {
         key: "total",
         header: t("order.total"),
-        render: (data: any) => data.total,
+        render: (data: Order) => data.total,
       },
       {
         key: "status",
         header: t("order.status"),
-        render: (data: any) => t(`order.${data.status}`),
+        render: (data: Order) => t(`order.${data.status}`),
       },
       {
         key: "created_time",
         header: t("order.created_time"),
-        render: (data: any) => data.created_time.format(DATE_DISPLAY_FORMAT),
+        render: (data: Order) => data.created_time.format(DATE_DISPLAY_FORMAT),
       },
       {
         key: "modified_time",
         header: t("order.modified_time"),
-        render: (data: any) => data.modified_time.format(DATE_DISPLAY_FORMAT),
+        render: (data: Order) => data.modified_time.format(DATE_DISPLAY_FORMAT),
       },
       {
         key: "edit",
         header: "",
-        render: (data: any) => (
+        render: (data: Order) => (
           <>
             <Button
               variant="outlined"
@@ -198,8 +198,8 @@ export const OrdersPage = memo(() => {
       <StyledCard>
         {
           <StyledTable
-            //@ts-ignore
             data={sortedorderList}
+            //@ts-ignore
             generator={listGenerator}
             unique_col={"order_id"}
           />

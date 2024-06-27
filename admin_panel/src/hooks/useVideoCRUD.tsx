@@ -6,7 +6,7 @@ import { auth, database } from "../firebase";
 import uuid from "react-uuid";
 import { useVideoFileCRUD } from "./useVideoFileCRUD";
 
-type Video = {
+export type Video = {
   title: string;
   id: string;
   upload_user_id: string;
@@ -58,7 +58,7 @@ export const useVideoCRUD = () => {
 
   const createVideo = useCallback(
     async (
-      content: string,
+      title: string,
       video_file: File | undefined,
       video_need_update: boolean
     ) => {
@@ -69,7 +69,7 @@ export const useVideoCRUD = () => {
         await uploadVideoFile(video_file, video_file_random_id);
       }
       await update(ref(database, `/Videos/${video_random_id}`), {
-        content,
+        title,
         upload_user_id: auth.currentUser?.uid,
         created_time: moment().format(DATE_DB_FORMAT),
         modified_time: moment().format(DATE_DB_FORMAT),
