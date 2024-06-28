@@ -40,6 +40,7 @@ export const EditCategoryForm = memo(
     const { imageUrl, setCurrentImgId } = useCategoryImageCRUD();
     const [imageFile, setImageFile] = useState<File | undefined>(undefined);
     const [imageChanged, setImageChanged] = useState<boolean>(false);
+
     useEffect(() => {
       setCurrentImgId(category.img_id ?? "");
     }, [category, setCurrentImgId]);
