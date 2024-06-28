@@ -156,22 +156,24 @@ export const OrdersPage = memo(() => {
               variant="outlined"
               onClick={() => {
                 setEditOrder(data);
-                setShowEditForm(true);
-              }}
-            >
-              <StyledEditIcon />
-              {t("button.edit")}
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() => {
-                setEditOrder(data);
                 setShowViewOrderForm(true);
               }}
             >
               <StyledViewIcon />
               {t("button.view")}
             </Button>
+            {data.status === "unpaid" && (
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setEditOrder(data);
+                  setShowEditForm(true);
+                }}
+              >
+                <StyledEditIcon />
+                {t("button.edit")}
+              </Button>
+            )}
           </>
         ),
       },
