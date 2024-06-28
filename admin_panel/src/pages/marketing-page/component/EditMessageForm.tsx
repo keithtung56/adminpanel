@@ -55,7 +55,7 @@ export const EditMessageForm = memo(
             multiline
             minRows={6}
             id="content"
-            label={t("category.content")}
+            label={t("message.content")}
             name="content"
             value={formik.values.content}
             onChange={formik.handleChange}

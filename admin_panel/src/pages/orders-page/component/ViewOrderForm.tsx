@@ -3,9 +3,10 @@ import { useFormik } from "formik";
 import { memo, useMemo } from "react";
 import styled from "styled-components";
 import { Dialog, Title } from "../../../components";
-import { Order, useProductCRUD } from "../../../hooks";
+import { Order, useProductCRUD, useUserCRUD } from "../../../hooks";
 import { useTranslation } from "react-i18next";
 import { SelectProductField } from "./SelectProductField";
+import { SelectUserField } from "./SelectUserField";
 
 const StyledBox = styled(Box)`
   dispaly: flex;
@@ -23,6 +24,11 @@ const StyledSelectTextField = styled(TextField)<{ $width?: number }>`
 const StyledSelectField = styled(SelectProductField)<{ $width?: number }>`
   width: ${({ $width }) => ($width ? $width : 30)}%;
 `;
+const StyledSelectUserField = styled(SelectUserField)<{
+  $width?: number;
+}>`
+  width: ${({ $width }) => ($width ? $width : 30)}%;
+`;
 const SelectTableRow = styled(Box)`
   width: 100%;
   display: flex;
@@ -33,6 +39,9 @@ const SelectTableRow = styled(Box)`
 `;
 const BottomWrapper = styled(Box)`
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 type Props = {
   showViewOrderForm: boolean;
@@ -43,10 +52,12 @@ export const ViewOrderForm = memo(
   ({ showViewOrderForm, setShowViewOrderForm, order }: Props) => {
     const { t } = useTranslation();
     const { productList } = useProductCRUD();
+    const { userList } = useUserCRUD();
     //@ts-ignore
     const formik = useFormik({
       initialValues: {
         selected_products: order.products,
+        user_id: order.user_id,
         status: order.status,
       },
     });
@@ -122,6 +133,19 @@ export const ViewOrderForm = memo(
             </>
           </SelectTable>
           <BottomWrapper>
+            <StyledSelectUserField
+              userList={userList}
+              id={`user_id`}
+              label={t("user_id")}
+              name={`user_id`}
+              value={formik.values.user_id}
+              onChange={formik.handleChange}
+              onBlur={() => {
+                formik.setFieldTouched(`user_id`);
+              }}
+              disabled
+            />
+
             <StyledSelectTextField
               select
               label="status"
