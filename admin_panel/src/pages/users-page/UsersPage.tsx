@@ -3,10 +3,11 @@ import { AddButton, DeleteButton, GenericTable } from "../../components";
 import { Card, Box, Checkbox, Button } from "@mui/material";
 import styled from "styled-components";
 import { User, useUserCRUD } from "../../hooks";
-import { AddUserForm, EditUserForm } from "./component";
+import { UserForm } from "./component";
 import { useTranslation } from "react-i18next";
 import { DATE_DISPLAY_FORMAT } from "../../constants";
 import { EditIcon } from "../../icons";
+import { UserFormAction } from "./enum/UserFormAction";
 
 const StyledCard = styled(Card)`
   border-radius: 20px;
@@ -47,14 +48,15 @@ const StyledEditIcon = styled(EditIcon)`
 `;
 export const UsersPage = memo(() => {
   const { t } = useTranslation();
-  const [showAddForm, setShowAddForm] = useState<boolean>(false);
-  const [editUser, setEditUser] = useState<User | null>(null);
-  const [showEditForm, setShowEditForm] = useState<boolean>(false);
+  const [formAction, setFormAction] = useState<UserFormAction | undefined>(
+    undefined
+  );
+  const [editUser, setEditUser] = useState<User | undefined>(undefined);
   const { userList, deleteAuthUser, deleteUserFromDb } = useUserCRUD();
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const AddButtonOnClick = useCallback(() => {
-    setShowAddForm(true);
-  }, [setShowAddForm]);
+    setFormAction(UserFormAction.Add);
+  }, [setFormAction]);
 
   const DeleteButtonOnClick = useCallback(async () => {
     for (const id of selectedUserIds) {
@@ -130,7 +132,7 @@ export const UsersPage = memo(() => {
             variant="outlined"
             onClick={() => {
               setEditUser(data);
-              setShowEditForm(true);
+              setFormAction(UserFormAction.Edit);
             }}
           >
             <StyledEditIcon />
@@ -139,7 +141,7 @@ export const UsersPage = memo(() => {
         ),
       },
     ],
-    [selectedUserIds, CheckBoxOnClick, t]
+    [selectedUserIds, CheckBoxOnClick, t, setEditUser, setFormAction]
   );
 
   const sortedUserList = useMemo(
@@ -168,17 +170,12 @@ export const UsersPage = memo(() => {
           />
         }
       </StyledCard>
-      {showAddForm && (
-        <AddUserForm
-          showAddForm={showAddForm}
-          setShowAddForm={setShowAddForm}
-        />
-      )}
-      {showEditForm && editUser && (
-        <EditUserForm
-          showEditForm={showEditForm}
-          setShowEditForm={setShowEditForm}
-          editUser={editUser}
+      {formAction !== undefined && (
+        <UserForm
+          selectedUser={editUser}
+          formAction={formAction}
+          title={"asd"}
+          setFormAction={setFormAction}
         />
       )}
     </>

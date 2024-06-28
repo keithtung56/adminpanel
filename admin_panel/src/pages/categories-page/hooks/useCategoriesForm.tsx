@@ -1,16 +1,18 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AddCategorySchema } from "../../../yup";
-import { Category, useCategoryCRUD } from "../../../hooks";
+import {
+  Category,
+  useCategoryCRUD,
+  useCategoryImageCRUD,
+} from "../../../hooks";
+import { CategoriesFormAction } from "../enum";
+import { FormikFormFields } from "../../../components";
 
-export enum CategoriesFormAction {
-  Edit,
-  Add,
-  View,
-}
-
-type CategoriesForm = {
+export type CategoryFormField = {
+  label: string;
   name: string;
-  enable: boolean;
+  disabled: boolean;
+  fieldType: FormikFormFields;
 };
 export const useCategoriesForm = (
   action: CategoriesFormAction,
@@ -19,14 +21,22 @@ export const useCategoriesForm = (
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [imageChanged, setImageChanged] = useState<boolean>(false);
   const { updateCategory, createCategory } = useCategoryCRUD();
-  const fields: CategoriesForm[] = useMemo(
+  const { imageUrl, setCurrentImgId } = useCategoryImageCRUD();
+
+  useEffect(() => {
+    setCurrentImgId(selectedCategory?.img_id ?? "");
+  }, [selectedCategory, setCurrentImgId]);
+
+  const fields: CategoryFormField[] = useMemo(
     () => [
       {
+        label: "category_name",
         name: "category_name",
-        enable: action in [CategoriesFormAction.Edit, CategoriesFormAction.Add],
+        disabled: action in [],
+        fieldType: FormikFormFields.TextField,
       },
     ],
-    []
+    [action]
   );
 
   const initValues = useMemo(() => {
@@ -41,7 +51,7 @@ export const useCategoriesForm = (
       };
     }
     return {};
-  }, [selectedCategory]);
+  }, [selectedCategory, action]);
 
   const schema = useMemo(() => {
     if (action === CategoriesFormAction.Edit) {
@@ -51,7 +61,7 @@ export const useCategoriesForm = (
       return AddCategorySchema;
     }
     return undefined;
-  }, []);
+  }, [action]);
 
   const formOnSubmit = useCallback(
     async (values: any) => {
@@ -68,7 +78,14 @@ export const useCategoriesForm = (
       }
       return () => {};
     },
-    [updateCategory, createCategory]
+    [
+      updateCategory,
+      createCategory,
+      action,
+      imageChanged,
+      imageFile,
+      selectedCategory,
+    ]
   );
 
   return {
@@ -78,6 +95,6 @@ export const useCategoriesForm = (
     formOnSubmit,
     setImageFile,
     setImageChanged,
-    createCategory,
+    imageUrl,
   };
 };

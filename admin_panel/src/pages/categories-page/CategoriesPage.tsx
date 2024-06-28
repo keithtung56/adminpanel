@@ -3,10 +3,11 @@ import { memo, useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import { AddButton, DeleteButton, GenericTable } from "../../components";
 import { useTranslation } from "react-i18next";
-import { AddCategoryForm, EditCategoryForm } from "./component";
+import { CategoryForm } from "./component";
 import { Category, useCategoryCRUD } from "../../hooks";
 import { DATE_DISPLAY_FORMAT } from "../../constants";
 import { EditIcon } from "../../icons";
+import { CategoriesFormAction } from "./enum";
 
 const StyledCard = styled(Card)`
   border-radius: 20px;
@@ -47,14 +48,16 @@ const StyledTable = styled(GenericTable)`
 
 export const CategoriesPage = memo(() => {
   const { t } = useTranslation();
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
+  const [formAction, setFormAction] = useState<
+    CategoriesFormAction | undefined
+  >(undefined);
   const [editCategory, setEditCategory] = useState<any>(null);
   const [selectedCategoryIds, setSelectedCatergoryIds] = useState<string[]>([]);
   const { categoriesList, deleteCategory } = useCategoryCRUD();
   const AddButtonOnClick = useCallback(() => {
-    setShowAddForm(true);
-  }, [setShowAddForm]);
+    setFormAction(CategoriesFormAction.Add);
+    setEditCategory(undefined);
+  }, [setFormAction, setEditCategory]);
 
   const DeleteButtonOnClick = useCallback(async () => {
     await Promise.all(
@@ -116,7 +119,7 @@ export const CategoriesPage = memo(() => {
             variant="outlined"
             onClick={() => {
               setEditCategory(data);
-              setShowEditForm(true);
+              setFormAction(CategoriesFormAction.Edit);
             }}
           >
             <StyledEditIcon />
@@ -125,7 +128,7 @@ export const CategoriesPage = memo(() => {
         ),
       },
     ],
-    [selectedCategoryIds, CheckBoxOnClick, setEditCategory, setShowEditForm, t]
+    [selectedCategoryIds, CheckBoxOnClick, setEditCategory, setFormAction, t]
   );
 
   const sortedCategoriesList = useMemo(
@@ -153,18 +156,12 @@ export const CategoriesPage = memo(() => {
         />
       </StyledCard>
 
-      {showAddForm && (
-        <AddCategoryForm
-          showAddForm={showAddForm}
-          setShowAddForm={setShowAddForm}
-        />
-      )}
-
-      {showEditForm && (
-        <EditCategoryForm
-          showEditForm={showEditForm}
-          setShowEditForm={setShowEditForm}
-          category={editCategory}
+      {formAction != undefined && (
+        <CategoryForm
+          title={"testing"}
+          formAction={formAction}
+          setFormAction={setFormAction}
+          selectedCategory={editCategory}
         />
       )}
     </>
