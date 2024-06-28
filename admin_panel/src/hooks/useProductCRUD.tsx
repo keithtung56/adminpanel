@@ -20,6 +20,7 @@ export type Product = {
   category_id: string;
   product_name: string;
   status: "listed" | "unlisted";
+  stock: number;
   price: number;
   created_time: moment.Moment;
   modified_time: moment.Moment;
@@ -91,6 +92,7 @@ export const useProductCRUD = () => {
       product_name: Product["product_name"],
       price: Product["price"],
       status: Product["status"],
+      stock: Product["stock"],
       category_id: Product["category_id"],
       description: Product["description"],
       img_file: File,
@@ -104,6 +106,7 @@ export const useProductCRUD = () => {
         product_name,
         price,
         status,
+        stock,
         category_id,
         description,
         created_time: moment().format(DATE_DB_FORMAT),

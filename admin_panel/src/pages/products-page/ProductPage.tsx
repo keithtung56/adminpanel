@@ -154,11 +154,16 @@ export const ProductsPage = memo(() => {
         render: (data: Product) => t(`product.${data.status}`),
       },
       {
-        key: "created_time",
-        header: t("product.created_time"),
-        render: (data: Product) =>
-          data.created_time.format(DATE_DISPLAY_FORMAT),
+        key: "status",
+        header: t("product.stock"),
+        render: (data: Product) => data.stock,
       },
+      // {
+      //   key: "created_time",
+      //   header: t("product.created_time"),
+      //   render: (data: Product) =>
+      //     data.created_time.format(DATE_DISPLAY_FORMAT),
+      // },
       {
         key: "modified_time",
         header: t("product.modified_time"),

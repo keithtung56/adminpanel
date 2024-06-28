@@ -2,6 +2,7 @@ export const product = {
     product_name: "產品名稱",
     price: "價錢",
     status: "產品狀態",
+    stock: "存貨",
     quantity: "件數",
     category: "類別",
     created_time: "創建時間",

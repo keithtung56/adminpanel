@@ -57,6 +57,7 @@ export const AddProductForm = memo(({ showAddForm, setShowAddForm }: Props) => {
       product_name: "",
       price: 0,
       status: "listed" as Product["status"],
+      stock: 0,
       category_id: "",
       description: "",
       options: [] as FormOptions,
@@ -72,6 +73,7 @@ export const AddProductForm = memo(({ showAddForm, setShowAddForm }: Props) => {
           values.product_name,
           values.price,
           values.status,
+          values.stock,
           values.category_id,
           values.description,
           imageFile,
@@ -135,6 +137,23 @@ export const AddProductForm = memo(({ showAddForm, setShowAddForm }: Props) => {
           />
 
           <StyledTextField
+            type="number"
+            id="stock"
+            label={t("product.stock")}
+            name="stock"
+            value={formik.values.stock}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.stock && Boolean(formik.errors.stock)}
+            helperText={
+              formik.touched.stock &&
+              formik.errors.stock &&
+              t(formik.errors.stock)
+            }
+            fullWidth
+          />
+
+          <StyledTextField
             select
             id="status"
             label={t("product.status")}
@@ -150,8 +169,8 @@ export const AddProductForm = memo(({ showAddForm, setShowAddForm }: Props) => {
             }
             fullWidth
           >
-            <MenuItem value={"listed"}>listed</MenuItem>
-            <MenuItem value={"unlisted"}>unlisted</MenuItem>
+            <MenuItem value={"listed"}>{t("product.listed")}</MenuItem>
+            <MenuItem value={"unlisted"}>{t("product.unlisted")}</MenuItem>
           </StyledTextField>
 
           <StyledSelectCategoryField
