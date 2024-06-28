@@ -6,20 +6,37 @@ import moment from "moment";
 import { DATE_DB_FORMAT } from "../constants";
 import { useProductImageCRUD } from "./useProductImageCRUD";
 
-export type Options = {
+export type DBOptions = {
   option_name: string;
   choices: string[];
+}[];
+
+export type FormOptions = {
+  option_name: string;
+  choices: string;
 }[];
 export type Product = {
   product_id: string;
   category_id: string;
   product_name: string;
+  status: "listed" | "unlisted";
   price: number;
   created_time: moment.Moment;
   modified_time: moment.Moment;
   description: string;
   img_id?: string;
-  options: Options;
+  options: DBOptions;
+};
+
+export const productStatusOptions: Product["status"][] = ["listed", "unlisted"];
+
+const formOptionsToDBOptions = (
+  notProcessedOptions: FormOptions
+): DBOptions => {
+  return notProcessedOptions.map(({ option_name, choices }) => ({
+    option_name: option_name,
+    choices: choices.split(","),
+  }));
 };
 export const useProductCRUD = () => {
   const [productList, setproductList] = useState<Product[]>([]);
@@ -28,77 +45,79 @@ export const useProductCRUD = () => {
   useEffect(() => {
     const unsubscribe = onValue(ref(database, "/Products"), (snapshot) => {
       const res = snapshot.val();
-      if (res) {
-        setproductList(
-          //@ts-ignore
-          Object.entries(res).reduce(
-            (acc: string[], [id, attr]: [string, any]) => {
-              const { created_time, modified_time, options, ...others } = attr;
-              let processedOptions: Options = [];
-              if (options) {
-                processedOptions = Object.entries(options).map(
-                  ([key, value]) => {
-                    return {
-                      option_name: key,
-                      choices: value,
-                    };
-                  }
-                ) as Options;
-              }
-              return [
-                ...acc,
-                {
-                  ...others,
-                  product_id: id,
-                  created_time: moment(created_time, DATE_DB_FORMAT),
-                  modified_time: moment(modified_time, DATE_DB_FORMAT),
-                  options: processedOptions,
-                },
-              ];
-            },
-            []
-          )
-        );
-      } else {
+      if (!res) {
         setproductList([]);
+        return;
       }
+      setproductList(
+        //@ts-ignore
+        Object.entries(res).reduce(
+          (acc: string[], [id, attr]: [string, any]) => {
+            const {
+              created_time,
+              modified_time,
+              options: optionsObj,
+              ...others
+            } = attr;
+            let options: DBOptions = [];
+            if (optionsObj) {
+              options = Object.entries(optionsObj).map(([key, value]) => {
+                return {
+                  option_name: key,
+                  choices: value,
+                };
+              }) as DBOptions;
+            }
+            return [
+              ...acc,
+              {
+                ...others,
+                product_id: id,
+                created_time: moment(created_time, DATE_DB_FORMAT),
+                modified_time: moment(modified_time, DATE_DB_FORMAT),
+                options: options,
+              },
+            ];
+          },
+          []
+        )
+      );
     });
     return unsubscribe;
   }, [setproductList]);
 
   const createProduct = useCallback(
     async (
-      product_name: string,
-      price: number,
-      category_id: string,
-      description: string,
-      img_file: File | undefined,
-      img_need_update: boolean,
-      options: { option_name: string; choices: string }[]
+      product_name: Product["product_name"],
+      price: Product["price"],
+      status: Product["status"],
+      category_id: Product["category_id"],
+      description: Product["description"],
+      img_file: File,
+      options: FormOptions
     ) => {
       const product_random_id = uuid();
-      let img_random_id;
-      if (img_need_update && img_file) {
-        img_random_id = uuid();
-        await uploadProductImage(img_file, img_random_id);
-      }
+      const img_random_id = uuid();
+      await uploadProductImage(img_file, img_random_id);
 
       const newProduct = {
         product_name,
         price,
+        status,
         category_id,
         description,
         created_time: moment().format(DATE_DB_FORMAT),
         modified_time: moment().format(DATE_DB_FORMAT),
-        img_id: img_random_id ? img_random_id : {},
+        img_id: img_random_id,
       };
 
       await update(ref(database, `/Products/${product_random_id}`), newProduct);
+
+      const dBOptions = formOptionsToDBOptions(options);
       await Promise.all(
-        options.map(async ({ option_name, choices }) => {
-          const choices_arr = choices.split(",");
+        dBOptions.map(async ({ option_name, choices }) => {
           await Promise.all(
-            choices_arr.map(async (choice, index) => {
+            choices.map(async (choice, index) => {
               await update(
                 ref(
                   database,
@@ -133,11 +152,12 @@ export const useProductCRUD = () => {
       product_id: string,
       product_name: string,
       price: number,
+      status: string,
       category_id: string,
       description: string,
       img_file: File | undefined,
       img_need_update: boolean,
-      options: { option_name: string; choices: string }[]
+      options: FormOptions
     ) => {
       let newProduct = {};
 
@@ -145,6 +165,7 @@ export const useProductCRUD = () => {
         newProduct = {
           product_name,
           price,
+          status,
           category_id,
           description,
           modified_time: moment().format(DATE_DB_FORMAT),
@@ -170,34 +191,16 @@ export const useProductCRUD = () => {
           img_id: img_random_id,
         };
       }
-      //remove current image
-      if (img_need_update && img_file === undefined) {
-        const snapshot = await get(
-          ref(database, `/Products/${product_id}/img_id`)
-        );
-        const img_id: string = snapshot.val();
-        if (img_id) {
-          deleteProductImage(img_id);
-        }
-        newProduct = {
-          product_name,
-          price,
-          category_id,
-          description,
-          modified_time: moment().format(DATE_DB_FORMAT),
-          img_id: {},
-        };
-      }
       await update(ref(database, `/Products/${product_id}`), newProduct);
       await update(ref(database, `/Products/${product_id}`), {
         options: {},
       });
       if (options) {
+        const dBOptions = formOptionsToDBOptions(options);
         await Promise.all(
-          options.map(async ({ option_name, choices }) => {
-            const choices_arr = choices.split(",");
+          dBOptions.map(async ({ option_name, choices }) => {
             await Promise.all(
-              choices_arr.map(async (choice, index) => {
+              choices.map(async (choice, index) => {
                 await update(
                   ref(
                     database,

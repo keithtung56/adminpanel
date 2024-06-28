@@ -1,9 +1,14 @@
-import { TextField, Box, Button } from "@mui/material";
+import { TextField, Box, Button, MenuItem } from "@mui/material";
 import { useFormik } from "formik";
 import { memo, useState } from "react";
 import styled from "styled-components";
 import { Dialog, Title } from "../../../components";
-import { useCategoryCRUD, useProductCRUD } from "../../../hooks";
+import {
+  FormOptions,
+  Product,
+  useCategoryCRUD,
+  useProductCRUD,
+} from "../../../hooks";
 import { AddProductSchema } from "../../../yup";
 import { useTranslation } from "react-i18next";
 import { SelectCategoryField } from "./SelectCategoryField";
@@ -40,35 +45,38 @@ type Props = {
   showAddForm: boolean;
   setShowAddForm: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 export const AddProductForm = memo(({ showAddForm, setShowAddForm }: Props) => {
   const { t } = useTranslation();
   const { createProduct } = useProductCRUD();
   const { categoriesList } = useCategoryCRUD();
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
-  const [imageChanged, setImageChanged] = useState<boolean>(false);
 
   const formik = useFormik({
     initialValues: {
       product_name: "",
-      price: 1,
+      price: 0,
+      status: "listed" as Product["status"],
       category_id: "",
       description: "",
-      options: [] as { option_name: string; choices: string }[],
+      options: [] as FormOptions,
     },
-    enableReinitialize: false,
     validationSchema: AddProductSchema,
     onSubmit: async (values) => {
       try {
+        if (!imageFile) return;
+        const notEmptyOptions = values.options.filter(
+          ({ option_name, choices }) => option_name || choices
+        );
         await createProduct(
           values.product_name,
           values.price,
+          values.status,
           values.category_id,
           values.description,
           imageFile,
-          imageChanged,
-          values.options
+          notEmptyOptions
         );
-
         setShowAddForm(false);
       } catch (e) {
         console.log(e);
@@ -125,6 +133,26 @@ export const AddProductForm = memo(({ showAddForm, setShowAddForm }: Props) => {
             }
             fullWidth
           />
+
+          <StyledTextField
+            select
+            id="status"
+            label={t("product.status")}
+            name="status"
+            value={formik.values.status}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.status && Boolean(formik.errors.status)}
+            helperText={
+              formik.touched.status &&
+              formik.errors.status &&
+              t(formik.errors.status)
+            }
+            fullWidth
+          >
+            <MenuItem value={"listed"}>listed</MenuItem>
+            <MenuItem value={"unlisted"}>unlisted</MenuItem>
+          </StyledTextField>
 
           <StyledSelectCategoryField
             categoriesList={categoriesList}
@@ -206,10 +234,7 @@ export const AddProductForm = memo(({ showAddForm, setShowAddForm }: Props) => {
           })}
         </LeftWrapper>
         <RightWrapper>
-          <ImageUploader
-            setImageFile={setImageFile}
-            setImageChanged={setImageChanged}
-          />
+          <ImageUploader setImageFile={setImageFile} />
         </RightWrapper>
       </StyledBox>
     </Dialog>

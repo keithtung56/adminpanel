@@ -51,7 +51,7 @@ const ReplaceButton = styled(Button)``;
 type Props = {
   className?: string;
   setImageFile: Dispatch<SetStateAction<File | undefined>>;
-  setImageChanged: Dispatch<SetStateAction<boolean>>;
+  setImageChanged?: Dispatch<SetStateAction<boolean>>;
   defaultImgPath?: string;
 };
 export const ImageUploader = memo(
@@ -73,7 +73,9 @@ export const ImageUploader = memo(
       if (uploadInput.current?.files && uploadInput.current?.files[0]) {
         setImageFile(uploadInput.current.files[0]);
         setImgURL(URL.createObjectURL(uploadInput.current.files[0]));
-        setImageChanged(true);
+        if (setImageChanged) {
+          setImageChanged(true);
+        }
         setIsHover(false);
       }
     }, [setImageFile, setImgURL, setImageChanged]);
@@ -81,7 +83,9 @@ export const ImageUploader = memo(
     const RemoveButtonOnClick = useCallback(() => {
       setImgURL("");
       setImageFile(undefined);
-      setImageChanged(true);
+      if (setImageChanged) {
+        setImageChanged(true);
+      }
       if (uploadInput.current) {
         uploadInput.current.value = "";
       }

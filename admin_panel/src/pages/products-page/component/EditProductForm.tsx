@@ -1,10 +1,11 @@
-import { TextField, Box, Button } from "@mui/material";
+import { TextField, Box, Button, MenuItem } from "@mui/material";
 import { useFormik } from "formik";
 import { memo, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Dialog, Title } from "../../../components";
 import {
   Product,
+  productStatusOptions,
   useCategoryCRUD,
   useProductCRUD,
   useProductImageCRUD,
@@ -62,6 +63,7 @@ export const EditProductForm = memo(
       initialValues: {
         product_name: product.product_name,
         price: product.price,
+        status: product.status,
         category_id: product.category_id,
         description: product.description,
         options: product.options.map(({ option_name, choices }) => ({
@@ -72,15 +74,20 @@ export const EditProductForm = memo(
       validationSchema: AddProductSchema,
       onSubmit: async (values) => {
         try {
+          if (imageChanged && imageFile === undefined) return;
+          const notEmptyOptions = values.options.filter(
+            ({ option_name, choices }) => option_name || choices
+          );
           await updateProduct(
             product.product_id,
             values.product_name,
             values.price,
+            values.status,
             values.category_id,
             values.description,
             imageFile,
             imageChanged,
-            values.options
+            notEmptyOptions
           );
           setShowEditForm(false);
         } catch (e) {
@@ -139,6 +146,26 @@ export const EditProductForm = memo(
               fullWidth
             />
 
+            <StyledTextField
+              select
+              id="status"
+              label={t("product.status")}
+              name="status"
+              value={formik.values.status}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.status && Boolean(formik.errors.status)}
+              helperText={
+                formik.touched.status &&
+                formik.errors.status &&
+                t(formik.errors.status)
+              }
+              fullWidth
+            >
+              {productStatusOptions.map((option) => (
+                <MenuItem value={option}>{option}</MenuItem>
+              ))}
+            </StyledTextField>
             <StyledSelectCategoryField
               categoriesList={categoriesList}
               id={"category_id"}
