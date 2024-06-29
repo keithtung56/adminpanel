@@ -1,4 +1,4 @@
-export enum CategoriesFormAction {
+export enum CategoryFormAction {
   Edit,
   Add,
   View,

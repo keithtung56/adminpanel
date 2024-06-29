@@ -1,12 +1,11 @@
 import { memo } from "react";
 import {
   Dialog,
-  FormikFormFields,
   ImageUploader,
-  NormalTextField,
   Title,
+  useFormikFields,
 } from "../../../components";
-import { CategoriesFormAction } from "../enum";
+import { CategoryFormAction } from "../enum";
 import { useCategoriesForm } from "../hooks";
 import { Category } from "../../../hooks";
 import { useFormik } from "formik";
@@ -14,11 +13,10 @@ import styled from "styled-components";
 import { Box } from "@mui/material";
 
 type Props = {
-  title: string;
   selectedCategory: Category | undefined;
-  formAction: CategoriesFormAction;
+  formAction: CategoryFormAction;
   setFormAction: React.Dispatch<
-    React.SetStateAction<CategoriesFormAction | undefined>
+    React.SetStateAction<CategoryFormAction | undefined>
   >;
 };
 
@@ -37,8 +35,9 @@ const RightWrapper = styled(Box)`
   width: 30%;
 `;
 export const CategoryForm = memo(
-  ({ title, formAction, selectedCategory, setFormAction }: Props) => {
+  ({ formAction, selectedCategory, setFormAction }: Props) => {
     const {
+      title,
       fields,
       initValues,
       schema,
@@ -53,6 +52,8 @@ export const CategoryForm = memo(
       validationSchema: schema,
       onSubmit: formOnSubmit,
     });
+
+    const { fieldsCompoents } = useFormikFields({ fields, formik });
     return (
       <Dialog
         title={<Title>{title}</Title>}
@@ -68,24 +69,7 @@ export const CategoryForm = memo(
         fullWidth
       >
         <StyledBox>
-          <LeftWrapper>
-            {fields.map(({ name, disabled, fieldType, label }) => {
-              switch (fieldType) {
-                case FormikFormFields.TextField:
-                  return (
-                    <NormalTextField
-                      key={name}
-                      name={name}
-                      label={label}
-                      disabled={disabled}
-                      formik={formik}
-                    />
-                  );
-                default:
-                  return <></>;
-              }
-            })}
-          </LeftWrapper>
+          <LeftWrapper>{fieldsCompoents}</LeftWrapper>
           <RightWrapper>
             <ImageUploader
               setImageFile={setImageFile}

@@ -5,19 +5,15 @@ import {
   useCategoryCRUD,
   useCategoryImageCRUD,
 } from "../../../hooks";
-import { CategoriesFormAction } from "../enum";
-import { FormikFormFields } from "../../../components";
+import { FormikForm, FormikFormFields } from "../../../components";
+import { useTranslation } from "react-i18next";
+import { CategoryFormAction } from "../enum";
 
-export type CategoryFormField = {
-  label: string;
-  name: string;
-  disabled: boolean;
-  fieldType: FormikFormFields;
-};
 export const useCategoriesForm = (
-  action: CategoriesFormAction,
+  action: CategoryFormAction,
   selectedCategory: Category | undefined
 ) => {
+  const { t } = useTranslation();
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [imageChanged, setImageChanged] = useState<boolean>(false);
   const { updateCategory, createCategory } = useCategoryCRUD();
@@ -27,25 +23,33 @@ export const useCategoriesForm = (
     setCurrentImgId(selectedCategory?.img_id ?? "");
   }, [selectedCategory, setCurrentImgId]);
 
-  const fields: CategoryFormField[] = useMemo(
+  const fields: FormikForm[] = useMemo(
     () => [
       {
         label: "category_name",
         name: "category_name",
-        disabled: action in [],
+        disabled: false,
         fieldType: FormikFormFields.TextField,
       },
     ],
     [action]
   );
 
+  const title = useMemo(() => {
+    if (action === CategoryFormAction.Add) {
+      return t("form.addCategory.title");
+    }
+    if (action === CategoryFormAction.Edit) {
+      return t("form.editCategory.title");
+    }
+  }, [action, t]);
   const initValues = useMemo(() => {
-    if (action === CategoriesFormAction.Edit) {
+    if (action === CategoryFormAction.Edit) {
       return {
         category_name: selectedCategory?.category_name,
       };
     }
-    if (action === CategoriesFormAction.Add) {
+    if (action === CategoryFormAction.Add) {
       return {
         category_name: "",
       };
@@ -54,10 +58,10 @@ export const useCategoriesForm = (
   }, [selectedCategory, action]);
 
   const schema = useMemo(() => {
-    if (action === CategoriesFormAction.Edit) {
+    if (action === CategoryFormAction.Edit) {
       return AddCategorySchema;
     }
-    if (action === CategoriesFormAction.Add) {
+    if (action === CategoryFormAction.Add) {
       return AddCategorySchema;
     }
     return undefined;
@@ -65,7 +69,7 @@ export const useCategoriesForm = (
 
   const formOnSubmit = useCallback(
     async (values: any) => {
-      if (action === CategoriesFormAction.Edit && selectedCategory) {
+      if (action === CategoryFormAction.Edit && selectedCategory) {
         await updateCategory(
           selectedCategory.category_id,
           values.category_name,
@@ -73,7 +77,7 @@ export const useCategoriesForm = (
           imageChanged
         );
       }
-      if (action === CategoriesFormAction.Add) {
+      if (action === CategoryFormAction.Add) {
         await createCategory(values.category_name, imageFile, imageChanged);
       }
       return () => {};
@@ -96,5 +100,6 @@ export const useCategoriesForm = (
     setImageFile,
     setImageChanged,
     imageUrl,
+    title,
   };
 };

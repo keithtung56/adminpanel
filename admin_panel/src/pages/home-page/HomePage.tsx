@@ -76,7 +76,7 @@ export const HomePage = memo(() => {
   const { productList } = useProductCRUD();
   const { todaySales, todayOrders } = useTodaySalesData();
   const { orderList } = useOrderCRUD();
-  const { categoriesList } = useCategoryCRUD();
+  const { categoryList } = useCategoryCRUD();
   return (
     <Wrapper>
       <CardWithText>
@@ -93,7 +93,7 @@ export const HomePage = memo(() => {
       </CardWithText>
       <CardWithText>
         <CardTitle>{t("home.total_categories")}</CardTitle>{" "}
-        <StyledText>{categoriesList.length}</StyledText>
+        <StyledText>{categoryList.length}</StyledText>
       </CardWithText>
       <CardWithText>
         <CardTitle>{t("home.today_sales")}</CardTitle>{" "}

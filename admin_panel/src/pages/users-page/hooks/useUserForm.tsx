@@ -1,61 +1,63 @@
 import { useCallback, useMemo } from "react";
 import { AddCustomerSchema } from "../../../yup";
 import { User, useUserCRUD } from "../../../hooks";
-import { FormikFormFields } from "../../../components";
-import { UserFormAction } from "../enum/UserFormAction";
+import { FormikForm, FormikFormFields } from "../../../components";
+import { UserFormActions } from "../enum/UserFormActions";
+import { useTranslation } from "react-i18next";
 
-export type CategoryFormField = {
-  label: string;
-  name: string;
-  disabled: boolean;
-  fieldType: FormikFormFields;
-};
 export const useUserForm = (
-  action: UserFormAction,
+  action: UserFormActions,
   selectedUser: User | undefined
 ) => {
+  const { t } = useTranslation();
   const { createUser, createAuthUser, updateUser } = useUserCRUD();
 
-  const fields: CategoryFormField[] = useMemo(
+  const fields: FormikForm[] = useMemo(
     () => [
       {
         label: "email",
         name: "email",
-        disabled: action in [UserFormAction.Edit],
+        disabled: [UserFormActions.Edit].includes(action),
         fieldType: FormikFormFields.TextField,
       },
       {
         label: "username",
         name: "username",
-        disabled: action in [],
+        disabled: false,
         fieldType: FormikFormFields.TextField,
       },
       {
         label: "password",
         name: "password",
-        disabled: action in [],
+        disabled: [UserFormActions.Edit].includes(action),
         fieldType: FormikFormFields.TextField,
       },
       {
         label: "phone",
         name: "phone",
-        disabled: action in [UserFormAction.Edit],
+        disabled: [UserFormActions.Edit].includes(action),
         fieldType: FormikFormFields.TextField,
       },
       {
         label: "age",
         name: "age",
-        disabled: action in [],
+        disabled: false,
         fieldType: FormikFormFields.NumberField,
       },
     ],
     [action]
   );
 
+  const title = useMemo(() => {
+    if (action === UserFormActions.Add) {
+      return t("form.addUser.title");
+    }
+    if (action === UserFormActions.Edit) {
+      return t("form.editUser.title");
+    }
+  }, [action, t]);
   const initValues = useMemo(() => {
-    console.log(selectedUser?.username);
-
-    if (action === UserFormAction.Edit) {
+    if (action === UserFormActions.Edit) {
       return {
         email: selectedUser?.email,
         username: selectedUser?.username,
@@ -65,7 +67,7 @@ export const useUserForm = (
         age: selectedUser?.age,
       };
     }
-    if (action === UserFormAction.Add) {
+    if (action === UserFormActions.Add) {
       return {
         email: "",
         username: "",
@@ -79,15 +81,15 @@ export const useUserForm = (
   }, [selectedUser, action]);
 
   const schema = useMemo(() => {
-    if (action === UserFormAction.Add) {
+    if (action === UserFormActions.Add) {
       return AddCustomerSchema;
     }
     return undefined;
-  }, [action, AddCustomerSchema]);
+  }, [action]);
 
   const formOnSubmit = useCallback(
     async (values: any) => {
-      if (action === UserFormAction.Add) {
+      if (action === UserFormActions.Add) {
         const res = await createAuthUser(values.email, values.password);
         await createUser(
           values.username,
@@ -99,7 +101,7 @@ export const useUserForm = (
           res.user.uid
         );
       }
-      if (action === UserFormAction.Edit && selectedUser) {
+      if (action === UserFormActions.Edit && selectedUser) {
         await updateUser(
           selectedUser.uid,
           values.username,
@@ -110,14 +112,7 @@ export const useUserForm = (
       }
       return () => {};
     },
-    [
-      createAuthUser,
-      createUser,
-      updateUser,
-      AddCustomerSchema,
-      action,
-      selectedUser,
-    ]
+    [createAuthUser, createUser, updateUser, action, selectedUser]
   );
 
   return {
@@ -125,5 +120,6 @@ export const useUserForm = (
     initValues,
     schema,
     formOnSubmit,
+    title,
   };
 };

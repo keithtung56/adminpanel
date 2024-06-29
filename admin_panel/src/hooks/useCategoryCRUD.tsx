@@ -14,13 +14,15 @@ export type Category = {
   modified_time: moment.Moment;
 };
 export const useCategoryCRUD = () => {
-  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
+  const [categoryList, setcategoryList] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { uploadCategoryImage, deleteCategoryImage } = useCategoryImageCRUD();
   useEffect(() => {
+    setIsLoading(true);
     const unsubscribe = onValue(ref(database, "/Categories"), (snapshot) => {
       const res = snapshot.val();
       if (res) {
-        setCategoriesList(
+        setcategoryList(
           //@ts-ignore
           Object.entries(res).reduce(
             (acc: string[], [id, attr]: [string, any]) => {
@@ -39,11 +41,12 @@ export const useCategoryCRUD = () => {
           )
         );
       } else {
-        setCategoriesList([]);
+        setcategoryList([]);
       }
+      setIsLoading(false);
     });
     return unsubscribe;
-  }, [setCategoriesList]);
+  }, [setcategoryList]);
 
   const createCategory = useCallback(
     async (
@@ -140,5 +143,11 @@ export const useCategoryCRUD = () => {
     [deleteCategoryImage, uploadCategoryImage]
   );
 
-  return { categoriesList, createCategory, deleteCategory, updateCategory };
+  return {
+    categoryList,
+    createCategory,
+    deleteCategory,
+    updateCategory,
+    isLoading,
+  };
 };

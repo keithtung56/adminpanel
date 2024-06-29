@@ -5,7 +5,8 @@ import styled from "styled-components";
 import { AddButton, DeleteButton, GenericTable } from "../../components";
 import { Message, useMessageCRUD } from "../../hooks";
 import { useTranslation } from "react-i18next";
-import { AddMessageForm, EditMessageForm, SelectUserForm } from "./component";
+import { MessageForm, SelectUserForm } from "./component";
+import { MarketingFormActions } from "./enum";
 
 const StyledCard = styled(Card)`
   border-radius: 20px;
@@ -51,15 +52,19 @@ const StyledTable = styled(GenericTable)`
 
 export const MarketingPage = memo(() => {
   const { t } = useTranslation();
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
+  const [formAction, setFormAction] = useState<
+    MarketingFormActions | undefined
+  >(undefined);
   const [showSelectUserForm, setShowSelectUserForm] = useState(false);
-  const [editMessage, setEditMessage] = useState<Message | null>(null);
+  const [editMessage, setEditMessage] = useState<Message | undefined>(
+    undefined
+  );
   const [selectedMessageIds, setSelectedMessageIds] = useState<string[]>([]);
   const { messageList, deleteMessage } = useMessageCRUD();
   const AddButtonOnClick = useCallback(() => {
-    setShowAddForm(true);
-  }, [setShowAddForm]);
+    setEditMessage(undefined);
+    setFormAction(MarketingFormActions.Add);
+  }, [setFormAction, setEditMessage]);
 
   const DeleteButtonOnClick = useCallback(async () => {
     await Promise.all(
@@ -110,7 +115,7 @@ export const MarketingPage = memo(() => {
               variant="outlined"
               onClick={() => {
                 setEditMessage(data);
-                setShowEditForm(true);
+                setFormAction(MarketingFormActions.Edit);
               }}
             >
               <StyledEditIcon />
@@ -135,7 +140,7 @@ export const MarketingPage = memo(() => {
       CheckBoxOnClick,
       t,
       setEditMessage,
-      setShowEditForm,
+      setFormAction,
       setShowSelectUserForm,
     ]
   );
@@ -164,18 +169,11 @@ export const MarketingPage = memo(() => {
         />
       </StyledCard>
 
-      {showAddForm && (
-        <AddMessageForm
-          showAddForm={showAddForm}
-          setShowAddForm={setShowAddForm}
-        />
-      )}
-
-      {showEditForm && editMessage && (
-        <EditMessageForm
-          showEditForm={showEditForm}
-          setShowEditForm={setShowEditForm}
-          message={editMessage}
+      {formAction !== undefined && (
+        <MessageForm
+          formAction={formAction}
+          setFormAction={setFormAction}
+          selectedMessage={editMessage}
         />
       )}
       {showSelectUserForm && editMessage && (

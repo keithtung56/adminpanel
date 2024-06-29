@@ -1,25 +1,18 @@
 import { memo } from "react";
-import {
-  Dialog,
-  FormikFormFields,
-  NormalTextField,
-  NumberTextField,
-  Title,
-} from "../../../components";
+import { Dialog, Title, useFormikFields } from "../../../components";
 import { User } from "../../../hooks";
 import { useFormik } from "formik";
 import styled from "styled-components";
 import { Box, MenuItem, TextField } from "@mui/material";
-import { UserFormAction } from "../enum";
+import { UserFormActions } from "../enum";
 import { useUserForm } from "../hooks";
 import { useTranslation } from "react-i18next";
 
 type Props = {
-  title: string;
   selectedUser: User | undefined;
-  formAction: UserFormAction;
+  formAction: UserFormActions;
   setFormAction: React.Dispatch<
-    React.SetStateAction<UserFormAction | undefined>
+    React.SetStateAction<UserFormActions | undefined>
   >;
 };
 
@@ -30,9 +23,9 @@ const StyledBox = styled(Box)`
   padding: 10px;
 `;
 export const UserForm = memo(
-  ({ title, formAction, selectedUser, setFormAction }: Props) => {
+  ({ formAction, selectedUser, setFormAction }: Props) => {
     const { t } = useTranslation();
-    const { fields, initValues, schema, formOnSubmit } = useUserForm(
+    const { title, fields, initValues, schema, formOnSubmit } = useUserForm(
       formAction,
       selectedUser
     );
@@ -42,6 +35,8 @@ export const UserForm = memo(
       validationSchema: schema,
       onSubmit: formOnSubmit,
     });
+
+    const { fieldsCompoents } = useFormikFields({ fields, formik });
     return (
       <Dialog
         title={<Title>{title}</Title>}
@@ -57,34 +52,7 @@ export const UserForm = memo(
         fullWidth
       >
         <StyledBox>
-          {fields.map(({ name, disabled, fieldType, label }) => {
-            switch (fieldType) {
-              case FormikFormFields.TextField:
-                return (
-                  <NormalTextField
-                    key={name}
-                    name={name}
-                    label={label}
-                    disabled={disabled}
-                    formik={formik}
-                    fullWidth
-                  />
-                );
-              case FormikFormFields.NumberField:
-                return (
-                  <NumberTextField
-                    key={name}
-                    name={name}
-                    label={label}
-                    disabled={disabled}
-                    formik={formik}
-                    fullWidth
-                  />
-                );
-              default:
-                return <></>;
-            }
-          })}
+          {fieldsCompoents}
           <TextField
             select
             id="gender"

@@ -7,7 +7,7 @@ import { CategoryForm } from "./component";
 import { Category, useCategoryCRUD } from "../../hooks";
 import { DATE_DISPLAY_FORMAT } from "../../constants";
 import { EditIcon } from "../../icons";
-import { CategoriesFormAction } from "./enum";
+import { CategoryFormAction } from "./enum";
 
 const StyledCard = styled(Card)`
   border-radius: 20px;
@@ -48,14 +48,14 @@ const StyledTable = styled(GenericTable)`
 
 export const CategoriesPage = memo(() => {
   const { t } = useTranslation();
-  const [formAction, setFormAction] = useState<
-    CategoriesFormAction | undefined
-  >(undefined);
+  const [formAction, setFormAction] = useState<CategoryFormAction | undefined>(
+    undefined
+  );
   const [editCategory, setEditCategory] = useState<any>(null);
   const [selectedCategoryIds, setSelectedCatergoryIds] = useState<string[]>([]);
-  const { categoriesList, deleteCategory } = useCategoryCRUD();
+  const { categoryList, deleteCategory } = useCategoryCRUD();
   const AddButtonOnClick = useCallback(() => {
-    setFormAction(CategoriesFormAction.Add);
+    setFormAction(CategoryFormAction.Add);
     setEditCategory(undefined);
   }, [setFormAction, setEditCategory]);
 
@@ -119,7 +119,7 @@ export const CategoriesPage = memo(() => {
             variant="outlined"
             onClick={() => {
               setEditCategory(data);
-              setFormAction(CategoriesFormAction.Edit);
+              setFormAction(CategoryFormAction.Edit);
             }}
           >
             <StyledEditIcon />
@@ -131,12 +131,12 @@ export const CategoriesPage = memo(() => {
     [selectedCategoryIds, CheckBoxOnClick, setEditCategory, setFormAction, t]
   );
 
-  const sortedCategoriesList = useMemo(
+  const sortedcategoryList = useMemo(
     () =>
-      categoriesList.sort((a, b) =>
+      categoryList.sort((a, b) =>
         a.created_time.isSameOrAfter(b.created_time) ? -1 : 1
       ),
-    [categoriesList]
+    [categoryList]
   );
   return (
     <>
@@ -149,7 +149,7 @@ export const CategoriesPage = memo(() => {
       </ButtonWrapper>
       <StyledCard>
         <StyledTable
-          data={sortedCategoriesList}
+          data={sortedcategoryList}
           //@ts-ignore
           generator={listGenerator}
           unique_col={"category_id"}
@@ -158,7 +158,6 @@ export const CategoriesPage = memo(() => {
 
       {formAction != undefined && (
         <CategoryForm
-          title={"testing"}
           formAction={formAction}
           setFormAction={setFormAction}
           selectedCategory={editCategory}

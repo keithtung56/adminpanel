@@ -21,7 +21,10 @@ type GenericTableProp<T> = {
   className?: string;
 };
 
-const StyledTableHead = styled(TableHead)``;
+const StyledTableHead = styled(TableHead)`
+  position: sticky;
+  top: 0;
+`;
 const StyledTable = styled(Table)``;
 export const GenericTable = memo(
   <T extends { [index: string]: any }>({

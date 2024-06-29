@@ -7,7 +7,7 @@ import { UserForm } from "./component";
 import { useTranslation } from "react-i18next";
 import { DATE_DISPLAY_FORMAT } from "../../constants";
 import { EditIcon } from "../../icons";
-import { UserFormAction } from "./enum/UserFormAction";
+import { UserFormActions } from "./enum";
 
 const StyledCard = styled(Card)`
   border-radius: 20px;
@@ -48,15 +48,16 @@ const StyledEditIcon = styled(EditIcon)`
 `;
 export const UsersPage = memo(() => {
   const { t } = useTranslation();
-  const [formAction, setFormAction] = useState<UserFormAction | undefined>(
+  const [formAction, setFormAction] = useState<UserFormActions | undefined>(
     undefined
   );
   const [editUser, setEditUser] = useState<User | undefined>(undefined);
   const { userList, deleteAuthUser, deleteUserFromDb } = useUserCRUD();
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const AddButtonOnClick = useCallback(() => {
-    setFormAction(UserFormAction.Add);
-  }, [setFormAction]);
+    setEditUser(undefined);
+    setFormAction(UserFormActions.Add);
+  }, [setFormAction, setEditUser]);
 
   const DeleteButtonOnClick = useCallback(async () => {
     for (const id of selectedUserIds) {
@@ -132,7 +133,7 @@ export const UsersPage = memo(() => {
             variant="outlined"
             onClick={() => {
               setEditUser(data);
-              setFormAction(UserFormAction.Edit);
+              setFormAction(UserFormActions.Edit);
             }}
           >
             <StyledEditIcon />
@@ -174,7 +175,6 @@ export const UsersPage = memo(() => {
         <UserForm
           selectedUser={editUser}
           formAction={formAction}
-          title={"asd"}
           setFormAction={setFormAction}
         />
       )}

@@ -3,11 +3,12 @@ import { AddButton, DeleteButton, GenericTable } from "../../components";
 import { Card, Box, Checkbox, Button } from "@mui/material";
 import styled from "styled-components";
 import { Order, useOrderCRUD } from "../../hooks";
-import { AddOrderForm, EditOrderForm, ViewOrderForm } from "./component";
+import { OrderForm } from "./component";
 import { useProductCRUD, useUserCRUD } from "../../hooks";
 import { useTranslation } from "react-i18next";
 import { DATE_DISPLAY_FORMAT } from "../../constants";
 import { EditIcon, ViewIcon } from "../../icons";
+import { OrderFormActions } from "./enum";
 
 const StyledCard = styled(Card)`
   border-radius: 20px;
@@ -51,9 +52,10 @@ const StyledEditIcon = styled(EditIcon)`
 `;
 export const OrdersPage = memo(() => {
   const { t } = useTranslation();
-  const [showAddForm, setShowAddForm] = useState<boolean>(false);
-  const [showEditForm, setShowEditForm] = useState<boolean>(false);
-  const [showViewOrderForm, setShowViewOrderForm] = useState<boolean>(false);
+
+  const [formAction, setFormAction] = useState<OrderFormActions | undefined>(
+    undefined
+  );
 
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
   const [editOrder, setEditOrder] = useState<any>(null);
@@ -62,8 +64,9 @@ export const OrdersPage = memo(() => {
   const { productList } = useProductCRUD();
   const { userList } = useUserCRUD();
   const AddButtonOnClick = useCallback(() => {
-    setShowAddForm(true);
-  }, [setShowAddForm]);
+    setEditOrder(undefined);
+    setFormAction(OrderFormActions.Add);
+  }, [setEditOrder, setFormAction]);
 
   const DeleteButtonOnClick = useCallback(async () => {
     await Promise.all(
@@ -156,7 +159,7 @@ export const OrdersPage = memo(() => {
               variant="outlined"
               onClick={() => {
                 setEditOrder(data);
-                setShowViewOrderForm(true);
+                setFormAction(OrderFormActions.View);
               }}
             >
               <StyledViewIcon />
@@ -167,7 +170,7 @@ export const OrdersPage = memo(() => {
                 variant="outlined"
                 onClick={() => {
                   setEditOrder(data);
-                  setShowEditForm(true);
+                  setFormAction(OrderFormActions.Edit);
                 }}
               >
                 <StyledEditIcon />
@@ -208,24 +211,11 @@ export const OrdersPage = memo(() => {
         }
       </StyledCard>
 
-      {showAddForm && (
-        <AddOrderForm
-          showAddForm={showAddForm}
-          setShowAddForm={setShowAddForm}
-        />
-      )}
-      {showViewOrderForm && (
-        <ViewOrderForm
-          showViewOrderForm={showViewOrderForm}
-          setShowViewOrderForm={setShowViewOrderForm}
-          order={editOrder}
-        />
-      )}
-      {showEditForm && (
-        <EditOrderForm
-          showEditOrderForm={showEditForm}
-          setShowEditOrderForm={setShowEditForm}
-          order={editOrder}
+      {formAction !== undefined && (
+        <OrderForm
+          formAction={formAction}
+          selectedOrder={editOrder}
+          setFormAction={setFormAction}
         />
       )}
     </>

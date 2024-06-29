@@ -27,6 +27,10 @@ type Props = Omit<DialogProps, "title"> &
     title: JSX.Element;
   };
 
+const StyledContent = styled(DialogContent)`
+  overflow: auto;
+  max-height: 50vh;
+`;
 export const Dialog = memo(
   ({
     children,
@@ -63,7 +67,7 @@ export const Dialog = memo(
     return (
       <MuiDialog {...props} className={className} maxWidth={"md"}>
         <DialogTitle>{title}</DialogTitle>
-        <DialogContent>{children}</DialogContent>
+        <StyledContent>{children}</StyledContent>
 
         <DialogActions>
           {dialogActions.map(({ text, onClick, variant }) => (

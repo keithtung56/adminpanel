@@ -23,8 +23,10 @@ export type User = {
 };
 export const useUserCRUD = () => {
   const [userList, setuserList] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    setIsLoading(true);
     const unsubscribe = onValue(ref(database, "/Users"), (snapshot) => {
       const res = snapshot.val();
       if (res) {
@@ -49,9 +51,10 @@ export const useUserCRUD = () => {
       } else {
         setuserList([]);
       }
+      setIsLoading(false);
     });
     return unsubscribe;
-  }, [setuserList]);
+  }, [setuserList, setIsLoading]);
 
   const createUser = useCallback(
     async (
@@ -136,5 +139,6 @@ export const useUserCRUD = () => {
     deleteUserFromDb,
     deleteAuthUser,
     updateUser,
+    isLoading,
   };
 };

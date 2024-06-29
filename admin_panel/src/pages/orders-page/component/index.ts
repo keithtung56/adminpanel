@@ -1,3 +1,1 @@
-export * from './AddOrderForm'
-export * from './EditOrderForm'
-export * from './ViewOrderForm'
+export * from "./OrderForm";

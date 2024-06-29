@@ -9,18 +9,17 @@ import {
 import { memo, useCallback, useState, useMemo } from "react";
 import { AddButton, DeleteButton, GenericTable } from "../../components";
 import styled from "styled-components";
-import {} from "../../components";
 import {
   Product,
   productStatusOptions,
   useCategoryCRUD,
   useProductCRUD,
 } from "../../hooks";
-import { AddProductForm } from "./component";
-import { EditProductForm } from "./component/EditProductForm";
 import { useTranslation } from "react-i18next";
 import { DATE_DISPLAY_FORMAT } from "../../constants";
 import { EditIcon } from "../../icons";
+import { ProductFormActions } from "./enum";
+import { ProductForm } from "./component";
 
 const StyledCard = styled(Card)`
   border-radius: 20px;
@@ -75,11 +74,11 @@ export const ProductsPage = memo(() => {
   const { t } = useTranslation();
 
   const { productList, deleteProduct } = useProductCRUD();
-  const { categoriesList } = useCategoryCRUD();
+  const { categoryList } = useCategoryCRUD();
 
-  const [showAddForm, setShowAddForm] = useState<boolean>(false);
-  const [showEditForm, setShowEditForm] = useState<boolean>(false);
-
+  const [formAction, setFormAction] = useState<ProductFormActions | undefined>(
+    undefined
+  );
   const [viewingProductStatus, setViewingProductStatus] = useState<
     Product["status"] | "all"
   >("all");
@@ -87,8 +86,9 @@ export const ProductsPage = memo(() => {
   const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
 
   const AddButtonOnClick = useCallback(() => {
-    setShowAddForm(true);
-  }, [setShowAddForm]);
+    setEditProduct(undefined);
+    setFormAction(ProductFormActions.Add);
+  }, [setFormAction, setEditProduct]);
 
   const DeleteButtonOnClick = useCallback(async () => {
     await Promise.all(
@@ -139,7 +139,7 @@ export const ProductsPage = memo(() => {
         key: "category",
         header: t("product.category"),
         render: (data: Product) => {
-          const category = categoriesList.find(
+          const category = categoryList.find(
             (category) => category.category_id === data.category_id
           );
           if (category) {
@@ -154,16 +154,10 @@ export const ProductsPage = memo(() => {
         render: (data: Product) => t(`product.${data.status}`),
       },
       {
-        key: "status",
+        key: "stock",
         header: t("product.stock"),
         render: (data: Product) => data.stock,
       },
-      // {
-      //   key: "created_time",
-      //   header: t("product.created_time"),
-      //   render: (data: Product) =>
-      //     data.created_time.format(DATE_DISPLAY_FORMAT),
-      // },
       {
         key: "modified_time",
         header: t("product.modified_time"),
@@ -178,7 +172,7 @@ export const ProductsPage = memo(() => {
             variant="outlined"
             onClick={() => {
               setEditProduct(data);
-              setShowEditForm(true);
+              setFormAction(ProductFormActions.Edit);
             }}
           >
             <StyledEditIcon />
@@ -187,7 +181,7 @@ export const ProductsPage = memo(() => {
         ),
       },
     ],
-    [selectedProductIds, CheckBoxOnClick, setEditProduct, t, categoriesList]
+    [selectedProductIds, CheckBoxOnClick, setEditProduct, t, categoryList]
   );
 
   const sortedproductList = useMemo(() => {
@@ -220,7 +214,9 @@ export const ProductsPage = memo(() => {
             <MenuItem value={"all"}>{t("product.all")}</MenuItem>
             {productStatusOptions.map((status) => {
               return (
-                <MenuItem value={status}>{t(`product.${status}`)}</MenuItem>
+                <MenuItem value={status} key={status}>
+                  {t(`product.${status}`)}
+                </MenuItem>
               );
             })}
           </StyledSelectStatusField>
@@ -241,17 +237,11 @@ export const ProductsPage = memo(() => {
           />
         }
       </StyledCard>
-      {showAddForm && (
-        <AddProductForm
-          showAddForm={showAddForm}
-          setShowAddForm={setShowAddForm}
-        />
-      )}
-      {showEditForm && (
-        <EditProductForm
-          showEditForm={showEditForm}
-          setShowEditForm={setShowEditForm}
-          product={editProduct}
+      {formAction !== undefined && (
+        <ProductForm
+          formAction={formAction}
+          selectedProduct={editProduct}
+          setFormAction={setFormAction}
         />
       )}
     </>
