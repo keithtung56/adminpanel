@@ -7,7 +7,12 @@ import {
   TextField,
 } from "@mui/material";
 import { memo, useCallback, useState, useMemo } from "react";
-import { AddButton, DeleteButton, GenericTable } from "../../components";
+import {
+  AddButton,
+  DeleteButton,
+  GenericTable,
+  usePagination,
+} from "../../components";
 import styled from "styled-components";
 import {
   Product,
@@ -23,7 +28,6 @@ import { ProductForm } from "./component";
 
 const StyledCard = styled(Card)`
   border-radius: 20px;
-  overflow: auto;
   margin-top: 10px;
   height: 100%;
   padding: 20px;
@@ -44,18 +48,17 @@ const RightButtons = styled(Box)`
 `;
 
 const StyledTable = styled(GenericTable)`
-  .MuiTableHead-root {
+  .MuiTableHead-root,
+  .MuiTableHead-root * {
     background-color: ${({ theme }) => theme.colors.greys[4]};
-    * {
-      color: ${({ theme }) => theme.colors.white};
-      font-size: ${({ theme }) => theme.fontSize.medium};
-    }
+    color: ${({ theme }) => theme.colors.white};
+    font-size: ${({ theme }) => theme.fontSize.medium};
   }
-  .MuiTableBody-root {
-    * {
-      color: ${({ theme }) => theme.colors.black};
-      font-size: ${({ theme }) => theme.fontSize.small};
-    }
+
+  .MuiTableBody-root,
+  .MuiTableBody-root * {
+    color: ${({ theme }) => theme.colors.black};
+    font-size: ${({ theme }) => theme.fontSize.small};
   }
 `;
 
@@ -195,6 +198,7 @@ export const ProductsPage = memo(() => {
     );
   }, [productList, viewingProductStatus]);
 
+  const { displayData, paginationComponent } = usePagination(sortedproductList);
   return (
     <>
       <ButtonWrapper>
@@ -230,13 +234,14 @@ export const ProductsPage = memo(() => {
       <StyledCard>
         {
           <StyledTable
-            data={sortedproductList}
+            data={displayData}
             //@ts-ignore
             generator={listGenerator}
             unique_col="product_id"
           />
         }
       </StyledCard>
+      {paginationComponent}
       {formAction !== undefined && (
         <ProductForm
           formAction={formAction}

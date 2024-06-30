@@ -1,7 +1,12 @@
 import { Box, Button, Card, Checkbox } from "@mui/material";
 import { memo, useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
-import { AddButton, DeleteButton, GenericTable } from "../../components";
+import {
+  AddButton,
+  DeleteButton,
+  GenericTable,
+  usePagination,
+} from "../../components";
 import { useTranslation } from "react-i18next";
 import { CategoryForm } from "./component";
 import { Category, useCategoryCRUD } from "../../hooks";
@@ -31,18 +36,17 @@ const StyledAddButton = styled(AddButton)``;
 const StyledDeleteButton = styled(DeleteButton)``;
 
 const StyledTable = styled(GenericTable)`
-  .MuiTableHead-root {
+  .MuiTableHead-root,
+  .MuiTableHead-root * {
     background-color: ${({ theme }) => theme.colors.greys[4]};
-    * {
-      color: ${({ theme }) => theme.colors.white};
-      font-size: ${({ theme }) => theme.fontSize.medium};
-    }
+    color: ${({ theme }) => theme.colors.white};
+    font-size: ${({ theme }) => theme.fontSize.medium};
   }
-  .MuiTableBody-root {
-    * {
-      color: ${({ theme }) => theme.colors.black};
-      font-size: ${({ theme }) => theme.fontSize.small};
-    }
+
+  .MuiTableBody-root,
+  .MuiTableBody-root * {
+    color: ${({ theme }) => theme.colors.black};
+    font-size: ${({ theme }) => theme.fontSize.small};
   }
 `;
 
@@ -138,6 +142,8 @@ export const CategoriesPage = memo(() => {
       ),
     [categoryList]
   );
+  const { displayData, paginationComponent } =
+    usePagination(sortedcategoryList);
   return (
     <>
       <ButtonWrapper>
@@ -149,13 +155,13 @@ export const CategoriesPage = memo(() => {
       </ButtonWrapper>
       <StyledCard>
         <StyledTable
-          data={sortedcategoryList}
+          data={displayData}
           //@ts-ignore
           generator={listGenerator}
           unique_col={"category_id"}
         />
       </StyledCard>
-
+      {paginationComponent}
       {formAction != undefined && (
         <CategoryForm
           formAction={formAction}

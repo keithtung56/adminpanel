@@ -1,6 +1,11 @@
 import { memo, useCallback, useMemo, useState } from "react";
 import { Message, User, useMessage, useUserCRUD } from "../../../hooks";
-import { Dialog, GenericTable, Title } from "../../../components";
+import {
+  Dialog,
+  GenericTable,
+  Title,
+  usePagination,
+} from "../../../components";
 import { useTranslation } from "react-i18next";
 import { Box, Checkbox } from "@mui/material";
 import styled from "styled-components";
@@ -15,21 +20,29 @@ const Body = styled(Box)`
 `;
 
 const StyledTable = styled(GenericTable)`
-  .MuiTableHead-root {
-    background-color: ${({ theme }) => theme.colors.greys[4]};
-    * {
-      color: ${({ theme }) => theme.colors.white};
-      font-size: ${({ theme }) => theme.fontSize.medium};
-    }
+  .MuiTableHead-root,
+  .MuiTableHead-root *:not(.MuiCheckbox-root *) {
+    background-color: ${({ theme }) => theme.colors.greys[5]};
+    color: ${({ theme }) => theme.colors.white};
+    font-size: ${({ theme }) => theme.fontSize.medium};
   }
-  .MuiTableBody-root {
-    * {
-      color: ${({ theme }) => theme.colors.black};
-      font-size: ${({ theme }) => theme.fontSize.small};
-    }
+  .MuiTableHead-root,
+  .MuiTableHead-root,
+  .MuiCheckbox-root * {
+    color: ${({ theme }) => theme.colors.black};
+    font-size: ${({ theme }) => theme.fontSize.small};
+  }
+  .MuiTableBody-root,
+  .MuiTableBody-root * {
+    color: ${({ theme }) => theme.colors.black};
+    font-size: ${({ theme }) => theme.fontSize.small};
   }
 `;
 
+const StyledBox = styled(Box)`
+  display: flex;
+`;
+const StyledCheckbox = styled(Checkbox)``;
 export const SelectUserForm = memo(
   ({ showSelectUserForm, setShowSelectUserForm, message }: Props) => {
     const { t } = useTranslation();
@@ -60,7 +73,7 @@ export const SelectUserForm = memo(
         {
           key: "delete",
           header: () => (
-            <Checkbox
+            <StyledCheckbox
               checked={selectedUserIds.length === userList.length}
               onClick={() => {
                 AllCheckBoxOnClick();
@@ -113,6 +126,7 @@ export const SelectUserForm = memo(
       [userList]
     );
 
+    const { displayData, paginationComponent } = usePagination(sortedUserList);
     return (
       <Dialog
         title={<Title>{t("form.sendMessage.title")}</Title>}
@@ -138,11 +152,12 @@ export const SelectUserForm = memo(
       >
         <Body>
           <StyledTable
-            data={sortedUserList}
+            data={displayData}
             //@ts-ignore
             generator={listGenerator}
             unique_col={"uid"}
           />
+          <StyledBox>{paginationComponent}</StyledBox>
         </Body>
       </Dialog>
     );

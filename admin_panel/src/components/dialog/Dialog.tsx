@@ -29,7 +29,7 @@ type Props = Omit<DialogProps, "title"> &
 
 const StyledContent = styled(DialogContent)`
   overflow: auto;
-  max-height: 50vh;
+  max-height: 70vh;
 `;
 export const Dialog = memo(
   ({

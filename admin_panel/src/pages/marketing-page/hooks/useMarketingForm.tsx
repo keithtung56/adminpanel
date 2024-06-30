@@ -23,13 +23,13 @@ export const useMarketingForm = (
   const fields: FormikForm[] = useMemo(
     () => [
       {
-        label: "content",
+        label: t("message.content"),
         name: "content",
         disabled: false,
         fieldType: FormikFormFields.TextArea,
       },
     ],
-    [action]
+    [t]
   );
 
   const initValues = useMemo(() => {

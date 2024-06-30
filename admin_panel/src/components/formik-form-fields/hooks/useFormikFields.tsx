@@ -6,6 +6,7 @@ import { NumberTextField } from "../NumberTextField";
 import { SelectCategoryField } from "../SelectCategoryField";
 import { SelectUserField } from "../SelectUserField";
 import { SelectOrderStatusField } from "../SelectOrderStatusField";
+import { SelectProductStatusField } from "../SelectProductStatusField";
 
 export type FormikForm = {
   label: string;
@@ -79,6 +80,17 @@ export const useFormikFields = ({ fields, formik }: Props) => {
       case FormikFormFields.SelectOrderStatusField:
         return (
           <SelectOrderStatusField
+            key={name}
+            name={name}
+            label={label}
+            disabled={disabled}
+            formik={formik}
+            fullWidth
+          />
+        );
+      case FormikFormFields.SelectProductStatusField:
+        return (
+          <SelectProductStatusField
             key={name}
             name={name}
             label={label}

@@ -1,2 +1,1 @@
-export * from './UploadVideoForm'
-export * from './ViewVideoForm'
+export * from "./VideoForm";

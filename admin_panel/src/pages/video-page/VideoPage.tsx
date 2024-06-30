@@ -1,12 +1,18 @@
 import { Box, Button, Card, Checkbox } from "@mui/material";
 import { memo, useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
-import { AddButton, DeleteButton, GenericTable } from "../../components";
-import { UploadVideoForm, ViewVideoForm } from "./components";
+import {
+  AddButton,
+  DeleteButton,
+  GenericTable,
+  usePagination,
+} from "../../components";
+import { VideoForm } from "./components";
 import { DATE_DISPLAY_FORMAT } from "../../constants";
 import { useTranslation } from "react-i18next";
 import { Video, useVideoCRUD } from "../../hooks";
 import { ViewIcon } from "../../icons";
+import { VideoFormActions } from "./enum";
 
 const StyledCard = styled(Card)`
   border-radius: 20px;
@@ -16,18 +22,17 @@ const StyledCard = styled(Card)`
   padding: 20px;
 `;
 const StyledTable = styled(GenericTable)`
-  .MuiTableHead-root {
+  .MuiTableHead-root,
+  .MuiTableHead-root * {
     background-color: ${({ theme }) => theme.colors.greys[4]};
-    * {
-      color: ${({ theme }) => theme.colors.white};
-      font-size: ${({ theme }) => theme.fontSize.medium};
-    }
+    color: ${({ theme }) => theme.colors.white};
+    font-size: ${({ theme }) => theme.fontSize.medium};
   }
-  .MuiTableBody-root {
-    * {
-      color: ${({ theme }) => theme.colors.black};
-      font-size: ${({ theme }) => theme.fontSize.small};
-    }
+
+  .MuiTableBody-root,
+  .MuiTableBody-root * {
+    color: ${({ theme }) => theme.colors.black};
+    font-size: ${({ theme }) => theme.fontSize.small};
   }
 `;
 const StyledAddButton = styled(AddButton)``;
@@ -47,16 +52,17 @@ export const VideoPage = memo(() => {
   const { t } = useTranslation();
   const { videoList, deleteVideo } = useVideoCRUD();
 
-  const [showUploadVideoForm, setShowUploadVideoForm] =
-    useState<boolean>(false);
-  const [showViewVideoForm, setShowViewVideoForm] = useState<boolean>(false);
+  const [formAction, setFormAction] = useState<VideoFormActions | undefined>(
+    undefined
+  );
 
   const [selectedVideoIds, setSelectedVideoIds] = useState<string[]>([]);
-  const [viewVideo, setViewVideo] = useState<Video | null>(null);
+  const [viewVideo, setViewVideo] = useState<Video | undefined>(undefined);
 
   const AddButtonOnClick = useCallback(() => {
-    setShowUploadVideoForm(true);
-  }, [setShowUploadVideoForm]);
+    setViewVideo(undefined);
+    setFormAction(VideoFormActions.Add);
+  }, [setViewVideo, setFormAction]);
 
   const DeleteButtonOnClick = useCallback(async () => {
     await Promise.all(
@@ -100,14 +106,14 @@ export const VideoPage = memo(() => {
         render: (data: Video) => data.created_time.format(DATE_DISPLAY_FORMAT),
       },
       {
-        key: "edit",
+        key: "view",
         header: "",
         render: (data: Video) => (
           <Button
             variant="outlined"
             onClick={() => {
               setViewVideo(data);
-              setShowViewVideoForm(true);
+              setFormAction(VideoFormActions.View);
             }}
           >
             <StyledViewIcon />
@@ -116,9 +122,15 @@ export const VideoPage = memo(() => {
         ),
       },
     ],
-    [t, selectedVideoIds, CheckBoxOnClick]
+    [t, selectedVideoIds, CheckBoxOnClick, setFormAction]
   );
 
+  const sortedVideoList = useMemo(() => {
+    return videoList.sort((a, b) =>
+      a.created_time.isSameOrAfter(b.created_time) ? -1 : 1
+    );
+  }, [videoList]);
+  const { displayData, paginationComponent } = usePagination(sortedVideoList);
   return (
     <>
       <ButtonWrapper>
@@ -130,23 +142,18 @@ export const VideoPage = memo(() => {
       </ButtonWrapper>
       <StyledCard>
         <StyledTable
-          data={videoList}
+          data={displayData}
           unique_col="id"
           //@ts-ignore
           generator={listGenerator}
         />
       </StyledCard>
-      {showUploadVideoForm && (
-        <UploadVideoForm
-          showUploadVideoForm={showUploadVideoForm}
-          setShowUploadVideoForm={setShowUploadVideoForm}
-        />
-      )}
-      {showViewVideoForm && viewVideo && (
-        <ViewVideoForm
-          showViewVideoForm={showViewVideoForm}
-          setShowViewVideoForm={setShowViewVideoForm}
-          viewVideo={viewVideo}
+      {paginationComponent}
+      {formAction !== undefined && (
+        <VideoForm
+          formAction={formAction}
+          setFormAction={setFormAction}
+          selectedVideo={viewVideo}
         />
       )}
     </>

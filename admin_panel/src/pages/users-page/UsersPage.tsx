@@ -1,5 +1,10 @@
 import { memo, useCallback, useMemo, useState } from "react";
-import { AddButton, DeleteButton, GenericTable } from "../../components";
+import {
+  AddButton,
+  DeleteButton,
+  GenericTable,
+  usePagination,
+} from "../../components";
 import { Card, Box, Checkbox, Button } from "@mui/material";
 import styled from "styled-components";
 import { User, useUserCRUD } from "../../hooks";
@@ -28,18 +33,17 @@ const RightButtons = styled(Box)`
 const ButtonWrapper = styled(Box)``;
 
 const StyledTable = styled(GenericTable)`
-  .MuiTableHead-root {
+  .MuiTableHead-root,
+  .MuiTableHead-root * {
     background-color: ${({ theme }) => theme.colors.greys[4]};
-    * {
-      color: ${({ theme }) => theme.colors.white};
-      font-size: ${({ theme }) => theme.fontSize.medium};
-    }
+    color: ${({ theme }) => theme.colors.white};
+    font-size: ${({ theme }) => theme.fontSize.medium};
   }
-  .MuiTableBody-root {
-    * {
-      color: ${({ theme }) => theme.colors.black};
-      font-size: ${({ theme }) => theme.fontSize.small};
-    }
+
+  .MuiTableBody-root,
+  .MuiTableBody-root * {
+    color: ${({ theme }) => theme.colors.black};
+    font-size: ${({ theme }) => theme.fontSize.small};
   }
 `;
 
@@ -152,6 +156,8 @@ export const UsersPage = memo(() => {
       ),
     [userList]
   );
+
+  const { displayData, paginationComponent } = usePagination(sortedUserList);
   return (
     <>
       <ButtonWrapper>
@@ -164,13 +170,14 @@ export const UsersPage = memo(() => {
       <StyledCard>
         {
           <StyledTable
-            data={sortedUserList}
+            data={displayData}
             //@ts-ignore
             generator={listGenerator}
             unique_col={"uid"}
           />
         }
       </StyledCard>
+      {paginationComponent}
       {formAction !== undefined && (
         <UserForm
           selectedUser={editUser}

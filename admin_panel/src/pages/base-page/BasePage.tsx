@@ -14,10 +14,14 @@ const BodyWrapper = styled.div`
 const RightWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
-  padding: 30px;
+  padding: 0 15px;
   width: 100%;
+  margin: 0 15px;
 `;
 
+const StyledBox = styled(Box)`
+  margin: 25px 0;
+`;
 export const BasePage = memo<PropsWithChildren>(({ children }) => {
   const { matchpath } = useCurrentPath();
   const { t } = useTranslation();
@@ -28,9 +32,9 @@ export const BasePage = memo<PropsWithChildren>(({ children }) => {
       <BodyWrapper>
         <NavBar open={showNavBar} />
         <RightWrapper>
-          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <StyledBox component="main">
             <Title>{t(`navBar.${matchpath}`)}</Title>
-          </Box>
+          </StyledBox>
           {children}
         </RightWrapper>
       </BodyWrapper>

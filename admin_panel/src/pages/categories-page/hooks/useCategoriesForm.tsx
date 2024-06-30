@@ -26,13 +26,13 @@ export const useCategoriesForm = (
   const fields: FormikForm[] = useMemo(
     () => [
       {
-        label: "category_name",
+        label: t("category.category_name"),
         name: "category_name",
         disabled: false,
         fieldType: FormikFormFields.TextField,
       },
     ],
-    [action]
+    [t]
   );
 
   const title = useMemo(() => {

@@ -2,6 +2,8 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
+  TableFooter,
   TableHead,
   TableRow,
 } from "@mui/material";
@@ -21,11 +23,17 @@ type GenericTableProp<T> = {
   className?: string;
 };
 
-const StyledTableHead = styled(TableHead)`
-  position: sticky;
-  top: 0;
-`;
+const StyledTableContainer = styled(TableContainer)``;
 const StyledTable = styled(Table)``;
+const StyledTableHead = styled(TableHead)``;
+const StyledTableBody = styled(TableBody)``;
+
+const StyledRow = styled(TableRow)``;
+const StyledCell = styled(TableCell)`
+  align-self: flex-start;
+  max-width: 30vw;
+`;
+
 export const GenericTable = memo(
   <T extends { [index: string]: any }>({
     data,
@@ -34,30 +42,33 @@ export const GenericTable = memo(
     className,
   }: GenericTableProp<T>) => {
     return (
-      <StyledTable className={className}>
-        <StyledTableHead>
-          <TableRow>
-            {generator.map((col) => (
-              <TableCell key={col.key}>
-                {typeof col.header === "function"
-                  ? col.header()
-                  : String(col.header)}
-              </TableCell>
-            ))}
-          </TableRow>
-        </StyledTableHead>
-        <TableBody>
-          {data.map((datum) => {
-            return (
-              <TableRow key={datum[unique_col]}>
-                {generator.map((col) => (
-                  <TableCell key={col.key}>{col.render(datum)}</TableCell>
-                ))}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </StyledTable>
+      <StyledTableContainer>
+        <StyledTable className={className} stickyHeader>
+          <StyledTableHead>
+            <TableRow>
+              {generator.map((col) => (
+                <StyledCell key={col.key}>
+                  {typeof col.header === "function"
+                    ? col.header()
+                    : String(col.header)}
+                </StyledCell>
+              ))}
+            </TableRow>
+          </StyledTableHead>
+          <StyledTableBody>
+            {data.map((datum) => {
+              return (
+                <StyledRow key={datum[unique_col]}>
+                  {generator.map((col) => (
+                    <StyledCell key={col.key}>{col.render(datum)}</StyledCell>
+                  ))}
+                </StyledRow>
+              );
+            })}
+          </StyledTableBody>
+          <TableFooter></TableFooter>
+        </StyledTable>
+      </StyledTableContainer>
     );
   }
 );

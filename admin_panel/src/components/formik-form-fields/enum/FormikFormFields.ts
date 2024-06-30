@@ -6,4 +6,5 @@ export enum FormikFormFields {
   SelectProductField,
   SelectCategoryField,
   SelectOrderStatusField,
+  SelectProductStatusField,
 }

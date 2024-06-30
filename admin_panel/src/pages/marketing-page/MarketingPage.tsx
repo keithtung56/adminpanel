@@ -2,7 +2,12 @@ import { Box, Button, Card, Checkbox } from "@mui/material";
 import { memo, useCallback, useMemo, useState } from "react";
 import { EditIcon, SendIcon } from "../../icons";
 import styled from "styled-components";
-import { AddButton, DeleteButton, GenericTable } from "../../components";
+import {
+  AddButton,
+  DeleteButton,
+  GenericTable,
+  usePagination,
+} from "../../components";
 import { Message, useMessageCRUD } from "../../hooks";
 import { useTranslation } from "react-i18next";
 import { MessageForm, SelectUserForm } from "./component";
@@ -33,20 +38,17 @@ const StyledAddButton = styled(AddButton)``;
 const StyledDeleteButton = styled(DeleteButton)``;
 
 const StyledTable = styled(GenericTable)`
-  .MuiTableHead-root {
+  .MuiTableHead-root,
+  .MuiTableHead-root * {
     background-color: ${({ theme }) => theme.colors.greys[4]};
-    * {
-      color: ${({ theme }) => theme.colors.white};
-      font-size: ${({ theme }) => theme.fontSize.medium};
-    }
+    color: ${({ theme }) => theme.colors.white};
+    font-size: ${({ theme }) => theme.fontSize.medium};
   }
-  .MuiTableBody-root {
-    * {
-      color: ${({ theme }) => theme.colors.black};
-      font-size: ${({ theme }) => theme.fontSize.small};
-      word-wrap: break-word;
-      max-width: 30vw;
-    }
+
+  .MuiTableBody-root,
+  .MuiTableBody-root * {
+    color: ${({ theme }) => theme.colors.black};
+    font-size: ${({ theme }) => theme.fontSize.small};
   }
 `;
 
@@ -144,6 +146,7 @@ export const MarketingPage = memo(() => {
       setShowSelectUserForm,
     ]
   );
+
   const sortedMessageList = useMemo(
     () =>
       messageList.sort((a, b) =>
@@ -151,6 +154,7 @@ export const MarketingPage = memo(() => {
       ),
     [messageList]
   );
+  const { displayData, paginationComponent } = usePagination(sortedMessageList);
   return (
     <>
       <ButtonWrapper>
@@ -162,13 +166,13 @@ export const MarketingPage = memo(() => {
       </ButtonWrapper>
       <StyledCard>
         <StyledTable
-          data={sortedMessageList}
+          data={displayData}
           //@ts-ignore
           generator={listGenerator}
           unique_col={"message_id"}
         />
       </StyledCard>
-
+      {paginationComponent}
       {formAction !== undefined && (
         <MessageForm
           formAction={formAction}

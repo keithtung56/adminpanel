@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 const StyledInput = styled.input`
@@ -40,13 +41,6 @@ const ButtonWrapper = styled.div`
   height: 100%;
   gap: 10px;
 `;
-
-const RemoveButton = styled(Button)`
-  background-color: ${({ theme }) => theme.colors.red};
-  &:hover {
-    background: ${({ theme }) => theme.colors.red};
-  }
-`;
 const ReplaceButton = styled(Button)``;
 type Props = {
   className?: string;
@@ -61,6 +55,7 @@ export const ImageUploader = memo(
     setImageChanged,
     defaultImgPath = "",
   }: Props) => {
+    const { t } = useTranslation();
     const uploadInput = useRef<HTMLInputElement>(null);
     const [imgURL, setImgURL] = useState<string>(defaultImgPath);
     const [isHover, setIsHover] = useState<boolean>(false);
@@ -79,17 +74,6 @@ export const ImageUploader = memo(
         setIsHover(false);
       }
     }, [setImageFile, setImgURL, setImageChanged]);
-
-    const RemoveButtonOnClick = useCallback(() => {
-      setImgURL("");
-      setImageFile(undefined);
-      if (setImageChanged) {
-        setImageChanged(true);
-      }
-      if (uploadInput.current) {
-        uploadInput.current.value = "";
-      }
-    }, [setImgURL, setImageFile, setImageChanged]);
 
     const ReplaceButtonOnClick = useCallback(() => {
       if (uploadInput.current) {
@@ -123,21 +107,13 @@ export const ImageUploader = memo(
         {imgURL && <StyledImg src={imgURL} $isHover={isHover} />}
         {isHover && imgURL && (
           <ButtonWrapper>
-            <RemoveButton
-              variant="contained"
-              onClick={() => {
-                RemoveButtonOnClick();
-              }}
-            >
-              Remove
-            </RemoveButton>
             <ReplaceButton
               variant="contained"
               onClick={() => {
                 ReplaceButtonOnClick();
               }}
             >
-              Replace
+              {t("button.replace")}
             </ReplaceButton>
           </ButtonWrapper>
         )}
@@ -148,7 +124,7 @@ export const ImageUploader = memo(
             }}
             variant="contained"
           >
-            Upload Image
+            {t("button.upload")}
           </Button>
         )}
       </StyledBox>

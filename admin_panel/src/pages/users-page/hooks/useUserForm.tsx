@@ -15,37 +15,37 @@ export const useUserForm = (
   const fields: FormikForm[] = useMemo(
     () => [
       {
-        label: "email",
+        label: t("user.email"),
         name: "email",
         disabled: [UserFormActions.Edit].includes(action),
         fieldType: FormikFormFields.TextField,
       },
       {
-        label: "username",
+        label: t("user.username"),
         name: "username",
         disabled: false,
         fieldType: FormikFormFields.TextField,
       },
       {
-        label: "password",
+        label: t("user.password"),
         name: "password",
         disabled: [UserFormActions.Edit].includes(action),
         fieldType: FormikFormFields.TextField,
       },
       {
-        label: "phone",
+        label: t("user.phone"),
         name: "phone",
         disabled: [UserFormActions.Edit].includes(action),
         fieldType: FormikFormFields.TextField,
       },
       {
-        label: "age",
+        label: t("user.age"),
         name: "age",
         disabled: false,
         fieldType: FormikFormFields.NumberField,
       },
     ],
-    [action]
+    [action, t]
   );
 
   const title = useMemo(() => {

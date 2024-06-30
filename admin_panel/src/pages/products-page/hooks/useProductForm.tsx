@@ -29,37 +29,43 @@ export const useProductForm = (
   const fields: FormikForm[] = useMemo(
     () => [
       {
-        label: "product_name",
+        label: t("product.product_name"),
         name: "product_name",
         disabled: action in [],
         fieldType: FormikFormFields.TextField,
       },
       {
-        label: "price",
+        label: t("product.price"),
         name: "price",
         disabled: action in [],
         fieldType: FormikFormFields.NumberField,
       },
       {
-        label: "stock",
+        label: t("product.stock"),
         name: "stock",
         disabled: action in [],
         fieldType: FormikFormFields.NumberField,
       },
       {
-        label: "category_id",
+        label: t("product.category"),
         name: "category_id",
         disabled: action in [],
         fieldType: FormikFormFields.SelectCategoryField,
       },
       {
-        label: "description",
+        label: t("product.status"),
+        name: "status",
+        disabled: action in [],
+        fieldType: FormikFormFields.SelectProductStatusField,
+      },
+      {
+        label: t("product.description"),
         name: "description",
         disabled: action in [],
         fieldType: FormikFormFields.TextArea,
       },
     ],
-    [action]
+    [action, t]
   );
 
   const initValues = useMemo(() => {

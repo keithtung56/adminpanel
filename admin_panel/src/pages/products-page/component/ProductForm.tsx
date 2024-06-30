@@ -8,7 +8,7 @@ import {
 import { Product } from "../../../hooks";
 import { useFormik } from "formik";
 import styled from "styled-components";
-import { Box, Button, MenuItem, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { ProductFormActions } from "../enum";
 import { useProductForm } from "../hooks";
 import { useTranslation } from "react-i18next";
@@ -81,25 +81,7 @@ export const ProductForm = memo(
         <StyledBox>
           <LeftWrapper>
             {fieldsCompoents}
-            <TextField
-              select
-              id="status"
-              label={t("product.status")}
-              name="status"
-              value={formik.values.status}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.status && Boolean(formik.errors.status)}
-              helperText={
-                formik.touched.status &&
-                formik.errors.status &&
-                t(formik.errors.status)
-              }
-              fullWidth
-            >
-              <MenuItem value={"listed"}>{t("product.listed")}</MenuItem>
-              <MenuItem value={"unlisted"}>{t("product.unlisted")}</MenuItem>
-            </TextField>
+
             {
               <Button
                 onClick={() => {
@@ -110,21 +92,23 @@ export const ProductForm = memo(
                 }}
                 variant="contained"
               >
-                Add Option
+                {t("button.addOption")}
               </Button>
             }
             {formik.values.options!.map(({ option_name, choices }, index) => {
               return (
                 <OptionFieldRow key={index}>
                   <TextField
-                    label={`option${index + 1}`}
+                    label={`${t("product.option")}${index + 1}`}
                     value={option_name}
                     name={`options[${index}].option_name`}
                     onChange={formik.handleChange}
                   />
                   <TextField
-                    label={`option${index + 1} choices`}
-                    placeholder="choice1,choice2,choice3..."
+                    label={t("product.choice")}
+                    placeholder={`${t("product.choice")}1,${t(
+                      "product.choice"
+                    )}2,${t("product.choice")}3...`}
                     value={choices}
                     name={`options[${index}].choices`}
                     onChange={formik.handleChange}

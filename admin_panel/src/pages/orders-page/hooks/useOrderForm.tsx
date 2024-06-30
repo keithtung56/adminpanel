@@ -30,7 +30,7 @@ export const useOrderForm = (
   const fields: FormikForm[] = useMemo(
     () => [
       {
-        label: "user_id",
+        label: t("order.username"),
         name: "user_id",
         disabled: [OrderFormActions.Edit, OrderFormActions.View].includes(
           action
@@ -38,13 +38,13 @@ export const useOrderForm = (
         fieldType: FormikFormFields.SelectUserField,
       },
       {
-        label: "status",
+        label: t("order.status"),
         name: "status",
         disabled: [OrderFormActions.View].includes(action),
         fieldType: FormikFormFields.SelectOrderStatusField,
       },
     ],
-    [action]
+    [action, t]
   );
 
   const initValues = useMemo(() => {
