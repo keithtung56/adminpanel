@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shop_app/components/loading.dart';
 import 'package:shop_app/services/crud/favorite/db_favorite.dart';
 import 'package:shop_app/services/crud/favorite/db_favorite_service.dart';
 import 'package:shop_app/services/crud/product/db_product.dart';
@@ -112,7 +113,7 @@ class _ProductCardState extends State<ProductCard> {
                 ),
               );
             default:
-              return const CircularProgressIndicator();
+              return const Loading();
           }
         });
   }

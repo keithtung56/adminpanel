@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/components/loading.dart';
+import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/video/components/video_player.dart';
 import 'package:shop_app/services/crud/video/db_video.dart';
 import 'package:shop_app/services/crud/video/db_video.service.dart';
@@ -15,88 +17,92 @@ class VideoScreen extends StatefulWidget {
 
 class _VideoScreenState extends State<VideoScreen> {
   late Future<List<DBVideo>> _videoListFuture;
-  int _currentIndex = 0;
   List<DBVideo>? _videoList;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
     _videoListFuture = DBVideoService().getVideoList();
-  }
-
-  void _showNextVideo() {
-    if (_videoList != null && _currentIndex < _videoList!.length - 1) {
-      setState(() {
-        _currentIndex++;
-      });
-    }
-  }
-
-  void _showPreviousVideo() {
-    if (_videoList != null && _currentIndex > 0) {
-      setState(() {
-        _currentIndex--;
-      });
-    }
+    _pageController = PageController();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.profile),
-      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: FutureBuilder<List<DBVideo>>(
-              future: _videoListFuture,
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.done:
-                    if (snapshot.hasData) {
-                      _videoList = snapshot.data;
-                      return _videoList!.isNotEmpty
-                          ? Column(
-                              children: [
-                                Expanded(
-                                  child: Card(
-                                    child: AspectRatio(
-                                      aspectRatio:
-                                          16 / 9, // Adjust this value as needed
-                                      child: VideoPlayerWidget(
-                                        key: ValueKey<int>(
-                                            _currentIndex), // Ensure widget rebuilds
-                                        video: _videoList![_currentIndex],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    FloatingActionButton(
-                                      onPressed: _showPreviousVideo,
-                                      child: const Text("prev"),
-                                    ),
-                                    FloatingActionButton(
-                                      onPressed: _showNextVideo,
-                                      child: const Text("next"),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )
-                          : Container();
-                    } else if (snapshot.hasError) {
-                      return const Center(child: Text("Error loading videos"));
-                    }
-                    return const Center(child: CircularProgressIndicator());
-                  default:
-                    return const Center(child: CircularProgressIndicator());
-                }
-              }),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              color: Colors.white, // Use your desired color
+              child: Text(
+                AppLocalizations.of(context)!.video,
+                style: headingStyle,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: Container(
+                  color: grey, //
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  child: Container(
+                      color: white,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
+                      child: FutureBuilder<List<DBVideo>>(
+                        future: _videoListFuture,
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.done:
+                              if (snapshot.hasData) {
+                                _videoList = snapshot.data;
+                                return _videoList!.isNotEmpty
+                                    ? PageView.builder(
+                                        controller: _pageController,
+                                        scrollDirection: Axis.vertical,
+                                        itemCount: _videoList!.length,
+                                        itemBuilder: (context, index) {
+                                          return Column(
+                                            children: [
+                                              Text(
+                                                _videoList![index].title,
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.black,
+                                                  height: 1.5,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Expanded(
+                                                  child: AspectRatio(
+                                                aspectRatio: 16 / 9,
+                                                child: VideoPlayerWidget(
+                                                  key: ValueKey<int>(index),
+                                                  video: _videoList![index],
+                                                ),
+                                              ))
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    : Container(); // Show a placeholder if no videos
+                              } else if (snapshot.hasError) {
+                                return const Center(
+                                    child: Text("Error loading videos"));
+                              }
+                              return const Loading();
+                            default:
+                              return const Loading();
+                          }
+                        },
+                      ))),
+            ),
+          ],
         ),
       ),
     );

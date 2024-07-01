@@ -26,48 +26,49 @@ class OrderCard extends StatelessWidget {
             });
       },
       child: Container(
-        margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 255, 255),
-          border: Border.all(
-            color: Colors.black,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          decoration: const BoxDecoration(
+              color: white,
+              border: Border.symmetric(
+                  horizontal: BorderSide(width: 2, color: grey))),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            child: Row(
               children: [
-                Text(
-                  order.createdTime,
-                  style: const TextStyle(color: Colors.black, fontSize: 13),
-                  textDirection: TextDirection.ltr,
-                  overflow: TextOverflow.ellipsis,
+                const SizedBox(width: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      order.createdTime,
+                      style: const TextStyle(color: Colors.black, fontSize: 13),
+                      textDirection: TextDirection.ltr,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Text.rich(
+                      TextSpan(
+                          text:
+                              "${AppLocalizations.of(context)!.total_quantity}: $totalQuantity",
+                          style: Theme.of(context).textTheme.bodyMedium),
+                    ),
+                    Text.rich(
+                      TextSpan(
+                        text:
+                            "${AppLocalizations.of(context)!.total}: \$${order.total}",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600, color: kPrimaryColor),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                Text.rich(
-                  TextSpan(
-                    text:
-                        "${AppLocalizations.of(context)!.total}: \$${order.total}",
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, color: kPrimaryColor),
-                  ),
+                const Spacer(),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  color: black,
                 ),
-                Text.rich(
-                  TextSpan(
-                      text:
-                          "${AppLocalizations.of(context)!.total_quantity}: $totalQuantity",
-                      style: Theme.of(context).textTheme.bodyMedium),
-                ),
-                const SizedBox(height: 8),
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          )),
     );
   }
 }

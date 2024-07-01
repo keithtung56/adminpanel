@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/components/loading.dart';
 import 'package:shop_app/services/crud/video/db_video.dart';
 import 'package:video_player/video_player.dart';
 
@@ -33,7 +34,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                 aspectRatio: _controller.value.aspectRatio,
                 child: VideoPlayer(_controller),
               )
-            : const CircularProgressIndicator(),
+            : const Loading(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/components/loading.dart';
 import 'package:shop_app/screens/my-account/components/my_account_form.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
 import 'package:shop_app/services/crud/user/db_user.dart';
@@ -61,10 +62,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     );
                   }
 
-                  return const CircularProgressIndicator();
+                  return const Loading();
 
                 default:
-                  return const CircularProgressIndicator();
+                  return const Loading();
               }
             }));
   }

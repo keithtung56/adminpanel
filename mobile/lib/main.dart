@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:shop_app/components/loading.dart';
 import 'package:shop_app/l10n/bloc/language_cubit.dart';
 import 'package:shop_app/screens/init_screen.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
@@ -61,14 +62,14 @@ class MyApp extends StatelessWidget {
                       default:
                         return const MaterialApp(
                             home: Scaffold(
-                          body: CircularProgressIndicator(),
+                          body: Loading(),
                         ));
                     }
                   });
             default:
               return const MaterialApp(
                   home: Scaffold(
-                body: CircularProgressIndicator(),
+                body: Loading(),
               ));
           }
         });

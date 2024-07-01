@@ -10,6 +10,10 @@ const kPrimaryGradientColor = LinearGradient(
 const kSecondaryColor = Color(0xFF979797);
 const kTextColor = Colors.black;
 
+const orange = Color(0xFFFF7643);
+const black = Colors.black;
+const white = Colors.white;
+const grey = Color.fromRGBO(248, 248, 248, 1);
 const kAnimationDuration = Duration(milliseconds: 200);
 
 const headingStyle = TextStyle(
@@ -19,6 +23,10 @@ const headingStyle = TextStyle(
   height: 1.5,
 );
 
+const appBarTitleStyle = TextStyle(
+  fontSize: 16,
+  color: Colors.black,
+);
 const defaultDuration = Duration(milliseconds: 250);
 
 // Form Error
@@ -51,7 +59,7 @@ final otpInputDecoration = InputDecoration(
 
 OutlineInputBorder outlineInputBorder() {
   return OutlineInputBorder(
-    borderRadius: BorderRadius.circular(16),
+    borderRadius: BorderRadius.circular(5),
     borderSide: const BorderSide(color: kTextColor),
   );
 }

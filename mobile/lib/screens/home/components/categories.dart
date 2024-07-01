@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/components/loading.dart';
+import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/products/products_screen.dart';
 import 'package:shop_app/services/crud/category/db_category.dart';
 import 'package:shop_app/services/crud/category/db_category_service.dart';
@@ -32,10 +34,10 @@ class _CategoriesState extends State<Categories> {
                 itemCount: snapshot.data!.length,
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  childAspectRatio: 0.7,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 16,
+                  maxCrossAxisExtent: 340,
+                  childAspectRatio: 0.8,
+                  mainAxisSpacing: 0,
+                  crossAxisSpacing: 0,
                 ),
                 scrollDirection: Axis.vertical,
                 physics: const NeverScrollableScrollPhysics(),
@@ -53,9 +55,7 @@ class _CategoriesState extends State<Categories> {
               ),
             );
           default:
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Loading();
         }
       },
     );
@@ -81,10 +81,10 @@ class CategoryCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(0),
-            height: 140,
-            width: 140,
+            height: 170,
+            width: 170,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
+              color: grey,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Image.network(imgUrl),

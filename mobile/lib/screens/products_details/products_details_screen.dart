@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logger/logger.dart';
+import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/cart/cart_screen.dart';
 import 'package:shop_app/screens/products_details/components/product_images.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
@@ -9,12 +10,12 @@ import 'package:shop_app/services/crud/cart/db_cart_service.dart';
 import 'package:shop_app/services/crud/product/db_product.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'components/product_description.dart';
-import 'components/top_rounded_container.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   static String routeName = "/details";
-
-  const ProductDetailsScreen({super.key});
+  const ProductDetailsScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -23,17 +24,19 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int quantity = 1;
   var options = {};
+
   @override
   Widget build(BuildContext context) {
     final ProductDetailsArguments agrs =
         ModalRoute.of(context)!.settings.arguments as ProductDetailsArguments;
     final product = agrs.product;
+
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      backgroundColor: const Color(0xFFF5F6F9),
+      backgroundColor: grey,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: white,
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -54,48 +57,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ),
         ),
-        actions: [
-          Row(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(right: 20),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Row(
-                  children: [
-                    const Text(
-                      "4.7",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    SvgPicture.asset("assets/icons/Star Icon.svg"),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
       body: ListView(
         children: [
           ProductImages(product: product),
-          TopRoundedContainer(
-            color: Colors.white,
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             child: Column(
               children: [
                 ProductDescription(
                   product: product,
                 ),
-                TopRoundedContainer(
-                  color: const Color(0xFFF6F7F9),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                  color: white,
                   child: Column(
                     children: product.options.map((optionObj) {
                       final optionName = optionObj['optionName'];
@@ -103,35 +79,34 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           .map((item) => item.toString())
                           .toList();
                       return Container(
-                        margin: const EdgeInsets.all(
-                            8.0), // Adjust this value as needed
-                        child: InputDecorator(
-                          decoration: InputDecoration(
-                            labelText: optionName,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 5,
+                            horizontal: 10,
                           ),
                           child: SizedBox(
-                            height: 30.0, // Adjust this value as needed
-                            width: 50.0, // Adjust this value as needed
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: options[optionName],
-                                isExpanded: true,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    options[optionName] = newValue;
-                                  });
-                                },
-                                items: optionChoice.map((choice) {
-                                  return DropdownMenuItem<String>(
-                                    value: choice,
-                                    child: Text(choice),
-                                  );
-                                }).toList(),
+                            height: 60,
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                labelText: optionName,
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: options[optionName],
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      options[optionName] = newValue;
+                                    });
+                                  },
+                                  items: optionChoice.map((choice) {
+                                    return DropdownMenuItem<String>(
+                                      value: choice,
+                                      child: Text(choice),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      );
+                          ));
                     }).toList(),
                   ),
                 ),
@@ -140,7 +115,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: TopRoundedContainer(
+      bottomNavigationBar: Container(
         color: Colors.white,
         child: SafeArea(
             child: SizedBox(
@@ -154,7 +129,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          quantity -= 1;
+                          if (quantity - 1 > 0) {
+                            quantity -= 1;
+                          }
                         });
                       },
                       child: SvgPicture.asset(
@@ -196,7 +173,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       if (options.keys.length != product.options.length) {
                         return;
                       }
-                      Logger().d('1');
                       await DBCartService()
                           .addItemToCart(product.id, quantity, options);
                       if (context.mounted) {

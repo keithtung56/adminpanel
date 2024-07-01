@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/components/loading.dart';
 import 'package:shop_app/services/crud/order/db_order.dart';
 import 'package:shop_app/services/crud/product/db_product.dart';
 import 'package:shop_app/services/crud/product/db_product_service.dart';
@@ -90,9 +91,7 @@ class _OrderProductCardState extends State<OrderProductCard> {
                 ],
               );
             default:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Loading();
           }
         });
   }

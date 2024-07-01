@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/components/loading.dart';
+import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/my-orders/components/order_card.dart';
 import 'package:shop_app/services/crud/order/db_order.dart';
 import 'package:shop_app/services/crud/order/db_order_service.dart';
@@ -24,27 +26,32 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.my_orders),
-        ),
-        body: FutureBuilder(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.my_orders),
+      ),
+      backgroundColor: grey,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          child: FutureBuilder(
             future: _currentUserOrders,
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
-                case (ConnectionState.done):
-                  return SafeArea(
-                      child: ListView.builder(
+                case ConnectionState.done:
+                  return ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       DBOrder order = snapshot.data![index];
-                      return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: OrderCard(order: order));
+                      return OrderCard(order: order);
                     },
-                  ));
+                  );
                 default:
-                  return const CircularProgressIndicator();
+                  return const Loading();
               }
-            }));
+            },
+          ),
+        ),
+      ),
+    );
   }
 }

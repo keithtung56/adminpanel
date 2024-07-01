@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:shop_app/components/loading.dart';
 import 'package:shop_app/components/product_card.dart';
+import 'package:shop_app/constants.dart';
 
 import 'package:shop_app/services/crud/product/db_product_service.dart';
 import '../../services/crud/product/db_product.dart';
@@ -31,14 +33,18 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Logger().d(widget.searchString);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Search Result"),
       ),
       body: SafeArea(
-        child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Expanded(
+              child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        child: Container(
+          color: grey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: FutureBuilder(
                 future: _productsList,
                 builder: (context, snapshot) {
@@ -53,7 +59,7 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                         gridDelegate:
                             const SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 200,
-                          childAspectRatio: 0.7,
+                          childAspectRatio: 0.6,
                           mainAxisSpacing: 20,
                           crossAxisSpacing: 16,
                         ),
@@ -68,10 +74,12 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                         ),
                       );
                     default:
-                      return const CircularProgressIndicator();
+                      return const Loading();
                   }
-                })),
-      ),
+                }),
+          ),
+        ),
+      ))),
     );
   }
 }

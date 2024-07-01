@@ -27,7 +27,6 @@ final Map<String, WidgetBuilder> routes = {
   ForgotPasswordScreen.routeName: (context) => const ForgotPasswordScreen(),
   OtpScreen.routeName: (context) => const OtpScreen(),
   HomeScreen.routeName: (context) => const HomeScreen(),
-  ProductDetailsScreen.routeName: (context) => const ProductDetailsScreen(),
   CartScreen.routeName: (context) => const CartScreen(),
   ProfileScreen.routeName: (context) => const ProfileScreen(),
   MyAccountScreen.routeName: (context) => const MyAccountScreen(),
@@ -50,6 +49,9 @@ final Map<String, WidgetBuilder> routes = {
     return SearchProductsScreen(
       searchString: args['searchString'],
     );
+  },
+  ProductDetailsScreen.routeName: (context) {
+    return const ProductDetailsScreen();
   },
   OrderProductDetailsScreen.routeName: (context) {
     final args =
