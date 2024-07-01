@@ -32,7 +32,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
       backgroundColor: grey,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           child: FutureBuilder(
             future: _currentUserOrders,
             builder: (context, snapshot) {

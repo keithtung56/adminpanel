@@ -28,7 +28,6 @@ class DBOrderService {
         id: e.key,
       );
     }).toList();
-    Logger().d('ok');
     return DBOrder(
       id: id,
       createdTime: val['created_time'],
@@ -59,6 +58,11 @@ class DBOrderService {
       final randomOrderProductId = const Uuid().v1();
       final product =
           await DBProductService().getProductById(cartItem.productId);
+      await FirebaseDatabase.instance
+          .ref("Products/${cartItem.productId}")
+          .update({
+        'stock': product.stock - cartItem.quantity,
+      });
       await FirebaseDatabase.instance
           .ref("Orders/$randomOrderId/products")
           .update({

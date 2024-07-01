@@ -11,7 +11,7 @@ class ProductCard extends StatefulWidget {
   const ProductCard({
     Key? key,
     this.width = 140,
-    this.aspectRetio = 1.02,
+    this.aspectRetio = 1,
     required this.product,
     required this.onPress,
   }) : super(key: key);
@@ -61,7 +61,6 @@ class _ProductCardState extends State<ProductCard> {
                       Text(
                         widget.product.productName,
                         style: Theme.of(context).textTheme.bodyMedium,
-                        maxLines: 2,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

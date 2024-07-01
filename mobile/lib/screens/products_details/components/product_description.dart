@@ -44,6 +44,13 @@ class _ProductDescriptionState extends State<ProductDescription> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                '${AppLocalizations.of(context)!.stock}: ${widget.product.stock}',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
             Align(
               alignment: Alignment.centerRight,
               child: Container(

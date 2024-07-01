@@ -26,7 +26,7 @@ class SettingsScreen extends StatelessWidget {
                 color: grey,
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                   child: ListView.builder(
                       itemCount: choices.length,
                       itemBuilder: (context, index) => SettingMenu(

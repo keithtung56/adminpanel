@@ -137,8 +137,8 @@ class _SignFormState extends State<SignForm> {
                     password: password,
                   );
                   if (context.mounted) {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, InitScreen.routeName, (_) => true);
+                    Navigator.pushNamedAndRemoveUntil(context,
+                        InitScreen.routeName, (route) => route.isFirst);
                   }
                 }
               } on UserNotFoundAuthException {

@@ -23,7 +23,8 @@ class HomeScreen extends StatelessWidget {
                 flexibleSpace: Padding(
                   padding: EdgeInsets.symmetric(vertical: 5),
                   child: HomeHeader(),
-                ), // Your HomeHeader widget
+                ),
+                automaticallyImplyLeading: false,
               ),
               SliverList(
                 delegate: SliverChildListDelegate(

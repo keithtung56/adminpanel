@@ -30,10 +30,12 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: grey,
       body: SafeArea(
         child: Column(
           children: [
             Container(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
               width: double.infinity,
               color: Colors.white, // Use your desired color
               child: Text(
@@ -47,11 +49,11 @@ class _VideoScreenState extends State<VideoScreen> {
               child: Container(
                   color: grey, //
                   padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                   child: Container(
-                      color: white,
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 10),
+                      color: white,
                       child: FutureBuilder<List<DBVideo>>(
                         future: _videoListFuture,
                         builder: (context, snapshot) {
@@ -90,7 +92,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                           );
                                         },
                                       )
-                                    : Container(); // Show a placeholder if no videos
+                                    : Container();
                               } else if (snapshot.hasError) {
                                 return const Center(
                                     child: Text("Error loading videos"));

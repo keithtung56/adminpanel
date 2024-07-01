@@ -52,7 +52,8 @@ class _CartCardState extends State<CartCard> {
                     ),
                   ),
                   const SizedBox(width: 20),
-                  Column(
+                  Expanded(
+                      child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -60,7 +61,7 @@ class _CartCardState extends State<CartCard> {
                         style:
                             const TextStyle(color: Colors.black, fontSize: 13),
                         textDirection: TextDirection.ltr,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.visible,
                       ),
                       const SizedBox(height: 8),
                       ...widget.cartItem.options.entries.map((entry) {
@@ -69,7 +70,7 @@ class _CartCardState extends State<CartCard> {
                           style: const TextStyle(
                               color: Colors.black, fontSize: 13),
                           textDirection: TextDirection.ltr,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: TextOverflow.visible,
                         );
                       }).toList(),
                       const SizedBox(height: 8),
@@ -87,7 +88,7 @@ class _CartCardState extends State<CartCard> {
                         ),
                       )
                     ],
-                  )
+                  ))
                 ],
               );
             default:

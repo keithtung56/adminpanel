@@ -37,14 +37,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: SafeArea(
             child: Column(
           children: [
-            Text(
-              AppLocalizations.of(context)!.profile,
-              style: headingStyle,
+            Container(
+              color: white,
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: Text(
+                AppLocalizations.of(context)!.profile,
+                style: headingStyle,
+                textAlign: TextAlign.center,
+              ),
             ),
-            const SizedBox(height: 10),
             Expanded(
                 child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: FutureBuilder(
                   future: _currentUser,
                   builder: (context, snapshot) {
@@ -64,7 +69,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                         }
                         return SingleChildScrollView(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 10),
                             child: Column(
                               children: [
                                 Container(

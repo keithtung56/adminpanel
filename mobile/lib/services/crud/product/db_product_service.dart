@@ -25,11 +25,11 @@ class DBProductService {
                 return {'optionName': optionName, 'optionChoice': optionChoice};
               }).toList()
             : [] as List<Map<dynamic, dynamic>>;
-
         return DBProduct(
           id: e.key,
           categoryId: val['category_id'],
           price: (val['price'] as num).toDouble(),
+          stock: val['stock'],
           description: val['description'],
           productName: val['product_name'],
           createdTime: val['created_time'],
@@ -79,10 +79,12 @@ class DBProductService {
             return {'optionName': optionName, 'optionChoice': optionChoice};
           }).toList()
         : [] as List<Map<dynamic, dynamic>>;
+
     return DBProduct(
       id: id,
       categoryId: val['category_id'],
       price: (val['price'] as num).toDouble(),
+      stock: val['stock'],
       description: val['description'],
       productName: val['product_name'],
       createdTime: val['created_time'],

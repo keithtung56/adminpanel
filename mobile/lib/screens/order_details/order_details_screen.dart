@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/order_details/components/order_details_bottom_card.dart';
 import 'package:shop_app/screens/order_details/components/order_product_card.dart';
 import 'package:shop_app/services/crud/order/db_order.dart';
@@ -15,7 +16,9 @@ class OrderProductDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: grey,
         appBar: AppBar(
+          backgroundColor: white,
           title: Column(
             children: [
               Text(
@@ -27,11 +30,18 @@ class OrderProductDetailsScreen extends StatelessWidget {
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: ListView.builder(
               itemCount: order.products.length,
-              itemBuilder: (context, index) =>
-                  OrderProductCard(product: order.products[index])),
+              itemBuilder: (context, index) => Container(
+                    decoration: const BoxDecoration(
+                        color: white,
+                        border: Border.symmetric(
+                            horizontal: BorderSide(width: 2, color: grey))),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    child: OrderProductCard(product: order.products[index]),
+                  )),
         ),
         bottomNavigationBar: OrderDetailsBottomCard(
           order: order,

@@ -52,16 +52,16 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                   switch (snapshot.connectionState) {
                     case (ConnectionState.done):
                       if (snapshot.data!.isEmpty) {
-                        return const Text("not found");
+                        return Container();
                       }
                       return GridView.builder(
                         itemCount: snapshot.data!.length,
                         gridDelegate:
                             const SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 200,
-                          childAspectRatio: 0.6,
-                          mainAxisSpacing: 20,
-                          crossAxisSpacing: 16,
+                          childAspectRatio: 0.65,
+                          mainAxisSpacing: 0,
+                          crossAxisSpacing: 10,
                         ),
                         itemBuilder: (context, index) => ProductCard(
                           product: snapshot.data![index],

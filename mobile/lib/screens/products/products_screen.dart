@@ -53,9 +53,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           gridDelegate:
                               const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 200,
-                            childAspectRatio: 0.6,
-                            mainAxisSpacing: 20,
-                            crossAxisSpacing: 16,
+                            childAspectRatio: 0.65,
+                            mainAxisSpacing: 0,
+                            crossAxisSpacing: 10,
                           ),
                           itemBuilder: (context, index) => ProductCard(
                             product: snapshot.data![index],

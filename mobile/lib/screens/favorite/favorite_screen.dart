@@ -45,7 +45,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             Expanded(
               child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   child: FutureBuilder(
                       future: _userFavorite,
                       builder: (context, snapshot) {

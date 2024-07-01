@@ -36,58 +36,64 @@ class _OrderProductCardState extends State<OrderProductCard> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case (ConnectionState.done):
-              return Row(
+              return Column(
                 children: [
-                  SizedBox(
-                    width: 88,
-                    child: AspectRatio(
-                      aspectRatio: 0.88,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF5F6F9),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Image.network(snapshot.data!.imgUrl),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(
-                        snapshot.data!.productName,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 13),
-                        textDirection: TextDirection.ltr,
-                        overflow: TextOverflow.ellipsis,
+                      SizedBox(
+                        width: 88,
+                        child: AspectRatio(
+                          aspectRatio: 0.88,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF5F6F9),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Image.network(snapshot.data!.imgUrl),
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 8),
-                      ...widget.product.options.entries.map((entry) {
-                        return Text(
-                          '${entry.key}: ${entry.value}',
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 13),
-                          textDirection: TextDirection.ltr,
-                          overflow: TextOverflow.ellipsis,
-                        );
-                      }).toList(),
-                      Text.rich(
-                        TextSpan(
-                          text: "\$${snapshot.data!.price}",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: kPrimaryColor),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            TextSpan(
-                                text: " x ${widget.product.quantity}",
-                                style: Theme.of(context).textTheme.bodyLarge),
+                            Text(
+                              snapshot.data!.productName,
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 13),
+                              textDirection: TextDirection.ltr,
+                              overflow: TextOverflow.visible,
+                            ),
+                            const SizedBox(height: 8),
+                            ...widget.product.options.entries.map((entry) {
+                              return Text(
+                                '${entry.key}: ${entry.value}',
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 13),
+                              );
+                            }).toList(),
+                            Text.rich(
+                              TextSpan(
+                                text: "\$${snapshot.data!.price}",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: kPrimaryColor),
+                                children: [
+                                  TextSpan(
+                                    text: " x ${widget.product.quantity}",
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                      )
+                      ),
                     ],
-                  )
+                  ),
                 ],
               );
             default:

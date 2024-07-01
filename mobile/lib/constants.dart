@@ -17,8 +17,7 @@ const grey = Color.fromRGBO(248, 248, 248, 1);
 const kAnimationDuration = Duration(milliseconds: 200);
 
 const headingStyle = TextStyle(
-  fontSize: 24,
-  fontWeight: FontWeight.bold,
+  fontSize: 22,
   color: Colors.black,
   height: 1.5,
 );
