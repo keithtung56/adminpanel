@@ -67,13 +67,6 @@ class _OrderProductCardState extends State<OrderProductCard> {
                               overflow: TextOverflow.visible,
                             ),
                             const SizedBox(height: 8),
-                            ...widget.product.options.entries.map((entry) {
-                              return Text(
-                                '${entry.key}: ${entry.value}',
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 13),
-                              );
-                            }).toList(),
                             Text.rich(
                               TextSpan(
                                 text: "\$${snapshot.data!.price}",

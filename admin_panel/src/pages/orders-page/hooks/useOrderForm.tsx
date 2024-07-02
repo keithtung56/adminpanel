@@ -61,7 +61,6 @@ export const useOrderForm = (
           {
             product_id: "",
             quantity: 0,
-            options: {},
           },
         ] as Omit<OrderProduct, "price">[],
         status: "unpaid" as Order["status"],
@@ -84,18 +83,26 @@ export const useOrderForm = (
               const product = productList.find(
                 (product) => product.product_id === selected_product.product_id
               );
-              if (!product) return true;
-              return (
-                Object.keys(selected_product.options).length !==
-                product.options.length
-              );
+              if (!product || product.status === "unlisted") return true;
             })
           )
             return;
+          const total = values.selected_products.reduce(
+            (acc: number, selected_product: any) => {
+              const product = productList.find(
+                (product) => product.product_id === selected_product.product_id
+              );
+              if (!product) {
+                return acc;
+              }
+              return acc + selected_product.quantity * product.price;
+            },
+            0
+          );
           await createOrder(
             values.selected_products,
             values.status,
-            0,
+            total,
             values.user_id
           );
         } catch (e) {

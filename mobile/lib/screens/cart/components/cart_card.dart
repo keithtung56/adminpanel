@@ -64,16 +64,6 @@ class _CartCardState extends State<CartCard> {
                         overflow: TextOverflow.visible,
                       ),
                       const SizedBox(height: 8),
-                      ...widget.cartItem.options.entries.map((entry) {
-                        return Text(
-                          '${entry.key}: ${entry.value}',
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 13),
-                          textDirection: TextDirection.ltr,
-                          overflow: TextOverflow.visible,
-                        );
-                      }).toList(),
-                      const SizedBox(height: 8),
                       Text.rich(
                         TextSpan(
                           text: "\$${snapshot.data!.price}",

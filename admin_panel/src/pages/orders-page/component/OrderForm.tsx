@@ -6,7 +6,6 @@ import { Dialog, Title, useFormikFields } from "../../../components";
 import { Order, useProductCRUD } from "../../../hooks";
 import { useTranslation } from "react-i18next";
 import { SelectProductField } from "./SelectProductField";
-import { SelectOptionField } from "./SelectOptionField";
 import { useOrderForm } from "../hooks";
 import { OrderFormActions } from "../enum";
 
@@ -22,10 +21,6 @@ const SelectTable = styled(Box)`
   gap: 2vh;
 `;
 
-const StyledSelectOptionField = styled(SelectOptionField)<{ $width?: number }>`
-  width: ${({ $width }) => ($width ? $width : 30)}%;
-`;
-
 const ProductRow = styled(Box)`
   display: flex;
   flex-direction: column;
@@ -34,10 +29,6 @@ const ProductRow = styled(Box)`
   padding: 10px;
 `;
 
-const ProductOptionsRow = styled(Box)`
-  display: flex;
-  gap: 10px;
-`;
 const ProductDetailsRow = styled(Box)`
   display: flex;
   gap: 10px;
@@ -142,11 +133,11 @@ export const OrderForm = memo(
                     ({ product_id: id }) => product_id === id
                   );
                   const product_unit_price = product ? product.price : 0;
-                  const product_options = product ? product.options : [];
                   return (
                     <ProductRow key={index}>
                       <ProductDetailsRow>
                         <StyledSelectProductField
+                          $width={60}
                           productList={productList}
                           select
                           id={`product_name`}
@@ -166,6 +157,7 @@ export const OrderForm = memo(
                         />
 
                         <StyledSelectTextField
+                          $width={10}
                           type="number"
                           value={quantity}
                           label={t("product.quantity")}
@@ -182,6 +174,7 @@ export const OrderForm = memo(
                           ].includes(formAction)}
                         />
                         <StyledSelectTextField
+                          $width={20}
                           type="number"
                           value={product_unit_price}
                           label={t("product.price")}
@@ -204,27 +197,6 @@ export const OrderForm = memo(
                           </DeleteProductButton>
                         )}
                       </ProductDetailsRow>
-
-                      <ProductOptionsRow>
-                        {product_options.map(({ option_name, choices }) => {
-                          return (
-                            <StyledSelectOptionField
-                              key={option_name}
-                              $width={20}
-                              choices={choices}
-                              name={`selected_products.${index}.options.${option_name}`}
-                              label={option_name}
-                              value={
-                                formik.values.selected_products![index].options[
-                                  option_name
-                                ]
-                              }
-                              onChange={formik.handleChange}
-                              disabled={formAction === OrderFormActions.View}
-                            />
-                          );
-                        })}
-                      </ProductOptionsRow>
                     </ProductRow>
                   );
                 }

@@ -11,7 +11,6 @@ class DBProduct {
   final String createdTime;
   final String modifiedTime;
   final String imgUrl;
-  final List<Map<dynamic, dynamic>> options;
 
   const DBProduct({
     required this.id,
@@ -23,6 +22,5 @@ class DBProduct {
     required this.createdTime,
     required this.modifiedTime,
     required this.imgUrl,
-    required this.options,
   });
 }

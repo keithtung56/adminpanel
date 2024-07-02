@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:logger/logger.dart';
 import 'package:shop_app/helper/count_total.dart';
 import 'package:shop_app/services/auth/auth_exceptions.dart';
 import 'package:shop_app/services/auth/auth_service.dart';
@@ -26,7 +25,6 @@ class DBCartService {
         uid: e.key,
         productId: e.value['product_id'],
         quantity: e.value['quantity'],
-        options: e.value['options'] as Map<dynamic, dynamic>,
       );
     }).toList();
     final total = countTotal(cartItems, productsList);
@@ -50,7 +48,6 @@ class DBCartService {
             uid: e.key,
             productId: e.value['product_id'],
             quantity: e.value['quantity'],
-            options: e.value['options'],
           );
         }).toList();
         final productsList = await DBProductService().getProductList();
@@ -61,25 +58,19 @@ class DBCartService {
     });
   }
 
-  Future<void> addItemToCart(
-      String productId, int quantity, Map<dynamic, dynamic> options) async {
+  Future<void> addItemToCart(String productId, int quantity) async {
     final userId = AuthService.firebase().currentUser?.uid;
     if (userId == null) {
       throw UserNotLoggedInAuthException;
     }
-    Logger().d(options);
     final currentCart = await getUserCart();
-    DBCartItem? item = currentCart.cartItems.firstWhereOrNull(
-      (cartItem) =>
-          cartItem.productId == productId &&
-          const DeepCollectionEquality().equals(cartItem.options, options),
-    );
+    DBCartItem? item = currentCart.cartItems
+        .firstWhereOrNull((cartItem) => cartItem.productId == productId);
     if (item != null) {
       await FirebaseDatabase.instance.ref("Carts/$userId").update({
         item.uid: {
           'product_id': productId,
-          'quantity': item.quantity + quantity,
-          'options': options,
+          'quantity': item.quantity + quantity
         }
       });
     } else {
@@ -88,7 +79,6 @@ class DBCartService {
         randomId: {
           'product_id': productId,
           'quantity': quantity,
-          'options': options,
         }
       });
     }

@@ -10,9 +10,6 @@ export type OrderProduct = {
   product_id: string;
   quantity: number;
   price: number;
-  options: {
-    [key: string]: string;
-  };
 };
 export type Order = {
   order_id: string;
@@ -56,11 +53,12 @@ export const useOrderCRUD = () => {
                 products: [],
               };
             }
-            const productIds = Object.keys(products);
-            const expandedProduct = productIds.map((id) => ({
-              product_id: id,
-              ...products[id],
-            }));
+            const expandedProduct = Object.entries(products).map(
+              ([id, val]: [string, any]) => ({
+                product_id: id,
+                ...val,
+              })
+            );
             return {
               ...data,
               products: expandedProduct,
@@ -96,7 +94,7 @@ export const useOrderCRUD = () => {
         update(ref(database, `/Users/${user_id}/orders/`), {
           [random_order_id]: "",
         }),
-        ...selected_products.map(({ product_id, quantity, options }) => {
+        ...selected_products.map(({ product_id, quantity }) => {
           const product = productList.find(
             (product) => product.product_id === product_id
           );
@@ -111,7 +109,6 @@ export const useOrderCRUD = () => {
                 product_id,
                 quantity,
                 price: product.price,
-                options,
               }
             );
           }

@@ -22,7 +22,6 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int quantity = 1;
-  var options = {};
 
   @override
   Widget build(BuildContext context) {
@@ -66,48 +65,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               children: [
                 ProductDescription(
                   product: product,
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  color: white,
-                  child: Column(
-                    children: product.options.map((optionObj) {
-                      final optionName = optionObj['optionName'];
-                      final optionChoice = (optionObj['optionChoice'] as List)
-                          .map((item) => item.toString())
-                          .toList();
-                      return Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 5,
-                            horizontal: 10,
-                          ),
-                          child: SizedBox(
-                            height: 60,
-                            child: InputDecorator(
-                              decoration: InputDecoration(
-                                labelText: optionName,
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  value: options[optionName],
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      options[optionName] = newValue;
-                                    });
-                                  },
-                                  items: optionChoice.map((choice) {
-                                    return DropdownMenuItem<String>(
-                                      value: choice,
-                                      child: Text(choice),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                          ));
-                    }).toList(),
-                  ),
                 ),
               ],
             ),
@@ -169,11 +126,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       Navigator.pushNamedAndRemoveUntil(
                           context, SignInScreen.routeName, (_) => true);
                     } else {
-                      if (options.keys.length != product.options.length) {
-                        return;
-                      }
-                      await DBCartService()
-                          .addItemToCart(product.id, quantity, options);
+                      await DBCartService().addItemToCart(product.id, quantity);
                       if (context.mounted) {
                         Navigator.pushNamed(context, CartScreen.routeName);
                       }

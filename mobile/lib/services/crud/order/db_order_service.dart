@@ -24,7 +24,6 @@ class DBOrderService {
         price: (e.value['price'] as num).toDouble(),
         quantity: e.value['quantity'],
         productId: e.value['product_id'],
-        options: e.value['options'],
         id: e.key,
       );
     }).toList();
@@ -70,7 +69,6 @@ class DBOrderService {
           'quantity': cartItem.quantity,
           'price': product.price,
           'product_id': cartItem.productId,
-          "options": cartItem.options,
         }
       });
     }

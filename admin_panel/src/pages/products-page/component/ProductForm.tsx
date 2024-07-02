@@ -8,10 +8,9 @@ import {
 import { Product } from "../../../hooks";
 import { useFormik } from "formik";
 import styled from "styled-components";
-import { Box, Button, TextField } from "@mui/material";
+import { Box } from "@mui/material";
 import { ProductFormActions } from "../enum";
 import { useProductForm } from "../hooks";
-import { useTranslation } from "react-i18next";
 
 type Props = {
   selectedProduct: Product | undefined;
@@ -37,14 +36,8 @@ const RightWrapper = styled(Box)`
   width: 30%;
 `;
 
-const OptionFieldRow = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-`;
-
 export const ProductForm = memo(
   ({ formAction, selectedProduct, setFormAction }: Props) => {
-    const { t } = useTranslation();
     const {
       fields,
       initValues,
@@ -79,58 +72,7 @@ export const ProductForm = memo(
         fullWidth
       >
         <StyledBox>
-          <LeftWrapper>
-            {fieldsCompoents}
-
-            {
-              <Button
-                onClick={() => {
-                  formik.setFieldValue("options", [
-                    ...formik.values.options!,
-                    { option_name: "", choices: "" },
-                  ]);
-                }}
-                variant="contained"
-              >
-                {t("button.addOption")}
-              </Button>
-            }
-            {formik.values.options!.map(({ option_name, choices }, index) => {
-              return (
-                <OptionFieldRow key={index}>
-                  <TextField
-                    label={`${t("product.option")}${index + 1}`}
-                    value={option_name}
-                    name={`options[${index}].option_name`}
-                    onChange={formik.handleChange}
-                  />
-                  <TextField
-                    label={t("product.choice")}
-                    placeholder={`${t("product.choice")}1,${t(
-                      "product.choice"
-                    )}2,${t("product.choice")}3...`}
-                    value={choices}
-                    name={`options[${index}].choices`}
-                    onChange={formik.handleChange}
-                  />
-                  <Button
-                    onClick={() => {
-                      formik.setFieldValue(
-                        "options",
-                        formik.values.options!.filter(
-                          (_, idx) => idx !== index
-                        ),
-                        true
-                      );
-                    }}
-                    variant="outlined"
-                  >
-                    {t("button.delete")}
-                  </Button>
-                </OptionFieldRow>
-              );
-            })}
-          </LeftWrapper>
+          <LeftWrapper>{fieldsCompoents}</LeftWrapper>
           <RightWrapper>
             <ImageUploader
               setImageFile={setImageFile}

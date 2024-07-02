@@ -16,15 +16,6 @@ class DBProductService {
         final imageUrl = await FirebaseStorage.instance
             .ref("Images/Products/$imgId")
             .getDownloadURL();
-
-        final optionsObj = val['options'] as Map<dynamic, dynamic>;
-        final options = val['options'] != null
-            ? optionsObj.entries.map((e) {
-                final optionName = e.key;
-                final optionChoice = e.value;
-                return {'optionName': optionName, 'optionChoice': optionChoice};
-              }).toList()
-            : [] as List<Map<dynamic, dynamic>>;
         return DBProduct(
           id: e.key,
           categoryId: val['category_id'],
@@ -35,7 +26,6 @@ class DBProductService {
           createdTime: val['created_time'],
           modifiedTime: val['modified_time'],
           imgUrl: imageUrl,
-          options: options,
         );
       }).toList());
       return productsList;
@@ -71,14 +61,6 @@ class DBProductService {
     final imageUrl = await FirebaseStorage.instance
         .ref("Images/Products/$imgId")
         .getDownloadURL();
-    final optionsObj = val['options'] as Map<dynamic, dynamic>;
-    final options = val['options'] != null
-        ? optionsObj.entries.map((e) {
-            final optionName = e.key;
-            final optionChoice = e.value;
-            return {'optionName': optionName, 'optionChoice': optionChoice};
-          }).toList()
-        : [] as List<Map<dynamic, dynamic>>;
 
     return DBProduct(
       id: id,
@@ -90,7 +72,6 @@ class DBProductService {
       createdTime: val['created_time'],
       modifiedTime: val['modified_time'],
       imgUrl: imageUrl,
-      options: options,
     );
   }
 }

@@ -43,7 +43,9 @@ export const useProductForm = (
       {
         label: t("product.stock"),
         name: "stock",
-        disabled: action in [],
+        disabled: [ProductFormActions.Edit, ProductFormActions.View].includes(
+          action
+        ),
         fieldType: FormikFormFields.NumberField,
       },
       {
@@ -77,10 +79,6 @@ export const useProductForm = (
         stock: selectedProduct?.stock,
         category_id: selectedProduct?.category_id,
         description: selectedProduct?.description,
-        options: selectedProduct?.options.map(({ option_name, choices }) => ({
-          option_name,
-          choices: choices.join(","),
-        })),
       };
     }
     if (action === ProductFormActions.Add) {
@@ -91,7 +89,6 @@ export const useProductForm = (
         stock: 0,
         category_id: "",
         description: "",
-        options: [],
       };
     }
     return {};
@@ -105,9 +102,6 @@ export const useProductForm = (
     async (values: any) => {
       if (action === ProductFormActions.Add) {
         if (!imageFile) return;
-        const notEmptyOptions = values.options.filter(
-          ({ option_name, choices }: any) => option_name || choices
-        );
         await createProduct(
           values.product_name,
           values.price,
@@ -115,15 +109,11 @@ export const useProductForm = (
           values.stock,
           values.category_id,
           values.description,
-          imageFile,
-          notEmptyOptions
+          imageFile
         );
       }
       if (action === ProductFormActions.Edit && selectedProduct) {
         if (imageChanged && imageFile === undefined) return;
-        const notEmptyOptions = values.options.filter(
-          ({ option_name, choices }: any) => option_name || choices
-        );
         await updateProduct(
           selectedProduct.product_id,
           values.product_name,
@@ -132,8 +122,7 @@ export const useProductForm = (
           values.category_id,
           values.description,
           imageFile,
-          imageChanged,
-          notEmptyOptions
+          imageChanged
         );
       }
       return () => {};
