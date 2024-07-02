@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:shop_app/constants.dart';
+import 'package:logger/logger.dart';
 import 'package:shop_app/services/crud/user/db_user_service.dart';
 import 'package:shop_app/services/stripe/payment_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -60,14 +60,15 @@ class _PaymentFormState extends State<PaymentForm> {
             onSaved: (newValue) => name = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyNameError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_name_error);
               }
               name = value;
               return;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyNameError);
+                addError(error: AppLocalizations.of(context)!.empty_name_error);
                 return "";
               }
               return null;
@@ -86,14 +87,16 @@ class _PaymentFormState extends State<PaymentForm> {
             onSaved: (newValue) => phone = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyPhoneError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_phone_error);
               }
               phone = value;
               return;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyPhoneError);
+                addError(
+                    error: AppLocalizations.of(context)!.empty_phone_error);
                 return "";
               }
               return null;
@@ -111,14 +114,15 @@ class _PaymentFormState extends State<PaymentForm> {
             onSaved: (newValue) => city = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyCityError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_city_error);
               }
               city = value;
               return;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyCityError);
+                addError(error: AppLocalizations.of(context)!.empty_city_error);
                 return "";
               }
               return null;
@@ -134,14 +138,16 @@ class _PaymentFormState extends State<PaymentForm> {
             onSaved: (newValue) => country = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyCountryError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_country_error);
               }
               country = value;
               return;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyCountryError);
+                addError(
+                    error: AppLocalizations.of(context)!.empty_country_error);
                 return "";
               }
               return null;
@@ -157,14 +163,18 @@ class _PaymentFormState extends State<PaymentForm> {
             onSaved: (newValue) => line1 = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyAddressLine1);
+                removeError(
+                    error: AppLocalizations.of(context)!
+                        .empty_address_line1_error);
               }
               line1 = value;
               return;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyAddressLine1);
+                addError(
+                    error: AppLocalizations.of(context)!
+                        .empty_address_line1_error);
                 return "";
               }
               return null;
@@ -209,24 +219,31 @@ class _PaymentFormState extends State<PaymentForm> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
-              // if (_formKey.currentState!.validate()) {
-              context.loaderOverlay.show();
-              await StripeService().stripeMakePayment(
-                name: name,
-                email: email,
-                phone: phone,
-                city: city,
-                country: country,
-                line1: line1,
-                line2: line2,
-                postalCode: postalCode,
-                state: state,
-              );
-              if (context.mounted) {
-                context.loaderOverlay.hide();
-                Navigator.pop(context);
+              if (_formKey.currentState!.validate()) {
+                try {
+                  context.loaderOverlay.show();
+                  await StripeService().stripeMakePayment(
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    city: city,
+                    country: country,
+                    line1: line1,
+                    line2: line2,
+                    postalCode: postalCode,
+                    state: state,
+                  );
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+                } catch (e) {
+                  Logger().d(e.toString());
+                } finally {
+                  if (context.mounted) {
+                    context.loaderOverlay.hide();
+                  }
+                }
               }
-              // }
             },
             child: Text(AppLocalizations.of(context)!.continue_text),
           ),

@@ -52,33 +52,6 @@ class _LanguageScreenState extends State<LanguageScreen> {
                             text: choices[index]['text']!,
                             press: choices[index]['press']!,
                           )),
-                )))
-
-        // ListView.builder(
-        //     itemCount: choices.length,
-        //     itemBuilder: (context, index) => Padding(
-        //           padding:
-        //               const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        //           child: TextButton(
-        //             style: TextButton.styleFrom(
-        //               foregroundColor: kPrimaryColor,
-        //               padding: const EdgeInsets.all(20),
-        //               shape: RoundedRectangleBorder(
-        //                   borderRadius: BorderRadius.circular(15)),
-        //               backgroundColor: const Color(0xFFF5F6F9),
-        //             ),
-        //             onPressed: () {
-        //               (choices[index]['function'] as Function)();
-        //             },
-        //             child: Row(
-        //               children: [
-        //                 const SizedBox(width: 20),
-        //                 Expanded(child: Text(choices[index]['text'] as String)),
-        //               ],
-        //             ),
-        //           ),
-        //         ))
-
-        );
+                ))));
   }
 }

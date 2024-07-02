@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:logger/logger.dart';
 import 'package:shop_app/components/loading.dart';
 import 'package:shop_app/constants.dart';
@@ -37,40 +39,48 @@ class _VideoScreenState extends State<VideoScreen> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
-              width: double.infinity,
-              color: Colors.white, // Use your desired color
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      AppLocalizations.of(context)!.video,
-                      style: headingStyle,
-                      textAlign: TextAlign.center,
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+                width: double.infinity,
+                color: Colors.white,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        AppLocalizations.of(context)!.video,
+                        style: headingStyle,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        VideoUploadScreen.routeName,
-                      ).then((_) {
-                        setState(() {
-                          _videoListFuture = DBVideoService().getVideoList();
-                        });
-                      });
-                    },
-                    child: const Text(
-                      "+",
-                      style: headingStyle,
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            VideoUploadScreen.routeName,
+                          ).then((_) {
+                            setState(() {
+                              _videoListFuture =
+                                  DBVideoService().getVideoList();
+                            });
+                          });
+                        },
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: SvgPicture.asset(
+                            "assets/icons/UploadIcon.svg",
+                            colorFilter: const ColorFilter.mode(
+                              black,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  )
-                ],
-              ),
-            ),
+                  ],
+                )),
             const SizedBox(height: 10),
             Expanded(
               child: Container(
@@ -128,8 +138,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                         )
                                       : Container();
                                 } else if (snapshot.hasError) {
-                                  return const Center(
-                                      child: Text("Error loading videos"));
+                                  return const Center(child: Text(""));
                                 }
                                 return const Loading();
                               default:

@@ -18,7 +18,7 @@ class SettingMenu extends StatelessWidget {
             style: TextButton.styleFrom(
               side: const BorderSide(
                 color: grey,
-                width: 1,
+                width: 2,
               ),
               backgroundColor: const Color.fromARGB(255, 255, 255, 255),
               shape: const RoundedRectangleBorder(

@@ -34,18 +34,17 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             Container(
               width: double.infinity,
               color: white,
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               child: Text(
                 AppLocalizations.of(context)!.favorites,
                 style: headingStyle,
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 10),
             Expanded(
               child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: FutureBuilder(
                       future: _userFavorite,
                       builder: (context, snapshot) {

@@ -91,18 +91,24 @@ class _SignUpFormState extends State<SignUpForm> {
             onSaved: (newValue) => password = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyPasswordError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_password_error);
               } else if (value.length >= 8) {
-                removeError(error: tooShortPasswordError);
+                removeError(
+                    error:
+                        AppLocalizations.of(context)!.too_short_password_error);
               }
               password = value;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyPasswordError);
+                addError(
+                    error: AppLocalizations.of(context)!.empty_password_error);
                 return "";
               } else if (value.length < 8) {
-                addError(error: tooShortPasswordError);
+                addError(
+                    error:
+                        AppLocalizations.of(context)!.too_short_password_error);
                 return "";
               }
               return null;
@@ -158,13 +164,15 @@ class _SignUpFormState extends State<SignUpForm> {
             onSaved: (newValue) => username = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyUsernameError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_username_error);
               }
               username = value;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyUsernameError);
+                addError(
+                    error: AppLocalizations.of(context)!.empty_username_error);
               }
               return null;
             },
@@ -180,13 +188,15 @@ class _SignUpFormState extends State<SignUpForm> {
             onSaved: (newValue) => age = int.parse(newValue ?? ''),
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: emptyUsernameError);
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_username_error);
               }
               age = int.parse(value);
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: emptyUsernameError);
+                addError(
+                    error: AppLocalizations.of(context)!.empty_username_error);
               }
               return null;
             },
@@ -202,27 +212,32 @@ class _SignUpFormState extends State<SignUpForm> {
             onSaved: (newValue) => phoneNumber = newValue ?? "",
             onChanged: (value) {
               if (value.isNotEmpty) {
-                removeError(error: "Please enter your phone number");
-              } else if (phoneValidatorRegExp.hasMatch(value)) {
-                removeError(error: "Please enter a valid phone number");
+                removeError(
+                    error: AppLocalizations.of(context)!.empty_phone_error);
+              }
+              if (phoneValidatorRegExp.hasMatch(value)) {
+                removeError(
+                    error: AppLocalizations.of(context)!.invalid_phone_error);
               }
               phoneNumber = value;
             },
             validator: (value) {
               if (value!.isEmpty) {
-                addError(error: "Please enter your phone number");
+                addError(
+                    error: AppLocalizations.of(context)!.empty_phone_error);
                 return "";
               } else if (!phoneValidatorRegExp.hasMatch(value)) {
-                addError(error: "Please enter a valid phone number");
+                addError(
+                    error: AppLocalizations.of(context)!.invalid_phone_error);
                 return "";
               }
               return null;
             },
-            decoration: const InputDecoration(
-              labelText: "Phone Number",
-              hintText: "Enter your phone number",
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.phone,
+              hintText: AppLocalizations.of(context)!.enter_your_phone,
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              prefix: Text("+852"),
+              prefix: const Text("+852"),
             ),
           ),
           const SizedBox(height: 20),
@@ -253,6 +268,15 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
+              removeError(
+                  error: AppLocalizations.of(context)!.weak_password_error);
+              removeError(
+                  error:
+                      AppLocalizations.of(context)!.emial_already_in_use_error);
+              removeError(
+                  error: AppLocalizations.of(context)!.invalid_email_error);
+              removeError(
+                  error: AppLocalizations.of(context)!.failed_to_sign_up);
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
 
@@ -276,13 +300,28 @@ class _SignUpFormState extends State<SignUpForm> {
                         context, InitScreen.routeName, (_) => false);
                   }
                 } on WeakPasswordAuthException {
-                  addError(error: 'weak password');
+                  if (context.mounted) {
+                    addError(
+                        error:
+                            AppLocalizations.of(context)!.weak_password_error);
+                  }
                 } on EmailAlreadyInUseAuthException {
-                  addError(error: "alread used");
+                  if (context.mounted) {
+                    addError(
+                        error: AppLocalizations.of(context)!
+                            .emial_already_in_use_error);
+                  }
                 } on InvalidEmailAuthException {
-                  addError(error: "invalid email");
+                  if (context.mounted) {
+                    addError(
+                        error:
+                            AppLocalizations.of(context)!.invalid_email_error);
+                  }
                 } on GenericAuthException {
-                  addError(error: "unknown error");
+                  if (context.mounted) {
+                    addError(
+                        error: AppLocalizations.of(context)!.failed_to_sign_up);
+                  }
                 } finally {
                   if (context.mounted) {
                     context.loaderOverlay.hide();
