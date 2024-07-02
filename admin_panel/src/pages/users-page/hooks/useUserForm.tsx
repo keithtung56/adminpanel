@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { AddCustomerSchema } from "../../../yup";
+import { AddUserSchema, EditUserSchema } from "../../../yup";
 import { User, useUserCRUD } from "../../../hooks";
 import { FormikForm, FormikFormFields } from "../../../components";
 import { UserFormActions } from "../enum/UserFormActions";
@@ -57,16 +57,6 @@ export const useUserForm = (
     }
   }, [action, t]);
   const initValues = useMemo(() => {
-    if (action === UserFormActions.Edit) {
-      return {
-        email: selectedUser?.email,
-        username: selectedUser?.username,
-        password: selectedUser?.password,
-        phone: selectedUser?.phone,
-        gender: selectedUser?.gender,
-        age: selectedUser?.age,
-      };
-    }
     if (action === UserFormActions.Add) {
       return {
         email: "",
@@ -77,12 +67,25 @@ export const useUserForm = (
         age: 0,
       };
     }
+    if (action === UserFormActions.Edit) {
+      return {
+        email: selectedUser?.email,
+        username: selectedUser?.username,
+        password: selectedUser?.password,
+        phone: selectedUser?.phone,
+        gender: selectedUser?.gender,
+        age: selectedUser?.age,
+      };
+    }
     return {};
   }, [selectedUser, action]);
 
   const schema = useMemo(() => {
     if (action === UserFormActions.Add) {
-      return AddCustomerSchema;
+      return AddUserSchema;
+    }
+    if (action === UserFormActions.Edit) {
+      return EditUserSchema;
     }
     return undefined;
   }, [action]);

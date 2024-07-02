@@ -8,6 +8,7 @@ import {
 import { FormikForm, FormikFormFields } from "../../../components";
 import { OrderFormActions } from "../enum";
 import { useTranslation } from "react-i18next";
+import { AddOrderSchema, EditOrderSchema } from "../../../yup";
 
 export const useOrderForm = (
   action: OrderFormActions,
@@ -48,13 +49,6 @@ export const useOrderForm = (
   );
 
   const initValues = useMemo(() => {
-    if (action === OrderFormActions.Edit || action === OrderFormActions.View) {
-      return {
-        selected_products: selectedOrder?.products,
-        status: selectedOrder?.status,
-        user_id: selectedOrder?.user_id,
-      };
-    }
     if (action === OrderFormActions.Add) {
       return {
         selected_products: [
@@ -67,12 +61,26 @@ export const useOrderForm = (
         user_id: "",
       };
     }
+
+    if (action === OrderFormActions.Edit || action === OrderFormActions.View) {
+      return {
+        selected_products: selectedOrder?.products,
+        status: selectedOrder?.status,
+        user_id: selectedOrder?.user_id,
+      };
+    }
+
     return {};
   }, [selectedOrder, action]);
 
   const schema = useMemo(() => {
-    return undefined;
-  }, []);
+    if (action === OrderFormActions.Add) {
+      return AddOrderSchema;
+    }
+    if (action === OrderFormActions.Edit) {
+      return EditOrderSchema;
+    }
+  }, [action]);
 
   const formOnSubmit = useCallback(
     async (values: any) => {

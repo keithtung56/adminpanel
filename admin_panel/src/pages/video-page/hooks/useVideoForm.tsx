@@ -3,6 +3,7 @@ import { Video, useVideoCRUD, useVideoFileCRUD } from "../../../hooks";
 import { FormikForm, FormikFormFields } from "../../../components";
 import { useTranslation } from "react-i18next";
 import { VideoFormActions } from "../enum";
+import { AddVideoSchema, EditVideoSchema } from "../../../yup";
 
 export const useVideoForm = (
   action: VideoFormActions,
@@ -12,8 +13,6 @@ export const useVideoForm = (
   const [videoFile, setVideoFile] = useState<File | undefined>(undefined);
   const { createVideo } = useVideoCRUD();
   const { videoFileUrl, setCurrentVideoFileId } = useVideoFileCRUD();
-
-  console.log(videoFile);
 
   useEffect(() => {
     setCurrentVideoFileId(selectedVideo?.video_file_id ?? "");
@@ -40,22 +39,29 @@ export const useVideoForm = (
     }
   }, [action, t]);
   const initValues = useMemo(() => {
-    if (action === VideoFormActions.Edit || action === VideoFormActions.View) {
-      return {
-        title: selectedVideo?.title,
-      };
-    }
     if (action === VideoFormActions.Add) {
       return {
         title: "",
       };
     }
+    if (action === VideoFormActions.Edit || action === VideoFormActions.View) {
+      return {
+        title: selectedVideo?.title,
+      };
+    }
+
     return {};
   }, [selectedVideo, action]);
 
   const schema = useMemo(() => {
+    if (action === VideoFormActions.Add) {
+      return AddVideoSchema;
+    }
+    if (action === VideoFormActions.Edit) {
+      return EditVideoSchema;
+    }
     return undefined;
-  }, []);
+  }, [action]);
 
   const formOnSubmit = useCallback(
     async (values: any) => {

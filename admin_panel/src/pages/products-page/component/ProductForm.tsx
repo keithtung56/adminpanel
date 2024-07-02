@@ -52,6 +52,7 @@ export const ProductForm = memo(
     const formik = useFormik({
       initialValues: initValues,
       validationSchema: schema,
+      validateOnMount: true,
       onSubmit: formOnSubmit,
     });
 
@@ -66,7 +67,9 @@ export const ProductForm = memo(
             setFormAction(undefined);
           } else {
             formik.handleSubmit();
-            setFormAction(undefined);
+            if (Object.keys(formik.errors).length === 0) {
+              setFormAction(undefined);
+            }
           }
         }}
         fullWidth

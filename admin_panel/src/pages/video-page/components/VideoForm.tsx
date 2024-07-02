@@ -52,6 +52,7 @@ export const VideoForm = memo(
     const formik = useFormik({
       initialValues: initValues,
       validationSchema: schema,
+      validateOnMount: true,
       onSubmit: formOnSubmit,
     });
 
@@ -76,6 +77,9 @@ export const VideoForm = memo(
             setFormAction(undefined);
           } else {
             formik.handleSubmit();
+            if (Object.keys(formik.errors).length === 0) {
+              setFormAction(undefined);
+            }
           }
         }}
         fullWidth

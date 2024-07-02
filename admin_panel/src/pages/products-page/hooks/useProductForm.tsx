@@ -3,6 +3,7 @@ import { Product, useProductCRUD, useProductImageCRUD } from "../../../hooks";
 import { FormikForm, FormikFormFields } from "../../../components";
 import { ProductFormActions } from "../enum";
 import { useTranslation } from "react-i18next";
+import { AddProductSchema, EditProductSchema } from "../../../yup";
 
 export const useProductForm = (
   action: ProductFormActions,
@@ -71,16 +72,6 @@ export const useProductForm = (
   );
 
   const initValues = useMemo(() => {
-    if (action === ProductFormActions.Edit) {
-      return {
-        product_name: selectedProduct?.product_name,
-        price: selectedProduct?.price,
-        status: selectedProduct?.status,
-        stock: selectedProduct?.stock,
-        category_id: selectedProduct?.category_id,
-        description: selectedProduct?.description,
-      };
-    }
     if (action === ProductFormActions.Add) {
       return {
         product_name: "",
@@ -91,12 +82,28 @@ export const useProductForm = (
         description: "",
       };
     }
+    if (action === ProductFormActions.Edit) {
+      return {
+        product_name: selectedProduct?.product_name,
+        price: selectedProduct?.price,
+        status: selectedProduct?.status,
+        stock: selectedProduct?.stock,
+        category_id: selectedProduct?.category_id,
+        description: selectedProduct?.description,
+      };
+    }
     return {};
   }, [selectedProduct, action]);
 
   const schema = useMemo(() => {
+    if (action === ProductFormActions.Add) {
+      return AddProductSchema;
+    }
+    if (action === ProductFormActions.Edit) {
+      return EditProductSchema;
+    }
     return undefined;
-  }, []);
+  }, [action]);
 
   const formOnSubmit = useCallback(
     async (values: any) => {

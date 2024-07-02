@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AddCategorySchema } from "../../../yup";
+import { AddCategorySchema, EditCategorySchema } from "../../../yup";
 import {
   Category,
   useCategoryCRUD,
@@ -44,31 +44,36 @@ export const useCategoriesForm = (
     }
   }, [action, t]);
   const initValues = useMemo(() => {
-    if (action === CategoryFormAction.Edit) {
-      return {
-        category_name: selectedCategory?.category_name,
-      };
-    }
     if (action === CategoryFormAction.Add) {
       return {
         category_name: "",
       };
     }
+    if (action === CategoryFormAction.Edit) {
+      return {
+        category_name: selectedCategory?.category_name,
+      };
+    }
+
     return {};
   }, [selectedCategory, action]);
 
   const schema = useMemo(() => {
-    if (action === CategoryFormAction.Edit) {
-      return AddCategorySchema;
-    }
     if (action === CategoryFormAction.Add) {
       return AddCategorySchema;
     }
+    if (action === CategoryFormAction.Edit) {
+      return EditCategorySchema;
+    }
+
     return undefined;
   }, [action]);
 
   const formOnSubmit = useCallback(
     async (values: any) => {
+      if (action === CategoryFormAction.Add) {
+        await createCategory(values.category_name, imageFile, imageChanged);
+      }
       if (action === CategoryFormAction.Edit && selectedCategory) {
         await updateCategory(
           selectedCategory.category_id,
@@ -77,9 +82,7 @@ export const useCategoriesForm = (
           imageChanged
         );
       }
-      if (action === CategoryFormAction.Add) {
-        await createCategory(values.category_name, imageFile, imageChanged);
-      }
+
       return () => {};
     },
     [
