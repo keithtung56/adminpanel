@@ -1,8 +1,8 @@
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableFooter,
   TableHead,
   TableRow,
@@ -23,7 +23,7 @@ type GenericTableProp<T> = {
   className?: string;
 };
 
-const StyledTableContainer = styled(TableContainer)``;
+const StyledTableContainer = styled(Box)``;
 const StyledTable = styled(Table)``;
 const StyledTableHead = styled(TableHead)``;
 const StyledTableBody = styled(TableBody)``;

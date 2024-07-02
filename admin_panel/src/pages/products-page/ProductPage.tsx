@@ -30,7 +30,7 @@ const StyledCard = styled(Card)`
   border-radius: 20px;
   margin-top: 10px;
   height: 100%;
-  padding: 20px;
+  padding: 0px 20px;
 `;
 
 const StyledAddButton = styled(AddButton)``;
