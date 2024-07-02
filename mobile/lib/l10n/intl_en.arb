@@ -90,6 +90,8 @@
   "please_check_email":"please check your mailbox",
   "back_to_login":"Back to Login",
   "resend_opt":"Resend email",
-  "not_verified":"Account is not verified"
-
+  "not_verified":"Account is not verified",
+  "send_reset_password":"Send Reset Password Email",
+  "reset_password":"Reset password",
+  "email_sent":"Email Sent"
 }

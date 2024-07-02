@@ -90,5 +90,9 @@
   "please_check_email":"請查看你的電郵信箱",
   "back_to_login":"回到登入介面",
   "resend_opt":"重新發送電郵",
-  "not_verified":"帳戶還未通過身份驗證"
+  "not_verified":"帳戶還未通過身份驗證",
+  "send_reset_password":"發送重設密碼電郵",
+  "reset_password":"重設密碼",
+  "email_sent":"已發送電郵"
+
   }

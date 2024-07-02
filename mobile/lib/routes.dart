@@ -31,7 +31,7 @@ final Map<String, WidgetBuilder> routes = {
   SignUpScreen.routeName: (context) =>
       const LoaderOverlay(child: SignUpScreen()),
   ForgotPasswordScreen.routeName: (context) =>
-      const LoaderOverlay(child: AuthMiddleware(child: ForgotPasswordScreen())),
+      const LoaderOverlay(child: ForgotPasswordScreen()),
   OtpScreen.routeName: (context) => const LoaderOverlay(child: OtpScreen()),
   HomeScreen.routeName: (context) =>
       const LoaderOverlay(child: AuthMiddleware(child: HomeScreen())),
