@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shop_app/screens/init_screen.dart';
+import 'package:shop_app/services/auth/auth_exceptions.dart';
 import 'package:shop_app/services/auth/auth_service.dart';
 import 'package:shop_app/services/crud/user/db_user_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -253,23 +255,38 @@ class _SignUpFormState extends State<SignUpForm> {
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
+
                 // if all are valid then go to success screen
-                await AuthService.firebase()
-                    .createUser(email: email, password: password);
+                try {
+                  context.loaderOverlay.show();
+                  await AuthService.firebase()
+                      .createUser(email: email, password: password);
+                  String uid = AuthService.firebase().currentUser!.uid;
 
-                String uid = AuthService.firebase().currentUser!.uid;
-
-                await DBUserService().createDBUser(
-                    uid: uid,
-                    email: email,
-                    password: password,
-                    username: username,
-                    gender: gender,
-                    phone: "+852$phoneNumber",
-                    age: age);
-                if (context.mounted) {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, InitScreen.routeName, (_) => true);
+                  await DBUserService().createDBUser(
+                      uid: uid,
+                      email: email,
+                      password: password,
+                      username: username,
+                      gender: gender,
+                      phone: "+852$phoneNumber",
+                      age: age);
+                  if (context.mounted) {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, InitScreen.routeName, (_) => false);
+                  }
+                } on WeakPasswordAuthException {
+                  addError(error: 'weak password');
+                } on EmailAlreadyInUseAuthException {
+                  addError(error: "alread used");
+                } on InvalidEmailAuthException {
+                  addError(error: "invalid email");
+                } on GenericAuthException {
+                  addError(error: "unknown error");
+                } finally {
+                  if (context.mounted) {
+                    context.loaderOverlay.hide();
+                  }
                 }
               }
             },

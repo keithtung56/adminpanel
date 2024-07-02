@@ -127,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     await AuthService.firebase().logOut();
                                     if (context.mounted) {
                                       Navigator.pushNamedAndRemoveUntil(context,
-                                          SignInScreen.routeName, (_) => true);
+                                          SignInScreen.routeName, (_) => false);
                                     }
                                   },
                                 ),

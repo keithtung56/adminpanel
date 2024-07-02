@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/services/crud/user/db_user_service.dart';
 import 'package:shop_app/services/stripe/payment_service.dart';
@@ -209,6 +210,7 @@ class _PaymentFormState extends State<PaymentForm> {
           ElevatedButton(
             onPressed: () async {
               // if (_formKey.currentState!.validate()) {
+              context.loaderOverlay.show();
               await StripeService().stripeMakePayment(
                 name: name,
                 email: email,
@@ -221,6 +223,7 @@ class _PaymentFormState extends State<PaymentForm> {
                 state: state,
               );
               if (context.mounted) {
+                context.loaderOverlay.hide();
                 Navigator.pop(context);
               }
               // }

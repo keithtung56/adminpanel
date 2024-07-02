@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shop_app/screens/init_screen.dart';
 import 'package:shop_app/services/auth/auth_exceptions.dart';
 import 'package:shop_app/services/auth/auth_service.dart';
@@ -130,15 +131,15 @@ class _SignFormState extends State<SignForm> {
               try {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-
                   KeyboardUtil.hideKeyboard(context);
+                  context.loaderOverlay.show();
                   await AuthService.firebase().logIn(
                     email: email,
                     password: password,
                   );
                   if (context.mounted) {
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        InitScreen.routeName, (route) => route.isFirst);
+                    Navigator.pushReplacementNamed(
+                        context, InitScreen.routeName);
                   }
                 }
               } on UserNotFoundAuthException {
@@ -153,6 +154,10 @@ class _SignFormState extends State<SignForm> {
                 if (context.mounted) {
                   addError(
                       error: AppLocalizations.of(context)!.failed_to_login);
+                }
+              } finally {
+                if (context.mounted) {
+                  context.loaderOverlay.hide();
                 }
               }
             },

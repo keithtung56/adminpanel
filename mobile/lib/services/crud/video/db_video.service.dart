@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:logger/logger.dart';
+import 'package:moment_dart/moment_dart.dart';
+import 'package:shop_app/constants.dart';
+import 'package:shop_app/services/auth/auth_service.dart';
 import 'package:shop_app/services/crud/video/db_video.dart';
+import 'package:uuid/uuid.dart';
 
 class DBVideoService {
   Future<List<DBVideo>> getVideoList() async {
@@ -26,9 +33,29 @@ class DBVideoService {
         );
       }).toList());
       return videoList;
-    } catch (_) {
+    } catch (e) {
+      Logger().d(e.toString());
       return [];
     }
+  }
+
+  Future<void> uploadVideo(String title, File file) async {
+    try {
+      final dBVideoRandomId = const Uuid().v1();
+      final storageVideoFileRandomId = const Uuid().v1();
+
+      await FirebaseStorage.instance
+          .ref("Videos/$storageVideoFileRandomId")
+          .putFile(file, SettableMetadata(contentType: 'video/mp4'));
+
+      await FirebaseDatabase.instance.ref("Videos/$dBVideoRandomId").update({
+        'title': title,
+        'video_file_id': storageVideoFileRandomId,
+        'upload_user_id': AuthService.firebase().currentUser!.uid,
+        'created_time': Moment.now().format(dateDBFormat),
+        'modified_time': Moment.now().format(dateDBFormat),
+      });
+    } catch (_) {}
   }
 }
 

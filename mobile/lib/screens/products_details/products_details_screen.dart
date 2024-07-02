@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/cart/cart_screen.dart';
 import 'package:shop_app/screens/products_details/components/product_images.dart';
@@ -124,10 +125,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     final userId = AuthService.firebase().currentUser?.uid;
                     if (userId == null) {
                       Navigator.pushNamedAndRemoveUntil(
-                          context, SignInScreen.routeName, (_) => true);
+                          context, SignInScreen.routeName, (_) => false);
                     } else {
+                      context.loaderOverlay.show();
                       await DBCartService().addItemToCart(product.id, quantity);
                       if (context.mounted) {
+                        context.loaderOverlay.hide();
                         Navigator.pushNamed(context, CartScreen.routeName);
                       }
                     }

@@ -38,7 +38,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                   var currentUser = snapshot.data;
                   if (currentUser == null) {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, SignInScreen.routeName, (_) => true);
+                        context, SignInScreen.routeName, (_) => false);
                   } else {
                     return SafeArea(
                       child: SizedBox(

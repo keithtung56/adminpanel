@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:shop_app/services/crud/user/db_user.dart';
 import 'package:shop_app/services/crud/user/db_user_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -135,9 +136,17 @@ class _MyAccountFormState extends State<MyAccountForm> {
           ElevatedButton(
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                await DBUserService().updateDBUser(username, age, gender);
-                if (context.mounted) {
-                  Navigator.pop(context);
+                try {
+                  context.loaderOverlay.show();
+                  await DBUserService().updateDBUser(username, age, gender);
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+                } catch (_) {
+                } finally {
+                  if (context.mounted) {
+                    context.loaderOverlay.hide();
+                  }
                 }
               }
             },
