@@ -1,7 +1,5 @@
 class DBCartItem {
-  //in case same product,different options
   final String uid;
-
   final String productId;
   final int quantity;
 

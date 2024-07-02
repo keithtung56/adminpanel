@@ -21,6 +21,7 @@ class DBProductService {
           categoryId: val['category_id'],
           price: (val['price'] as num).toDouble(),
           stock: val['stock'],
+          status: val['status'],
           description: val['description'],
           productName: val['product_name'],
           createdTime: val['created_time'],
@@ -34,8 +35,13 @@ class DBProductService {
     }
   }
 
-  Future<List<DBProduct>> getProductListByCategoryId(String categoryId) async {
+  Future<List<DBProduct>> getOnListedProductList() async {
     var productList = await getProductList();
+    return productList.where((product) => product.status == 'listed').toList();
+  }
+
+  Future<List<DBProduct>> getProductListByCategoryId(String categoryId) async {
+    var productList = await getOnListedProductList();
     return productList
         .where((product) => product.categoryId == categoryId)
         .toList();
@@ -43,7 +49,7 @@ class DBProductService {
 
   Future<List<DBProduct>> getProductListBySearchString(
       String searchString) async {
-    var productList = await getProductList();
+    var productList = await getOnListedProductList();
     return productList
         .where((product) => product.productName
             .toLowerCase()
@@ -67,6 +73,7 @@ class DBProductService {
       categoryId: val['category_id'],
       price: (val['price'] as num).toDouble(),
       stock: val['stock'],
+      status: val['status'],
       description: val['description'],
       productName: val['product_name'],
       createdTime: val['created_time'],

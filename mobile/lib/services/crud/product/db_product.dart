@@ -6,6 +6,7 @@ class DBProduct {
   final String categoryId;
   final double price;
   final int stock;
+  final String status;
   final String description;
   final String productName;
   final String createdTime;
@@ -17,6 +18,7 @@ class DBProduct {
     required this.categoryId,
     required this.price,
     required this.stock,
+    required this.status,
     required this.description,
     required this.productName,
     required this.createdTime,
